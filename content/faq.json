@@ -1,0 +1,32 @@
+[
+  {
+    "id": "vad-ar-hoa",
+    "question": "Vad är House of Awesome?",
+    "answer": "House of Awesome är en longevityklinik och ett professionellt showroom i Stora Höga. Verksamheten bygger på utrustningsledda sessioner och ett fullt Professional-showroom — inte på en stor terapeutstab."
+  },
+  {
+    "id": "hur-bokar-jag",
+    "question": "Hur bokar jag en session?",
+    "answer": "Bokning sker via Life Is Awesome. Fas 1 har ingen egen bokningsmotor på den här sajten."
+  },
+  {
+    "id": "priser",
+    "question": "Var hittar jag priser?",
+    "answer": "Priser i kronor publiceras inte här i fas 1. Aktuella tider och priser visas i Life Is Awesome bokning."
+  },
+  {
+    "id": "var",
+    "question": "Var ligger kliniken?",
+    "answer": "Brålandsvägen 29, Stora Höga. Öppettider meddelas senare."
+  },
+  {
+    "id": "showroom-b2b",
+    "question": "Kan företag besöka showroom?",
+    "answer": "Ja — showroom är kopplat till LIA Professional. B2B-förfrågningar går dit, inte via en separat HOA-butik i fas 1."
+  },
+  {
+    "id": "how-rebrand",
+    "question": "Är det samma som The House of Wellness?",
+    "answer": "House of Awesome är namnbytet från The House of Wellness. Innehållet här är nytt — kliniken är showroom och utrustningsledda sessioner, inte en kopia av tidigare HOW-sidor."
+  }
+]

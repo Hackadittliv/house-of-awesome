@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+:root {
+  --hoa-bg: #0b0b0b;
+  --hoa-bg-elevated: #14110c;
+  --hoa-bg-muted: #1b1711;
+  --hoa-gold: #d4af5f;
+  --hoa-gold-hover: #e4c77a;
+  --hoa-gold-dim: #8a7038;
+  --hoa-ink: #f4efe4;
+  --hoa-ink-muted: #b8ae9a;
+  --hoa-line: #2a261c;
+  --hoa-danger: #c45c4a;
+}
+
+@theme inline {
+  --color-hoa-bg: var(--hoa-bg);
+  --color-hoa-bg-elevated: var(--hoa-bg-elevated);
+  --color-hoa-bg-muted: var(--hoa-bg-muted);
+  --color-hoa-gold: var(--hoa-gold);
+  --color-hoa-gold-hover: var(--hoa-gold-hover);
+  --color-hoa-gold-dim: var(--hoa-gold-dim);
+  --color-hoa-ink: var(--hoa-ink);
+  --color-hoa-ink-muted: var(--hoa-ink-muted);
+  --color-hoa-line: var(--hoa-line);
+  --font-sans: var(--font-geist-sans);
+  --font-display: var(--font-display);
+}
+
+html,
+body {
+  background: var(--hoa-bg);
+  color: var(--hoa-ink);
+}
+
+body {
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--hoa-gold) 35%, transparent);
+  color: var(--hoa-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--hoa-gold);
+  outline-offset: 3px;
+}

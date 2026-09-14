@@ -1,0 +1,36 @@
+{
+  "name": "House of Awesome",
+  "shortName": "HOA",
+  "tagline": "Longevityklinik och professionell showroom i Stora Höga.",
+  "locale": "sv",
+  "formerName": "The House of Wellness",
+  "sibling": {
+    "name": "Life Is Awesome",
+    "shortName": "LIA",
+    "href": "https://lifeisawesome.se"
+  },
+  "address": {
+    "street": "Brålandsvägen 29",
+    "city": "Stora Höga",
+    "country": "Sverige"
+  },
+  "hoursNote": "Öppettider meddelas senare (TBD).",
+  "ctas": {
+    "booking": {
+      "label": "Boka via Life Is Awesome",
+      "href": "https://lifeisawesome.se/boka"
+    },
+    "b2b": {
+      "label": "LIA Professional",
+      "href": "https://lifeisawesome.se/professional"
+    }
+  },
+  "plannedPartners": [
+    "OneBase",
+    "CellOxy/TUR",
+    "Morozko",
+    "Vasper",
+    "CAROL",
+    "ZaZen"
+  ]
+}
