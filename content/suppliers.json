@@ -1,0 +1,18 @@
+[
+  {
+    "slug": "onebase",
+    "name": "OneBase",
+    "logo": null,
+    "blurb": "Partner i showroom. Produktkatalog fylls i en senare fas.",
+    "website": null,
+    "order": 10
+  },
+  {
+    "slug": "morozko",
+    "name": "Morozko",
+    "logo": null,
+    "blurb": "Partner i showroom. Produktkatalog fylls i en senare fas.",
+    "website": null,
+    "order": 30
+  }
+]

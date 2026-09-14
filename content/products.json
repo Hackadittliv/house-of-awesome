@@ -1,0 +1,15 @@
+[
+  {
+    "slug": "placeholder",
+    "supplier_id": "onebase",
+    "category": "other",
+    "name": "Produktplaceholder",
+    "short": "Fas 1-stub för routing. Ingen produktbeskrivning ännu.",
+    "body": "Fullständig katalog publiceras i en senare fas. Det här objektet finns bara så att showroom-rutterna kan demonstreras.",
+    "specs": {},
+    "images": [],
+    "showroom": true,
+    "bookable_session": false,
+    "order": 10
+  }
+]
