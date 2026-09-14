@@ -29,23 +29,10 @@ export default function SessionerPage() {
 
       {sessions.length === 0 ? (
         <div className="mt-12 border border-hoa-line bg-hoa-bg-elevated p-8">
-          <h2 className="text-lg text-hoa-ink">Katalog ej ifylld</h2>
+          <h2 className="text-lg text-hoa-ink">Inga sessioner listade ännu</h2>
           <p className="mt-3 max-w-2xl text-sm leading-6 text-hoa-ink-muted">
-            `content/sessions.json` är tom. Fält för kommande CMS finns redan:
-            namn, längd, `price_single`, `price_10pack` och `book_url`. Lämna
-            prisfält tomma tills officiella belopp finns — visa dem inte som
-            påhittade kronor här.
-          </p>
-          <p className="mt-4 text-sm text-hoa-ink-muted">
-            Deep-link för bokning:{" "}
-            <a
-              href={site.ctas.booking.href}
-              className="text-hoa-gold hover:text-hoa-gold-hover"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {site.ctas.booking.href}
-            </a>
+            Katalogen fylls i en senare fas. Tider och priser visas inte här —
+            de ligger i bokningen hos Life Is Awesome.
           </p>
         </div>
       ) : (
