@@ -1,0 +1,26 @@
+---
+description: When to use TypeSafe (System One / Jev) vs LLM vs plain code
+alwaysApply: true
+---
+
+# TypeSafe usage gate
+
+Before adding AI to a feature, choose exactly one primary tool:
+
+1. **Plain code** — deterministic rules, CRUD, auth, UI.
+2. **LLM (Grok/Claude via gateway)** — generate prose (readings, captions, drafts).
+3. **TypeSafe (Jev)** — typed semantic judgments that code will branch on.
+
+## Use TypeSafe when
+You need route / detect / score / verify / escalate over natural language or mixed state, and the answer must be a Choice, Noul, or Score with probabilities. Call it only from server code. Keep questions + thresholds in one config module. Read live docs: https://docs.typesafe.ai/llms.txt and invoke the TypeSafe skill (`typesafe-ai`).
+
+## Do not use TypeSafe when
+- Decorating every page or every request
+- Layout, forms, i18n, database wiring
+- `if` you can write without AI
+- The deliverable is long-form text (use the LLM; optionally run TypeSafe *after* as a guardrail)
+- Exposing `TYPESAFE_API_KEY` to the browser
+
+## Pattern
+`LLM writes → TypeSafe judges → code steers.`
+Independent questions over the same state go in **one** `systemOne` call.
