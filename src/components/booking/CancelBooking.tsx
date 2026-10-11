@@ -6,6 +6,7 @@ import { ClientOnly } from "@/components/booking/ClientOnly";
 import { Notice, primaryButtonClass } from "@/components/booking/fields";
 import { BookingApiError, cancelBooking } from "@/lib/booking/api";
 import { bookingCopy as t } from "@/lib/booking/copy";
+import { CANCEL_TOKEN_KEY, forgetStoredValue, takeStoredValue } from "@/lib/booking/sensitive-url";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -21,21 +22,24 @@ export function CancelBooking() {
 
 function CancelFromLink() {
   const [token] = useState(() => {
-    const value = new URLSearchParams(window.location.search).get("avboka");
+    const value = takeStoredValue(CANCEL_TOKEN_KEY) ?? new URLSearchParams(window.location.search).get("avboka");
     return value && UUID.test(value) ? value : null;
   });
   const [state, setState] = useState<State>(token ? "ready" : "missing");
 
   useEffect(() => {
-    // Ta bort koden ur adressfältet så att den inte delas vidare eller sparas i historiken.
-    if (token) window.history.replaceState(null, "", window.location.pathname);
-  }, [token]);
+    // Reserv om skriptet i <head> inte hann köra: ta bort koden ur adressfältet.
+    if (new URLSearchParams(window.location.search).has("avboka")) {
+      window.history.replaceState(window.history.state, "", window.location.pathname);
+    }
+  }, []);
 
   async function confirm() {
     if (!token) return;
     setState("sending");
     try {
       const result = await cancelBooking(token);
+      forgetStoredValue(CANCEL_TOKEN_KEY);
       setState(result.already ? "already" : result.late ? "late" : "done");
     } catch (error) {
       if (error instanceof BookingApiError && error.status === 404) setState("not_found");

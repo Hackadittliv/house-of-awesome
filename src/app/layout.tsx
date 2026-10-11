@@ -7,6 +7,7 @@ import { ConsentProvider } from "@/components/consent/ConsentProvider";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { scrubSensitiveParamsScript } from "@/lib/booking/sensitive-url";
 import { site } from "@/lib/content";
 import { bookingUrl } from "@/lib/links";
 import { businessJsonLd, siteUrl } from "@/lib/seo";
@@ -52,6 +53,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="sv" className={`${inter.variable} ${jakarta.variable} h-full antialiased`}>
+      <head>
+        <script id="hoa-scrub-sensitive-params" dangerouslySetInnerHTML={{ __html: scrubSensitiveParamsScript }} />
+      </head>
       <body className="flex min-h-full flex-col bg-hoa-bg text-hoa-ink">
         <ConsentProvider>
           <a
