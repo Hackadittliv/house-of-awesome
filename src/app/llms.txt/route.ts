@@ -1,5 +1,5 @@
 import {
-  WELLNESS_DISCLAIMER,
+  HEALTH_DISCLAIMER,
   formatAddress,
   formatDuration,
   formatSek,
@@ -65,7 +65,7 @@ ${memberships}
 
 ## Viktigt
 
-${WELLNESS_DISCLAIMER}
+${HEALTH_DISCLAIMER}
 `;
 
   return new Response(body, {

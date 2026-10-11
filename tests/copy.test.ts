@@ -8,7 +8,7 @@ import faq from "../content/faq.json";
 import memberships from "../content/memberships.json";
 import services from "../content/services.json";
 import site from "../content/site.json";
-import { WELLNESS_DISCLAIMER, getServices } from "@/lib/content";
+import { HEALTH_DISCLAIMER, getServices } from "@/lib/content";
 
 function strings(value: unknown): string[] {
   if (typeof value === "string") return [value];
@@ -35,12 +35,34 @@ describe("språkregler", () => {
     expect(findCopyViolations("Krossekärr 517, 473 94 Henån och Manuella behandlingar")).toHaveLength(0);
   });
 
+  it.each([
+    ["Individuellt ordinerat av läkare.", "medicinskt-lofte"],
+    ["Vitamindropp ordineras individuellt av läkare.", "medicinskt-lofte"],
+    ["Innan behandling gör vår läkare en bedömning.", "medicinskt-lofte"],
+    ["Kräver en läkarbedömning först.", "medicinskt-lofte"],
+    ["Våra tjänster är friskvård och ett komplement.", "generell-friskrivning"],
+    ["Huset är inte vård.", "generell-friskrivning"],
+    ["Många upplever mer energi och ork.", "utfallslofte"],
+    ["EWOT står för Exercise With Oxygen Therapy.", "engelsk-ewot"],
+  ])("stoppar förbjuden fras: %s", (text, rule) => {
+    expect(findCopyViolations(text).map((v) => v.rule)).toContain(rule);
+  });
+
+  it.each([
+    "Innehåll och upplägg ordineras och dokumenteras av ansvarig vårdgivare.",
+    "Behandlingen ges av legitimerad personal.",
+    "Vägledningen ställer inte diagnos och ersätter inte vård eller behandling.",
+    "EWOT (träning med extra syre)",
+  ])("tillåter LIA:s formulering: %s", (text) => {
+    expect(findCopyViolations(text)).toEqual([]);
+  });
+
   const texts = [
     ...strings(services),
     ...strings(faq),
     ...strings(memberships),
     ...strings(site),
-    WELLNESS_DISCLAIMER,
+    HEALTH_DISCLAIMER,
     ...getServices().map((service) => service.priceLabel ?? ""),
   ];
 

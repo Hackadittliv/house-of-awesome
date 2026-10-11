@@ -99,5 +99,6 @@ export function formatDuration(service: Service): string | null {
   return service.durationLabel ?? null;
 }
 
-export const WELLNESS_DISCLAIMER =
-  "Våra tjänster är friskvård och ett komplement till vården, aldrig en ersättning. Har du sjukdom, besvär eller pågående behandling, rådgör alltid med din läkare. Vissa behandlingar kräver en hälsodeklaration eller en läkarbedömning före första tillfället, och vi går igenom det tillsammans med dig.";
+// Samma formulering som LIA:s ansvarsfriskrivning (awesome-life-hub, src/config/longevityClinicLanding.ts).
+export const HEALTH_DISCLAIMER =
+  "Innehållet är generell information och utgör inte medicinsk rådgivning, diagnos eller behandling. Individuella upplevelser och resultat varierar. Lämplighet, risker och kontraindikationer ska bedömas av legitimerad hälso- och sjukvårdspersonal när det krävs. Vid akuta eller livshotande symtom, ring 112.";

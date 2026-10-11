@@ -27,12 +27,12 @@
   {
     "id": "halsodeklaration",
     "question": "Behöver jag fylla i en hälsodeklaration?",
-    "answer": "Före första sessionen i tryckkammaren fyller du i en hälsodeklaration. Vitamindropp kräver en läkarbedömning först. Vi går igenom det tillsammans med dig."
+    "answer": "Före första sessionen i tryckkammaren fyller du i en hälsodeklaration, och vi går igenom den tillsammans med dig. Intravenös vitaminbehandling erbjuds endast när ansvarig, behörig vårdgivare bedömer att det är lämpligt."
   },
   {
-    "id": "ar-det-vard",
-    "question": "Är det här vård?",
-    "answer": "Våra tjänster är friskvård och ett komplement till vården, aldrig en ersättning. Vitamindropp ordineras individuellt av läkare och ges av legitimerad personal. Har du sjukdom, besvär eller pågående behandling, rådgör alltid med din läkare."
+    "id": "traning-eller-medicinskt",
+    "question": "Vilka delar är träning och vilka är medicinska?",
+    "answer": "Gymmet, The Awesome Protocol, EWOT, Celloxy IHHT, rödljus, sessionerna i tryckkammaren, coachning och InBody handlar om träning, återhämtning och vägledning. De medicinska delarna är vitamindropp och provtagning. En intravenös behandling är ett medicinskt ingrepp och erbjuds endast när ansvarig, behörig vårdgivare bedömer att det är lämpligt, och behandlingen ges av legitimerad personal. Provtagning utförs av behörig personal när det krävs. Vägledningen ställer inte diagnos och ersätter inte vård eller behandling. Har du symtom eller en diagnos, kontakta hälso- och sjukvården för medicinsk bedömning."
   },
   {
     "id": "avboka",
