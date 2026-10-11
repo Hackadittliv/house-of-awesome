@@ -47,4 +47,4 @@ Svenska som enda UI-språk i fas 1 (`lang="sv"`).
 
 ## Imagery
 
-Leverantörslogotyper och produktbilder kommer via content-fält (`logo`, `images`). Fas 1 visar initialer i en guld-ram när `logo` är `null`.
+Fas 0 lånar LIA:s guldfärgade uggla som logga och LIA:s bilder (landskapet vid Stora Höga, tryckkammaren, Patrik och Alexandra) i `public/images`. Bilder visas via `next/image` och ramas in med 1px `--hoa-line`. Byts mot egna HOA bilder när de finns.

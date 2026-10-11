@@ -1,84 +1,71 @@
 # House of Awesome
 
-Longevityklinik och professionell showroom i Stora Höga (Brålandsvägen 29). Syskon till [Life Is Awesome](https://lifeisawesome.se). Namnbyte från The House of Wellness.
+Sajten för [houseofawesome.se](https://houseofawesome.se): longevity, träning och återhämtning på Brålandsvägen 29 i Stora Höga. Drivs av Life Is Awesome AB, syskon till [lifeisawesome.se](https://lifeisawesome.se).
 
-Fas 1 är ett skelett: Next.js-sidor, navigation, design tokens och en tom/minimal innehållsmodell. Ingen bokningsmotor, inget CMS-admin, ingen engelsk i18n.
+Det här är **Fas 0** enligt [docs/PLAN-hoa-sajt.md](./docs/PLAN-hoa-sajt.md) (planen ligger i en separat PR): en ren innehållssajt. All bokning och alla köp sker hos Life Is Awesome. Varje bokningsknapp länkar till rätt tjänst på `lifeisawesome.se/boka/<slug>` med `utm_source=houseofawesome`.
 
 ## Stack
 
-- Next.js App Router + TypeScript + Tailwind CSS
-- Netlify (`netlify.toml`, Node >= 20)
-- Innehåll v1: JSON i `content/` (fältnamn redo för senare LIA-extrakt / CMS)
-- Svenskt UI
+* Next.js 16 (App Router, alla sidor förrenderas statiskt), React 19, TypeScript, Tailwind 4
+* Netlify (`netlify.toml`, Node 20)
+* Innehåll som JSON i `content/`
+* Vitest för tester
 
-## Setup
+## Kom igång
 
 ```bash
 npm install
-npm run dev
-```
-
-Öppna [http://localhost:3000](http://localhost:3000).
-
-```bash
-npm run typecheck   # tsc --noEmit
-npm run build
+npm run dev          # http://localhost:3000
 npm run lint
+npm run typecheck
+npm test             # Vitest
+npm run build
+npm run check:copy   # språkkontroll av de byggda sidorna, kör efter build
 ```
 
-Lokal Netlify-dev (valfritt): `npx netlify dev`.
+## Sidor
 
-## Environment
-
-Inga miljövariabler krävs i fas 1. Hemligheter ska inte hardkodas — när de behövs sätts de i Netlify UI/CLI.
-
-## Netlify
-
-`netlify.toml` sätter:
-
-- `NODE_VERSION = "20"`
-- build: `npm run build`
-- publish: `.next` (Next-runtime på Netlify)
-
-Koppla GitHub-repot till en Netlify-sajt (Git-deploy). Preview-deploys kommer per branch/PR. Lägg `.netlify` i gitignore (redan gjort).
-
-## Sitemap (SV)
-
-| Route | Sida |
+| Sökväg | Innehåll |
 | --- | --- |
-| `/` | Hem |
-| `/upplevelsen` | Upplevelsen |
-| `/sessioner` | Sessioner (CTA till LIA-bokning) |
-| `/showroom` | Showroom-index |
-| `/showroom/[leverantor]` | Leverantör (stub) |
-| `/showroom/[leverantor]/[produkt]` | Produkt (stub) |
-| `/medlemskap` | Medlemskap (placeholder) |
-| `/besok` | Besök — Brålandsvägen 29, Stora Höga |
-| `/faq` | FAQ |
-| `/kontakt` | Kontakt |
-| `/om` | Om (valfri, inkluderad) |
+| `/` | Startsida |
+| `/tjanster` | Alla tjänster, bokningsbara och efter förfrågan |
+| `/tjanster/[slug]` | En sida per tjänst, med längd, pris och bokningsknapp |
+| `/medlemskap` | De fyra HOA medlemskapen, länkar till `lifeisawesome.se/medlem?plan=...` |
+| `/om` | Om huset, platsen i Stora Höga och showroom för företag |
+| `/besok` | Adress, kontakt, öppettider och bokning |
+| `/faq` | Vanliga frågor (med FAQPage JSON-LD) |
+| `/integritetspolicy`, `/cookies` | Life Is Awesome AB som personuppgiftsansvarig |
+| `/sitemap.xml`, `/robots.txt`, `/llms.txt` | Genereras från innehållet |
 
-Nav täcker huvudspåren. Footer täcker alla routes plus LIA-länkar.
+Gamla skelettsidor (`/sessioner`, `/upplevelsen`, `/kontakt`, `/showroom/...`) skickas vidare med 301. `/boka` och `/boka/<slug>` skickas till LIA:s bokning.
 
-## CTA:er
+## Tjänsterna och var de kommer ifrån
 
-- Bokning: [https://lifeisawesome.se/boka](https://lifeisawesome.se/boka) (relativt: LIA `/boka`)
-- B2B / Professional: [https://lifeisawesome.se/professional](https://lifeisawesome.se/professional)
+* `content/services.snapshot.json` är en ögonblicksbild av LIA:s publika `booking_event_types` (slug, titel, längd, pris, plats). Den uppdateras med `npm run sync:services`, se kommentaren i `scripts/sync-services.mjs`. Bygget hämtar ingenting över nätet.
+* `content/services.json` innehåller HOA:s egna texter per tjänst, skrivna utan hälsopåståenden. LIA:s beskrivningar i databasen används inte eftersom flera av dem innehåller sådana påståenden.
+* Ett test säkerställer att varje publik tjänst i LIA har en HOA text. Lägger LIA till en ny tjänst och snapshoten uppdateras, faller testet tills texten finns.
+* Tjänster utan egen kalender i LIA (Awesome Protocol, InBody, vitamindropp, blodprov, funktionsmedicin, manuella behandlingar) leder till det kostnadsfria korta samtalet och till mejl.
 
-Inga påhittade sessionpriser i SEK. Inget återanvänt HOW-innehåll om osteopati/massage.
+## Samtycke och analys
 
-## Innehåll
+Inget skript från tredje part laddas innan besökaren har valt. Bannern sparar valet i `localStorage` (`hoa_consent_v1`). Analys och marknadsföring aktiveras genom miljövariabler i Netlify, och laddas då först efter samtycke:
 
-Se `content/README.md` och TypeScript-typer i `src/lib/types.ts`.
+| Variabel | Effekt |
+| --- | --- |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 (format `G-XXXX`), kategori analys |
+| `NEXT_PUBLIC_META_PIXEL_ID` | Meta pixel (bara siffror), kategori marknadsföring |
+| `NEXT_PUBLIC_SITE_URL` | Bas för kanoniska adresser, satt till `https://houseofawesome.se` i `netlify.toml` |
 
-Planerade showroom-namn (inga påhittade produkter utöver stubs): OneBase, CellOxy/TUR, Morozko, Vasper, CAROL, ZaZen.
+Utan de två första används inga verktyg alls, och cookiesidan och integritetspolicyn säger det.
 
-Fas 1 har två leverantörsstubs för routing (`onebase`, `morozko`) och en produktplaceholder under OneBase.
+## Språkregler
+
+Svenska, enkelt språk, inga tankstreck i löptext, inte orden "man" eller "hen" och inga hälsopåståenden. Reglerna finns i `scripts/copy-rules.mjs` och körs både i testerna och av `npm run check:copy`.
 
 ## Design
 
-Tokens och layout: [DESIGN.md](./DESIGN.md). LIA Dark Gold — nästan svart + `#D4AF5F`.
+Tokens och layout i [DESIGN.md](./DESIGN.md): nästan svart, krämvit text och guld `#D4AF5F`, Cormorant Garamond i rubriker och Geist i brödtext.
 
-## Utanför fas 1
+## Bilder
 
-Full showroom-katalog, riktiga priser, 301-karta från HOW, CMS-admin, medlemslogik, engelsk i18n, Lovable, Supabase.
+Tills HOA har egna bilder används LIA:s logga och bilder (`public/images`, `src/app/icon.png`, `src/assets` för OG bilder). Se PR:en för var egna HOA bilder skulle göra mest nytta.
