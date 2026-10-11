@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const isProduction = process.env.NODE_ENV === "production";
+// Netlify lägger in sitt granskningsverktyg som iframe på förhandsversioner, aldrig i produktion.
+const isNetlifyPreview = ["deploy-preview", "branch-deploy"].includes(process.env.CONTEXT ?? "");
 
 // Ingen tredjepartskod laddas förrän besökaren har samtyckt. CSP:n tillåter bara de
 // analysverktyg som ConsentedTrackers kan ladda efter samtycke. Dev behöver 'unsafe-eval'.
@@ -11,7 +13,7 @@ const contentSecurityPolicy = [
   "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.facebook.com https://connect.facebook.net",
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",
-  "frame-src 'none'",
+  isNetlifyPreview ? "frame-src https://app.netlify.com" : "frame-src 'none'",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
