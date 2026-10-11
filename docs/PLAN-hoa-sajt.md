@@ -7,7 +7,17 @@ Granskat underlag:
 * Det här repot (`Hackadittliv/house-of-awesome`), gren `main`.
 * LIA:s live gren `codex/professional-onebase-celloxy-v1` i `Hackadittliv/awesome-life-hub` (commit `0670cdd`). Det är den grenen Lovable publicerar, inte `main`.
 
-I texten står `<hoa-domän>` för HOA:s domän eftersom namnet inte är bekräftat.
+I texten står `<hoa-domän>` för HOA:s domän. Domänen är nu bekräftad som `houseofawesome.se`.
+
+## Beslut från ägaren (11 oktober 2026)
+
+* **Bolag:** Life Is Awesome AB driver HOA. Samma personuppgiftsansvarig och samma Stripe konto. Inget avtal om gemensamt ansvar behövs.
+* **Tjänster:** alla tjänster visas på båda sajterna. I fas 1 betyder det `sites = '{lia,hoa}'` på alla tjänster.
+* **Domän:** `houseofawesome.se`, med DNS hos Loopia.
+* **Bilder och logga:** LIA:s logga och bilder används tills HOA har egna.
+* **Fas 0** byggs i en egen PR ([#4](https://github.com/Hackadittliv/house-of-awesome/pull/4)).
+
+Öppna frågor 1 till 3 och 8 i avsnitt 10 är därmed besvarade. Övriga står kvar.
 
 ---
 
