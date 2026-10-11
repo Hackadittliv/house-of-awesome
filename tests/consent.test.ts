@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { createConsent, isRevocation, parseConsent } from "@/lib/consent";
+import { createConsent, isRevocation, isStorageRevocation, parseConsent } from "@/lib/consent";
 
 describe("samtycke", () => {
   it("tolkar ett sparat val", () => {
@@ -20,5 +20,15 @@ describe("samtycke", () => {
     expect(isRevocation(yes, createConsent(true, false))).toBe(true);
     expect(isRevocation(createConsent(false, false), yes)).toBe(false);
     expect(isRevocation(null, createConsent(false, false))).toBe(false);
+  });
+
+  it("återkallar i alla flikar när valet ändras eller tas bort i en annan flik", () => {
+    const yes = JSON.stringify(createConsent(true, false));
+    const no = JSON.stringify(createConsent(false, false));
+    expect(isStorageRevocation(yes, no)).toBe(true);
+    expect(isStorageRevocation(yes, null)).toBe(true);
+    expect(isStorageRevocation(no, yes)).toBe(false);
+    expect(isStorageRevocation(null, yes)).toBe(false);
+    expect(isStorageRevocation(no, null)).toBe(false);
   });
 });

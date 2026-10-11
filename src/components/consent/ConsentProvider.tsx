@@ -4,7 +4,9 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
   type ReactNode,
@@ -16,6 +18,7 @@ import {
   clearTrackingCookies,
   createConsent,
   isRevocation,
+  isStorageRevocation,
   parseConsent,
   type ConsentChoice,
 } from "@/lib/consent";
@@ -55,6 +58,25 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
   const ready = raw !== SERVER_SNAPSHOT;
   const choice = useMemo(() => (ready ? parseConsent(raw) : null), [raw, ready]);
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  const lastRaw = useRef<string | null>(null);
+  useEffect(() => {
+    if (ready) lastRaw.current = raw;
+  }, [raw, ready]);
+
+  useEffect(() => {
+    function onStorage(event: StorageEvent) {
+      if (event.key !== CONSENT_STORAGE_KEY && event.key !== null) return;
+      const oldValue = event.key === null ? lastRaw.current : event.oldValue;
+      const newValue = event.key === null ? null : event.newValue;
+      if (isStorageRevocation(oldValue, newValue)) {
+        clearTrackingCookies();
+        window.location.reload();
+      }
+    }
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
 
   const save = useCallback(
     (analytics: boolean, marketing: boolean) => {

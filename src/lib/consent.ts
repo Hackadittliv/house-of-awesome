@@ -43,6 +43,12 @@ export function isRevocation(previous: ConsentChoice | null, next: ConsentChoice
   return (previous.analytics && !next.analytics) || (previous.marketing && !next.marketing);
 }
 
+// Ett borttaget val i en annan flik räknas som att allt valfritt återkallas.
+export function isStorageRevocation(oldRaw: string | null, newRaw: string | null): boolean {
+  const next = parseConsent(newRaw) ?? { analytics: false, marketing: false, updatedAt: "" };
+  return isRevocation(parseConsent(oldRaw), next);
+}
+
 const TRACKING_COOKIE = /^(_ga|_gid|_gat|_fbp|_fbc)/;
 
 export function clearTrackingCookies(): void {

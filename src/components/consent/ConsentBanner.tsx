@@ -22,7 +22,7 @@ export function ConsentBanner() {
     <section
       role="region"
       aria-labelledby={titleId}
-      className="fixed inset-x-0 bottom-0 z-[60] border-t border-hoa-line bg-hoa-card/95 shadow-[0_-8px_30px_-4px_rgba(0,0,0,0.65)] backdrop-blur-md"
+      className="fixed inset-x-0 bottom-0 z-[60] max-h-[70dvh] overflow-y-auto overscroll-contain border-t border-hoa-line bg-hoa-card/95 shadow-[0_-8px_30px_-4px_rgba(0,0,0,0.65)] backdrop-blur-md"
     >
       <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 lg:px-8">
         <h2 id={titleId} className="text-xl text-hoa-ink sm:text-2xl">
