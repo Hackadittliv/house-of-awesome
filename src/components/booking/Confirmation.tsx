@@ -101,7 +101,7 @@ function ConfirmationDetails() {
           </div>
           <div>
             <dt className="text-sm text-hoa-ink-muted">{t.when}</dt>
-            <dd className="capitalize text-hoa-ink">{formatDateTime(details.startsAt)}</dd>
+            <dd className="text-hoa-ink first-letter:uppercase">{formatDateTime(details.startsAt)}</dd>
           </div>
           <div>
             <dt className="text-sm text-hoa-ink-muted">{t.where}</dt>

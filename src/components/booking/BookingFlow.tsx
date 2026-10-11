@@ -18,6 +18,7 @@ import {
 import { bookingCopy as t } from "@/lib/booking/copy";
 import { addDays, formatDateTime, formatDayLabel, formatTime, groupSlotsByDay, stockholmDate, utmFrom } from "@/lib/booking/format";
 import { saveConfirmation } from "@/lib/booking/confirmation";
+import { formatPriceLabel } from "@/lib/content";
 
 const DAYS_PER_PAGE = 7;
 
@@ -160,7 +161,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
         {eventType.price_label_sv ? (
           <div>
             <dt className="sr-only">Pris</dt>
-            <dd>{eventType.price_label_sv}</dd>
+            <dd>{formatPriceLabel(eventType.price_label_sv)}</dd>
           </div>
         ) : null}
         <div>
@@ -211,7 +212,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
                     role="tab"
                     aria-selected={day === selectedDay}
                     onClick={() => setSelectedDay(day)}
-                    className={`min-h-11 shrink-0 rounded-full border px-4 text-sm capitalize ${
+                    className={`min-h-11 shrink-0 rounded-full border px-4 text-sm first-letter:uppercase ${
                       day === selectedDay ? "border-hoa-gold bg-hoa-gold text-hoa-espresso" : "border-hoa-line text-hoa-ink hover:bg-hoa-secondary"
                     }`}
                   >
@@ -250,7 +251,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
           <div className="flex flex-wrap items-center justify-between gap-3 rounded-lia-md border border-hoa-line bg-hoa-card px-4 py-3">
             <p className="text-hoa-ink">
               <span className="text-sm text-hoa-ink-muted">{t.selected}: </span>
-              <span className="capitalize">{formatDateTime(slot.start)}</span>
+              <span className="inline-block first-letter:uppercase">{formatDateTime(slot.start)}</span>
             </p>
             <button type="button" className="text-sm text-hoa-gold underline-offset-4 hover:underline" onClick={() => setStep("pick")}>
               {t.change}
