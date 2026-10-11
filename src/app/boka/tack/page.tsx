@@ -6,8 +6,8 @@ import { bookingCopy as t } from "@/lib/booking/copy";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: t.confirmedTitle,
-  description: t.confirmedLead,
+  title: t.thanksPageTitle,
+  description: t.thanksPageLead,
   path: "/boka/tack",
   noindex: true,
 });

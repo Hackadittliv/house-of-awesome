@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 
 import { EmbeddedCheckout } from "@/components/booking/EmbeddedCheckout";
 import { RequestForm } from "@/components/booking/RequestForm";
@@ -18,6 +17,7 @@ import {
 import { bookingCopy as t } from "@/lib/booking/copy";
 import { addDays, formatDateTime, formatDayLabel, formatTime, groupSlotsByDay, stockholmDate, utmFrom } from "@/lib/booking/format";
 import { saveConfirmation } from "@/lib/booking/confirmation";
+import { stripePublishableKey } from "@/lib/booking/config";
 import { formatPriceLabel } from "@/lib/content";
 
 const DAYS_PER_PAGE = 7;
@@ -30,6 +30,8 @@ type Props = {
 
 type Step = "pick" | "form" | "pay";
 
+type PendingPayment = { bookingId: string; priceId: string | null; startAt: string; email: string };
+
 export function locationLabel(type: EventTypeInfo["location_type"]): string {
   if (type === "in_person") return t.locationInPerson;
   if (type === "phone") return t.locationPhone;
@@ -37,7 +39,6 @@ export function locationLabel(type: EventTypeInfo["location_type"]): string {
 }
 
 export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
-  const router = useRouter();
   const [fromDate, setFromDate] = useState(() => stockholmDate(new Date()));
   const [loaded, setLoaded] = useState<{ key: string; result: AvailabilityResult | "error" } | null>(null);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
@@ -51,6 +52,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const [pendingPayment, setPendingPayment] = useState<PendingPayment | null>(null);
 
   const today = useMemo(() => stockholmDate(new Date()), []);
   const toDate = addDays(fromDate, DAYS_PER_PAGE - 1);
@@ -88,6 +90,16 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
     );
   }
 
+  // Utan publik Stripenyckel kan betalningen aldrig visas, så ingen tid reserveras.
+  if (availability.eventType.requires_payment && !stripePublishableKey) {
+    return (
+      <div className="space-y-6">
+        <Notice>{t.paymentNeedsRequest}</Notice>
+        <RequestForm serviceSlug={slug} serviceName={serviceName} />
+      </div>
+    );
+  }
+
   const { eventType, slots } = availability;
   const days = groupSlotsByDay(slots);
   const daySlots = selectedDay ? days.get(selectedDay) ?? [] : [];
@@ -98,39 +110,58 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
     setSubmitting(true);
     setSubmitError(null);
     let phase: "booking" | "checkout" = "booking";
+    const guestEmail = email.trim();
     try {
-      const booking = await createBooking({
-        eventTypeSlug: eventType.slug,
-        startAt: slot.start,
-        name: name.trim(),
-        email: email.trim(),
-        phone: phone.trim(),
-        notes: notes.trim(),
-        locationType: eventType.location_type,
-        utm: utmFrom(window.location.search),
-      });
-      const confirmation = {
-        bookingId: booking.booking_id,
-        cancelToken: booking.cancel_token,
-        startsAt: booking.starts_at,
-        title: eventType.title_sv,
-        location: locationLabel(eventType.location_type),
-      };
-      if (booking.requires_payment && booking.price_id) {
-        saveConfirmation(confirmation);
-        phase = "checkout";
-        const secret = await createCheckout({
-          bookingId: booking.booking_id,
-          priceId: booking.price_id,
-          email: email.trim(),
-          returnUrl: `${window.location.origin}/boka/tack?session_id={CHECKOUT_SESSION_ID}`,
-        });
-        setClientSecret(secret);
-        setStep("pay");
+      // Ett nytt försök efter misslyckad betalstart återanvänder den egna reservationen,
+      // annars blockerar den egna hållningen tiden.
+      const reusable =
+        pendingPayment && pendingPayment.startAt === slot.start && pendingPayment.email === guestEmail ? pendingPayment : null;
+      let bookingId: string;
+      let priceId: string | null;
+      if (reusable) {
+        bookingId = reusable.bookingId;
+        priceId = reusable.priceId;
       } else {
-        saveConfirmation(confirmation);
-        router.push("/boka/tack");
+        const booking = await createBooking({
+          eventTypeSlug: eventType.slug,
+          startAt: slot.start,
+          name: name.trim(),
+          email: guestEmail,
+          phone: phone.trim(),
+          notes: notes.trim(),
+          locationType: eventType.location_type,
+          utm: utmFrom(window.location.search),
+        });
+        const requiresPayment = Boolean(booking.requires_payment && booking.price_id);
+        saveConfirmation({
+          bookingId: booking.booking_id,
+          cancelToken: booking.cancel_token,
+          startsAt: booking.starts_at,
+          title: eventType.title_sv,
+          location: locationLabel(eventType.location_type),
+          slug,
+          requiresPayment,
+        });
+        if (!requiresPayment) {
+          // Hel sidladdning, så att inga spårare från tidigare sidor följer med till tacksidan.
+          // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+          window.location.assign("/boka/tack");
+          return;
+        }
+        bookingId = booking.booking_id;
+        priceId = booking.price_id ?? null;
+        setPendingPayment({ bookingId, priceId, startAt: slot.start, email: guestEmail });
       }
+      if (!priceId) throw new Error("price missing");
+      phase = "checkout";
+      const secret = await createCheckout({
+        bookingId,
+        priceId,
+        email: guestEmail,
+        returnUrl: `${window.location.origin}/boka/tack?session_id={CHECKOUT_SESSION_ID}`,
+      });
+      setClientSecret(secret);
+      setStep("pay");
     } catch (error) {
       if (phase === "checkout") {
         setSubmitError(t.paymentUnavailable);

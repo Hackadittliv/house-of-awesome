@@ -143,6 +143,19 @@ export async function fetchIcs(
   return response.text();
 }
 
+/**
+ * confirmed: betald och bokad. review: betald men tiden bekräftas manuellt.
+ * pending: betalningen pågår eller är inte registrerad än. not_paid / unknown: ingen bokning.
+ */
+export type PaymentStatus = "confirmed" | "review" | "pending" | "not_paid" | "unknown";
+
+const PAYMENT_STATUSES: readonly PaymentStatus[] = ["confirmed", "review", "pending", "not_paid", "unknown"];
+
+export async function getPaymentStatus(sessionId: string): Promise<PaymentStatus> {
+  const data = await callFunction<{ status?: unknown }>("booking-payment-status", { session_id: sessionId });
+  return PAYMENT_STATUSES.find((status) => status === data.status) ?? "unknown";
+}
+
 export type InterestType = "free_10min" | "paid_60min" | "hbot" | "celloxy" | "coaching" | "other";
 
 export type RequestInput = {
