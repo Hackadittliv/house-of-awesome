@@ -1,21 +1,18 @@
-import { CtaLink } from "@/components/CtaLink";
 import { Container } from "@/components/Container";
+import { CtaLink } from "@/components/CtaLink";
 
 export default function NotFound() {
   return (
     <Container className="py-24">
-      <p className="text-xs font-medium uppercase tracking-[0.2em] text-hoa-gold">
-        404
-      </p>
+      <p className="text-xs font-medium uppercase tracking-[0.2em] text-hoa-gold">404</p>
       <h1 className="mt-3 font-display text-4xl text-hoa-ink">Sidan finns inte</h1>
       <p className="mt-4 max-w-md text-hoa-ink-muted">
-        Adressen matchar ingen sida i fas 1. Gå tillbaka till startsidan eller
-        showroom.
+        Adressen matchar ingen sida. Kanske hittar du det du söker bland våra tjänster.
       </p>
       <div className="mt-8 flex flex-wrap gap-3">
         <CtaLink href="/">Till startsidan</CtaLink>
-        <CtaLink href="/showroom" variant="secondary">
-          Showroom
+        <CtaLink href="/tjanster" variant="secondary">
+          Tjänster
         </CtaLink>
       </div>
     </Container>
