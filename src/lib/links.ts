@@ -1,3 +1,4 @@
+import { bookingEnabled } from "@/lib/booking/config";
 import { site } from "@/lib/content";
 
 export const SHORT_CALL_SLUG = "forsta-halsosamtal";
@@ -12,13 +13,20 @@ function withUtm(base: string, placement: string, extra: Record<string, string> 
   return url.toString();
 }
 
-export function bookingUrl(slug: string | null, placement: string): string {
+/** Bokning på lifeisawesome.se. Används när HOA:s egen bokning inte är konfigurerad. */
+export function liaBookingUrl(slug: string | null, placement: string): string {
   const base = slug ? `${site.booking.base}/${encodeURIComponent(slug)}` : site.booking.base;
   return withUtm(base, placement);
 }
 
-export function inquiryUrl(serviceSlug: string, placement: string): string {
-  return bookingUrl(SHORT_CALL_SLUG, `${placement}_${serviceSlug}`);
+export function bookingUrl(slug: string | null, placement: string, enabled = bookingEnabled): string {
+  if (enabled) return slug ? `/boka/${encodeURIComponent(slug)}` : "/boka";
+  return liaBookingUrl(slug, placement);
+}
+
+export function inquiryUrl(serviceSlug: string, placement: string, enabled = bookingEnabled): string {
+  if (enabled) return `/boka/forfragan?tjanst=${encodeURIComponent(serviceSlug)}`;
+  return liaBookingUrl(SHORT_CALL_SLUG, `${placement}_${serviceSlug}`);
 }
 
 export function membershipUrl(priceId: string | null, placement: string): string {
