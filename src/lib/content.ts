@@ -1,53 +1,103 @@
 import faqData from "../../content/faq.json";
-import productsData from "../../content/products.json";
-import sessionsData from "../../content/sessions.json";
+import membershipsData from "../../content/memberships.json";
+import servicesCopyData from "../../content/services.json";
+import snapshotData from "../../content/services.snapshot.json";
 import siteData from "../../content/site.json";
-import suppliersData from "../../content/suppliers.json";
 
-import type { FaqItem, Product, Session, SiteConfig, Supplier } from "@/lib/types";
+import type {
+  FaqItem,
+  LiaEventType,
+  Membership,
+  Service,
+  ServiceCopy,
+  ServicesSnapshot,
+  SiteConfig,
+} from "@/lib/types";
 
 export const site = siteData as SiteConfig;
+export const servicesSnapshot = snapshotData as ServicesSnapshot;
 
-export function getSuppliers(): Supplier[] {
-  return [...(suppliersData as Supplier[])].sort((a, b) => a.order - b.order);
+const serviceCopy = servicesCopyData as ServiceCopy[];
+
+export const categoryLabels: Record<ServiceCopy["category"], string> = {
+  syre: "Syre",
+  ljus: "Ljus",
+  traning: "Träning",
+  samtal: "Samtal och coachning",
+  halsa: "Hälsa och provtagning",
+  kropp: "Kropp",
+};
+
+// LIA skriver t.ex. "Från 900 kr (10-kort), styckpris 1 000 kr". Vi visar samma fakta utan bindestreck.
+export function formatPriceLabel(label: string | null): string | null {
+  if (!label) return null;
+  const match = label.match(/^Från (.+?) \((\d+)-kort\), styckpris (.+)$/i);
+  if (match) {
+    const [, fromPrice, count, single] = match;
+    return `${single} per gång, eller ${fromPrice} per gång med klippkort för ${count} gånger`;
+  }
+  return label.replace(/(\d+)-kort/g, "klippkort med $1 gånger");
 }
 
-export function getSupplier(slug: string): Supplier | undefined {
-  return getSuppliers().find((supplier) => supplier.slug === slug);
+function toService(copy: ServiceCopy, event: LiaEventType | undefined): Service {
+  return {
+    ...copy,
+    durationMinutes: event?.duration_minutes ?? null,
+    priceLabel: formatPriceLabel(event?.price_label_sv ?? null),
+    location: event && event.location_type !== "in_person" ? "digital" : "in_person",
+    bookable: copy.kind === "bookable" && Boolean(event),
+  };
 }
 
-export function getProducts(): Product[] {
-  return [...(productsData as Product[])].sort((a, b) => a.order - b.order);
+export function getServices(): Service[] {
+  const events = new Map(servicesSnapshot.services.map((event) => [event.slug, event]));
+  const order = new Map(servicesSnapshot.services.map((event) => [event.slug, event.sort_order]));
+
+  const bookable = serviceCopy
+    .filter((copy) => copy.kind === "bookable" && events.has(copy.slug))
+    .sort((a, b) => (order.get(a.slug) ?? 0) - (order.get(b.slug) ?? 0))
+    .map((copy) => toService(copy, events.get(copy.slug)));
+
+  const inquiry = serviceCopy
+    .filter((copy) => copy.kind === "inquiry" || !events.has(copy.slug))
+    .map((copy) => toService({ ...copy, kind: "inquiry" }, undefined));
+
+  return [...bookable, ...inquiry];
 }
 
-export function getProductsBySupplier(supplierId: string): Product[] {
-  return getProducts().filter((product) => product.supplier_id === supplierId);
+export function getBookableServices(): Service[] {
+  return getServices().filter((service) => service.bookable);
 }
 
-export function getProduct(
-  supplierId: string,
-  slug: string,
-): Product | undefined {
-  return getProducts().find(
-    (product) => product.supplier_id === supplierId && product.slug === slug,
-  );
+export function getInquiryServices(): Service[] {
+  return getServices().filter((service) => !service.bookable);
 }
 
-export function getSessions(): Session[] {
-  return sessionsData as Session[];
+export function getService(slug: string): Service | undefined {
+  return getServices().find((service) => service.slug === slug);
 }
 
-export function getActiveSessions(): Session[] {
-  return getSessions().filter((session) => session.active);
+export function getMemberships(): Membership[] {
+  return membershipsData as Membership[];
 }
 
 export function getFaqItems(): FaqItem[] {
   return faqData as FaqItem[];
 }
 
-export function formatAddress(multiline = false): string {
-  const { street, city, country } = site.address;
-  return multiline
-    ? `${street}\n${city}\n${country}`
-    : `${street}, ${city}`;
+export function formatAddress(): string {
+  const { street, postalCode, city } = site.address;
+  return `${street}, ${postalCode} ${city}`;
 }
+
+export function formatSek(amount: number): string {
+  return `${amount.toLocaleString("sv-SE").replace(/\u00a0/g, " ")} kr`;
+}
+
+export function formatDuration(service: Service): string | null {
+  if (service.durationMinutes) return `${service.durationMinutes} minuter`;
+  return service.durationLabel ?? null;
+}
+
+export const WELLNESS_DISCLAIMER =
+  "Våra tjänster är friskvård och ett komplement till vården, aldrig en ersättning. Har du sjukdom, besvär eller pågående behandling, rådgör alltid med din läkare. Vissa behandlingar kräver en hälsodeklaration eller en läkarbedömning före första tillfället, och vi går igenom det tillsammans med dig.";

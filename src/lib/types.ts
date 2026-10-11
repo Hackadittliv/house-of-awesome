@@ -1,97 +1,101 @@
-export type ProductCategory =
-  | "hbot"
-  | "ihht"
-  | "light"
-  | "heat"
-  | "cold"
-  | "training"
-  | "other";
-
-export type Supplier = {
-  slug: string;
+export type SiteConfig = {
   name: string;
-  logo: string | null;
-  blurb: string;
-  website: string | null;
-  order: number;
+  shortName: string;
+  url: string;
+  tagline: string;
+  description: string;
+  locale: string;
+  formerName: string;
+  operator: {
+    legalName: string;
+    orgNr: string;
+    registeredAddress: string;
+    url: string;
+    privacyPolicyUrl: string;
+    termsUrl: string;
+  };
+  contact: {
+    email: string;
+    phone: string;
+    phoneDisplay: string;
+  };
+  address: {
+    street: string;
+    postalCode: string;
+    city: string;
+    region: string;
+    country: string;
+    countryName: string;
+  };
+  hours: {
+    members: string;
+    staffed: string;
+  };
+  booking: {
+    base: string;
+    membership: string;
+    b2b: string;
+    utmSource: string;
+    utmMedium: string;
+    utmCampaign: string;
+  };
+  showroomPartners: string[];
 };
 
-export type Product = {
+export type LiaLocationType = "meet" | "phone" | "in_person";
+
+export type LiaEventType = {
   slug: string;
-  supplier_id: string;
-  category: ProductCategory;
-  name: string;
-  short: string;
-  body: string;
-  specs: Record<string, string>;
-  images: string[];
-  showroom: boolean;
-  bookable_session: boolean;
-  order: number;
+  title_sv: string;
+  duration_minutes: number;
+  price_label_sv: string | null;
+  location_type: LiaLocationType;
+  requires_payment: boolean;
+  sort_order: number;
 };
 
-export type Session = {
+export type ServicesSnapshot = {
+  source: string;
+  fetchedAt: string;
+  services: LiaEventType[];
+};
+
+export type ServiceCategory = "syre" | "ljus" | "traning" | "samtal" | "halsa" | "kropp";
+
+export type ServiceCopy = {
   slug: string;
-  product_id?: string | null;
+  kind: "bookable" | "inquiry";
+  category: ServiceCategory;
   name: string;
-  duration_min: number | null;
-  price_single: number | null;
-  price_10pack: number | null;
-  book_url: string;
-  active: boolean;
+  shortName: string;
+  lead: string;
+  body: string[];
+  points: string[];
+  durationLabel?: string;
+  image?: string;
+  imageAlt?: string;
+  healthDeclaration?: boolean;
+};
+
+export type Service = ServiceCopy & {
+  durationMinutes: number | null;
+  priceLabel: string | null;
+  location: "in_person" | "digital";
+  bookable: boolean;
+};
+
+export type Membership = {
+  priceId: string;
+  name: string;
+  pricePerMonth: number;
+  tagline: string;
+  items: string[];
+  featured: boolean;
+  spots: number | null;
 };
 
 export type FaqItem = {
   id: string;
   question: string;
   answer: string;
-};
-
-export type SiteCta = {
-  label: string;
-  href: string;
-};
-
-export type SiteConfig = {
-  name: string;
-  shortName: string;
-  tagline: string;
-  locale: string;
-  formerName: string;
-  sibling: {
-    name: string;
-    shortName: string;
-    href: string;
-  };
-  address: {
-    street: string;
-    city: string;
-    country: string;
-  };
-  hoursNote: string;
-  ctas: {
-    booking: SiteCta;
-    b2b: SiteCta;
-  };
-  plannedPartners: string[];
-};
-
-export const PRODUCT_CATEGORIES: ProductCategory[] = [
-  "hbot",
-  "ihht",
-  "light",
-  "heat",
-  "cold",
-  "training",
-  "other",
-];
-
-export const categoryLabels: Record<ProductCategory, string> = {
-  hbot: "HBOT",
-  ihht: "IHHT",
-  light: "Ljus",
-  heat: "Värme",
-  cold: "Kyla",
-  training: "Träning",
-  other: "Övrigt",
 };
