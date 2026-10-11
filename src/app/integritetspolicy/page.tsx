@@ -21,7 +21,7 @@ export default function IntegritetspolicyPage() {
   const anyTracker = Boolean(trackers.gaMeasurementId || trackers.metaPixelId);
 
   return (
-    <Container className="py-16 sm:py-20">
+    <Container className="py-16 md:py-24">
       <PageHeader
         eyebrow="Integritet"
         title="Integritetspolicy"

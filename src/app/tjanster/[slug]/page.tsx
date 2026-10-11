@@ -43,17 +43,17 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
 
   return (
     <>
-      <Container className="py-16 sm:py-20">
+      <Container className="py-16 md:py-24">
         <nav aria-label="Brödsmulor" className="text-sm text-hoa-ink-muted">
           <ol className="flex flex-wrap gap-2">
             <li>
-              <Link href="/" className="hover:text-hoa-ink">
+              <Link href="/" className="hover:text-hoa-gold">
                 Hem
               </Link>
             </li>
             <li aria-hidden>/</li>
             <li>
-              <Link href="/tjanster" className="hover:text-hoa-ink">
+              <Link href="/tjanster" className="hover:text-hoa-gold">
                 Tjänster
               </Link>
             </li>
@@ -69,7 +69,7 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
         >
           <div>
             <Eyebrow>{categoryLabels[service.category]}</Eyebrow>
-            <h1 className="mt-3 font-display text-4xl leading-tight text-hoa-ink sm:text-5xl">
+            <h1 className="mt-3 text-3xl leading-tight text-hoa-ink md:text-5xl">
               {service.name}
             </h1>
             <p className="mt-4 text-lg leading-8 text-hoa-ink">{service.lead}</p>
@@ -81,7 +81,7 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
             <ul className="mt-8 space-y-3">
               {service.points.map((point) => (
                 <li key={point} className="flex gap-3 text-hoa-ink">
-                  <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 bg-hoa-gold" />
+                  <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-hoa-gold" />
                   {point}
                 </li>
               ))}
@@ -90,7 +90,7 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
 
           <aside className="h-fit space-y-6">
             {service.image ? (
-              <div className="relative aspect-[4/5] overflow-hidden border border-hoa-line">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-hoa-gold/20">
                 <Image
                   src={service.image}
                   alt={service.imageAlt ?? ""}
@@ -101,20 +101,20 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
                 />
               </div>
             ) : null}
-            <div className="border border-hoa-line bg-hoa-bg-elevated p-6">
+            <div className="rounded-2xl border border-hoa-gold/20 bg-hoa-secondary/20 p-5 md:p-6">
               <dl className="space-y-3 text-sm">
                 {duration ? (
                   <div>
-                    <dt className="text-xs uppercase tracking-[0.18em] text-hoa-gold">Längd</dt>
+                    <dt className="text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold">Längd</dt>
                     <dd className="mt-1 text-hoa-ink">{duration}</dd>
                   </div>
                 ) : null}
                 <div>
-                  <dt className="text-xs uppercase tracking-[0.18em] text-hoa-gold">Pris</dt>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold">Pris</dt>
                   <dd className="mt-1 text-hoa-ink">{service.priceLabel ?? "Enligt förfrågan"}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase tracking-[0.18em] text-hoa-gold">Plats</dt>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold">Plats</dt>
                   <dd className="mt-1 text-hoa-ink">
                     {service.location === "digital"
                       ? "Digitalt via videosamtal"
@@ -147,9 +147,9 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
       </Container>
 
       {related.length > 0 ? (
-        <section aria-labelledby="fler-tjanster" className="border-t border-hoa-line bg-hoa-bg-muted">
+        <section aria-labelledby="fler-tjanster" className="bg-hoa-secondary/50">
           <Container className="py-14">
-            <h2 id="fler-tjanster" className="font-display text-3xl text-hoa-ink">
+            <h2 id="fler-tjanster" className="text-2xl text-hoa-ink md:text-3xl">
               Fler inom {categoryLabels[service.category].toLowerCase()}
             </h2>
             <ul className="mt-6 flex flex-wrap gap-3">
@@ -157,7 +157,7 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
                 <li key={other.slug}>
                   <Link
                     href={`/tjanster/${other.slug}`}
-                    className="inline-flex min-h-11 items-center border border-hoa-line px-4 py-2 text-sm text-hoa-ink hover:border-hoa-gold hover:text-hoa-gold"
+                    className="inline-flex min-h-11 items-center rounded-full border border-hoa-gold/40 px-5 py-2 font-display text-sm font-medium text-hoa-ink transition-colors hover:bg-hoa-gold/10"
                   >
                     {other.name}
                   </Link>

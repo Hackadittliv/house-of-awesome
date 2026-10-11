@@ -64,7 +64,7 @@ Svenska, enkelt språk, inga tankstreck i löptext, inte orden "man" eller "hen"
 
 ## Design
 
-Tokens och layout i [DESIGN.md](./DESIGN.md): nästan svart, krämvit text och guld `#D4AF5F`, Cormorant Garamond i rubriker och Geist i brödtext.
+Tokens och layout i [DESIGN.md](./DESIGN.md): samma värden som lifeisawesome.se, alltså svart, kräm `#FDF5E2` och guld `#EFC55D`, Plus Jakarta Sans i rubriker och knappar och Inter i brödtext. Typsnitten serveras från den egna domänen.
 
 ## Bilder
 

@@ -11,14 +11,14 @@ export const metadata = pageMetadata({
   path: "/besok",
 });
 
-const cardClass = "border border-hoa-line bg-hoa-bg-elevated p-8";
-const labelClass = "text-xs uppercase tracking-[0.18em] text-hoa-gold";
+const cardClass = "rounded-2xl border border-hoa-gold/20 bg-hoa-secondary/20 p-6 md:p-8";
+const labelClass = "text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold";
 
 export default function BesokPage() {
   const { street, postalCode, city, countryName } = site.address;
 
   return (
-    <Container className="py-16 sm:py-20">
+    <Container className="py-16 md:py-24">
       <PageHeader
         eyebrow="Besök och kontakt"
         title="Välkommen till huset"

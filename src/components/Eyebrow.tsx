@@ -1,5 +1,17 @@
-export function Eyebrow({ children }: { children: React.ReactNode }) {
+export function Eyebrow({
+  children,
+  tone = "bronze",
+}: {
+  children: React.ReactNode;
+  tone?: "bronze" | "gold";
+}) {
   return (
-    <p className="text-xs font-medium uppercase tracking-[0.2em] text-hoa-gold">{children}</p>
+    <p
+      className={`text-xs font-semibold uppercase tracking-[0.25em] md:text-sm ${
+        tone === "gold" ? "text-hoa-gold" : "text-hoa-bronze"
+      }`}
+    >
+      {children}
+    </p>
   );
 }

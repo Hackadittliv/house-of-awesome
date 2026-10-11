@@ -18,7 +18,7 @@ export default function TjansterPage() {
   const inquiry = getInquiryServices();
 
   return (
-    <Container className="py-16 sm:py-20">
+    <Container className="py-16 md:py-24">
       <PageHeader
         eyebrow="Tjänster"
         title="Tjänster och behandlingar"
@@ -26,7 +26,7 @@ export default function TjansterPage() {
       />
 
       <section aria-labelledby="boka-direkt" className="mt-14">
-        <h2 id="boka-direkt" className="font-display text-3xl text-hoa-ink">
+        <h2 id="boka-direkt" className="text-2xl text-hoa-ink md:text-3xl">
           Boka direkt
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-hoa-ink-muted">
@@ -41,7 +41,7 @@ export default function TjansterPage() {
       </section>
 
       <section aria-labelledby="efter-forfragan" className="mt-16">
-        <h2 id="efter-forfragan" className="font-display text-3xl text-hoa-ink">
+        <h2 id="efter-forfragan" className="text-2xl text-hoa-ink md:text-3xl">
           Efter förfrågan
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-hoa-ink-muted">

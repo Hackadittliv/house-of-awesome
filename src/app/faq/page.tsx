@@ -17,28 +17,31 @@ export default function FaqPage() {
   const items = getFaqItems();
 
   return (
-    <Container className="py-16 sm:py-20">
+    <Container className="py-16 md:py-24">
       <PageHeader
         eyebrow="Frågor och svar"
         title="Vanliga frågor"
         lead="Hittar du inte svaret här är du välkommen att mejla oss."
       />
 
-      <div className="mt-12 divide-y divide-hoa-line border-y border-hoa-line">
+      <div className="mx-auto mt-12 max-w-3xl space-y-3">
         {items.map((item) => (
-          <details key={item.id} className="group py-2">
-            <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-3 text-lg text-hoa-ink marker:hidden">
-              <h2 className="font-normal">{item.question}</h2>
-              <span aria-hidden className="text-hoa-gold transition-transform group-open:rotate-45">
+          <details
+            key={item.id}
+            className="group rounded-2xl border border-hoa-gold/20 bg-hoa-secondary/20 px-5 open:border-hoa-gold/40"
+          >
+            <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-3 text-hoa-ink marker:hidden">
+              <h2 className="text-base md:text-lg">{item.question}</h2>
+              <span aria-hidden className="text-xl text-hoa-gold transition-transform group-open:rotate-45">
                 +
               </span>
             </summary>
-            <p className="max-w-3xl pb-4 leading-7 text-hoa-ink-muted">{item.answer}</p>
+            <p className="pb-5 leading-relaxed text-hoa-ink/80">{item.answer}</p>
           </details>
         ))}
       </div>
 
-      <div className="mt-10">
+      <div className="mt-10 text-center">
         <CtaLink href={mailtoUrl("Fråga till House of Awesome")} variant="secondary">
           Mejla en fråga
         </CtaLink>

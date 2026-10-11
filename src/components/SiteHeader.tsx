@@ -19,20 +19,18 @@ export function SiteHeader({ bookingHref }: { bookingHref: string }) {
   const open = openPath === pathname;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-hoa-line/80 bg-hoa-bg/90 backdrop-blur-md">
-      <Container className="flex h-16 items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 border-b border-hoa-line bg-hoa-bg shadow-sm">
+      <Container wide className="flex h-24 items-center justify-between gap-4 sm:h-28 lg:h-32">
         <Logo />
 
-        <nav aria-label="Huvudmeny" className="hidden items-center gap-6 lg:flex">
+        <nav aria-label="Huvudmeny" className="hidden items-center gap-7 lg:flex">
           {primaryNav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               aria-current={isActive(pathname, item.href) ? "page" : undefined}
-              className={`text-sm tracking-wide transition-colors ${
-                isActive(pathname, item.href)
-                  ? "text-hoa-gold"
-                  : "text-hoa-ink-muted hover:text-hoa-ink"
+              className={`inline-flex min-h-11 items-center text-sm font-medium transition-colors ${
+                isActive(pathname, item.href) ? "text-hoa-gold" : "text-hoa-ink hover:text-hoa-gold"
               }`}
             >
               {item.label}
@@ -41,43 +39,45 @@ export function SiteHeader({ bookingHref }: { bookingHref: string }) {
         </nav>
 
         <div className="hidden lg:block">
-          <CtaLink href={bookingHref}>Boka tid</CtaLink>
+          <CtaLink href={bookingHref} size="sm">
+            Boka tid
+          </CtaLink>
         </div>
 
         <button
           type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-sm border border-hoa-line text-hoa-ink lg:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-lia-md text-hoa-ink transition-colors hover:bg-hoa-bronze lg:hidden"
           aria-expanded={open}
           aria-controls="mobilmeny"
           onClick={() => setOpenPath(open ? null : pathname)}
         >
           <span className="sr-only">{open ? "Stäng meny" : "Öppna meny"}</span>
-          <span aria-hidden className="text-lg leading-none">
+          <span aria-hidden className="text-xl leading-none">
             {open ? "×" : "☰"}
           </span>
         </button>
       </Container>
 
       {open ? (
-        <div id="mobilmeny" className="border-t border-hoa-line bg-hoa-bg-elevated lg:hidden">
-          <Container className="flex flex-col gap-1 py-4">
+        <div id="mobilmeny" className="border-t border-hoa-line bg-hoa-bg lg:hidden">
+          <Container wide className="flex flex-col gap-2 py-6">
             <nav aria-label="Mobilmeny" className="flex flex-col gap-1">
               {primaryNav.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   aria-current={isActive(pathname, item.href) ? "page" : undefined}
-                  className={`rounded-sm px-2 py-3 text-base ${
-                    isActive(pathname, item.href) ? "text-hoa-gold" : "text-hoa-ink-muted"
+                  className={`inline-flex min-h-11 items-center text-lg font-medium ${
+                    isActive(pathname, item.href) ? "text-hoa-gold" : "text-hoa-ink"
                   }`}
                 >
                   {item.label}
                 </Link>
               ))}
             </nav>
-            <div className="pt-3">
-              <CtaLink href={bookingHref}>Boka tid</CtaLink>
-            </div>
+            <CtaLink href={bookingHref} size="sm" className="mt-4 w-full">
+              Boka tid
+            </CtaLink>
           </Container>
         </div>
       ) : null}

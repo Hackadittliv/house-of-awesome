@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Geist } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 
 import { ConsentBanner } from "@/components/consent/ConsentBanner";
 import { ConsentedTrackers } from "@/components/consent/ConsentedTrackers";
@@ -13,15 +13,17 @@ import { businessJsonLd, siteUrl } from "@/lib/seo";
 
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const display = Cormorant_Garamond({
-  variable: "--font-display",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
-  weight: ["500", "600"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -43,13 +45,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b0b0b",
+  themeColor: "#000000",
   colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="sv" className={`${geistSans.variable} ${display.variable} h-full antialiased`}>
+    <html lang="sv" className={`${inter.variable} ${jakarta.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-hoa-bg text-hoa-ink">
         <ConsentProvider>
           <a
@@ -59,7 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             Hoppa till innehåll
           </a>
           <SiteHeader bookingHref={bookingUrl(null, "header")} />
-          <main id="innehall" className="flex-1">
+          <main id="innehall" className="flex-1 bg-hoa-bg">
             {children}
           </main>
           <SiteFooter />

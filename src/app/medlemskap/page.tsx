@@ -22,7 +22,7 @@ export default function MedlemskapPage() {
   const plans = getMemberships();
 
   return (
-    <Container className="py-16 sm:py-20">
+    <Container className="py-16 md:py-24">
       <PageHeader
         eyebrow="Medlemskap"
         title="Din hälsa, på dina villkor"
@@ -33,31 +33,31 @@ export default function MedlemskapPage() {
         {plans.map((plan) => (
           <li
             key={plan.priceId}
-            className={`flex flex-col bg-hoa-bg-elevated p-6 ${
-              plan.featured ? "border-2 border-hoa-gold" : "border border-hoa-line"
+            className={`flex flex-col rounded-2xl bg-hoa-secondary/20 p-5 md:p-6 ${
+              plan.featured ? "border-2 border-hoa-gold shadow-gold" : "border border-hoa-gold/20"
             }`}
           >
             {plan.featured ? (
-              <p className="mb-3 self-start bg-hoa-gold px-2 py-0.5 text-xs font-medium text-hoa-bg">
+              <p className="mb-3 self-start rounded-full bg-hoa-gold px-3 py-1 text-xs font-semibold text-hoa-espresso">
                 Mest valt
               </p>
             ) : null}
-            <h2 className="font-display text-3xl text-hoa-ink">{plan.name}</h2>
-            <p className="mt-3 text-3xl text-hoa-ink">
+            <h2 className="text-xl text-hoa-ink md:text-2xl">{plan.name}</h2>
+            <p className="mt-3 font-display text-3xl font-bold text-hoa-gold">
               {formatSek(plan.pricePerMonth)}
-              <span className="text-base text-hoa-ink-muted"> per månad</span>
+              <span className="font-sans text-base font-normal text-hoa-ink-muted"> per månad</span>
             </p>
             <p className="mt-2 text-sm text-hoa-ink-muted">{plan.tagline}</p>
             <ul className="mt-5 flex-1 space-y-2">
               {plan.items.map((item) => (
                 <li key={item} className="flex gap-3 text-sm text-hoa-ink">
-                  <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 bg-hoa-gold" />
+                  <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-hoa-gold" />
                   {item}
                 </li>
               ))}
             </ul>
             {plan.spots ? (
-              <p className="mt-4 text-xs text-hoa-gold">Endast {plan.spots} platser.</p>
+              <p className="mt-4 text-xs font-semibold text-hoa-gold">Endast {plan.spots} platser.</p>
             ) : null}
             <CtaLink
               href={membershipUrl(plan.priceId, "membership_page")}
@@ -72,13 +72,13 @@ export default function MedlemskapPage() {
 
       <section aria-labelledby="ingar-alltid" className="mt-14 grid gap-8 border-t border-hoa-line pt-10 lg:grid-cols-2">
         <div>
-          <h2 id="ingar-alltid" className="font-display text-3xl text-hoa-ink">
+          <h2 id="ingar-alltid" className="text-2xl text-hoa-ink md:text-3xl">
             Ingår i alla medlemskap
           </h2>
           <ul className="mt-5 space-y-2">
             {common.map((item) => (
               <li key={item} className="flex gap-3 text-hoa-ink">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 bg-hoa-gold" />
+                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-hoa-gold" />
                 {item}
               </li>
             ))}

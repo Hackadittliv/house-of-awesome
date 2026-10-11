@@ -42,7 +42,7 @@ export default function CookiesPage() {
   }
 
   return (
-    <Container className="py-16 sm:py-20">
+    <Container className="py-16 md:py-24">
       <PageHeader
         eyebrow="Integritet"
         title="Cookies"
@@ -90,7 +90,7 @@ export default function CookiesPage() {
             <Link href="/integritetspolicy">integritetspolicy</Link>.
           </p>
         </Prose>
-        <CookieSettingsButton className="mt-8 inline-flex min-h-11 items-center justify-center rounded-sm border border-hoa-gold px-5 py-2.5 text-sm font-medium text-hoa-gold transition-colors hover:bg-hoa-gold hover:text-hoa-bg" />
+        <CookieSettingsButton className="mt-8 inline-flex min-h-11 items-center justify-center rounded-lia-md border border-hoa-gold px-5 py-2.5 text-sm font-medium text-hoa-gold transition-colors hover:bg-hoa-gold hover:text-hoa-bg" />
       </div>
     </Container>
   );

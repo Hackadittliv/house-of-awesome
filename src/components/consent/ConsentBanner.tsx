@@ -6,8 +6,8 @@ import { useId, useState } from "react";
 import { useConsent } from "@/components/consent/ConsentProvider";
 
 const buttonBase =
-  "inline-flex min-h-11 items-center justify-center rounded-sm px-4 py-2 text-sm font-medium transition-colors";
-const choiceButton = `${buttonBase} border border-hoa-gold text-hoa-ink hover:bg-hoa-gold hover:text-hoa-bg`;
+  "inline-flex min-h-11 items-center justify-center rounded-full px-6 py-2 font-display text-sm font-medium transition-colors";
+const choiceButton = `${buttonBase} border border-hoa-gold/40 bg-hoa-bg text-hoa-ink hover:bg-hoa-gold/10`;
 
 export function ConsentBanner() {
   const { ready, choice, settingsOpen, closeSettings, save } = useConsent();
@@ -22,10 +22,10 @@ export function ConsentBanner() {
     <section
       role="region"
       aria-labelledby={titleId}
-      className="fixed inset-x-0 bottom-0 z-[60] border-t border-hoa-gold/40 bg-hoa-bg-elevated/95 shadow-[0_-12px_32px_rgba(0,0,0,0.5)] backdrop-blur-md"
+      className="fixed inset-x-0 bottom-0 z-[60] border-t border-hoa-line bg-hoa-card/95 shadow-[0_-8px_30px_-4px_rgba(0,0,0,0.65)] backdrop-blur-md"
     >
-      <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6">
-        <h2 id={titleId} className="font-display text-xl text-hoa-ink">
+      <div className="mx-auto w-full max-w-6xl px-4 py-5 sm:px-6 lg:px-8">
+        <h2 id={titleId} className="text-xl text-hoa-ink sm:text-2xl">
           Cookies och integritet
         </h2>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-hoa-ink-muted">
@@ -89,14 +89,14 @@ function ConsentDetails({ initialAnalytics, initialMarketing, onSave, onCancel }
     >
       <fieldset className="grid gap-3 sm:grid-cols-3">
         <legend className="sr-only">Välj vilka kategorier du godkänner</legend>
-        <label className="flex gap-3 border border-hoa-line p-3 text-sm">
+        <label className="flex gap-3 rounded-lia-md border border-hoa-gold/20 bg-hoa-secondary/20 p-3 text-sm">
           <input type="checkbox" checked disabled className="mt-1 accent-[var(--hoa-gold)]" />
           <span>
             <span className="block text-hoa-ink">Nödvändiga</span>
             <span className="text-hoa-ink-muted">Sparar ditt val. Alltid på.</span>
           </span>
         </label>
-        <label className="flex cursor-pointer gap-3 border border-hoa-line p-3 text-sm">
+        <label className="flex cursor-pointer gap-3 rounded-lia-md border border-hoa-gold/20 bg-hoa-secondary/20 p-3 text-sm">
           <input
             type="checkbox"
             checked={analytics}
@@ -108,7 +108,7 @@ function ConsentDetails({ initialAnalytics, initialMarketing, onSave, onCancel }
             <span className="text-hoa-ink-muted">Hjälper oss förstå hur sajten används.</span>
           </span>
         </label>
-        <label className="flex cursor-pointer gap-3 border border-hoa-line p-3 text-sm">
+        <label className="flex cursor-pointer gap-3 rounded-lia-md border border-hoa-gold/20 bg-hoa-secondary/20 p-3 text-sm">
           <input
             type="checkbox"
             checked={marketing}

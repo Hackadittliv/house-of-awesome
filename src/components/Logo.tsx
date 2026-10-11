@@ -5,12 +5,25 @@ export function Logo({ className = "" }: { className?: string }) {
   return (
     <Link
       href="/"
-      className={`inline-flex shrink-0 items-center gap-2.5 font-display text-lg tracking-wide text-hoa-ink ${className}`}
+      aria-label="House of Awesome, startsida"
+      className={`inline-flex min-h-11 shrink-0 items-center gap-3 rounded-lia-md ${className}`}
     >
-      <Image src="/images/lia-uggla.webp" alt="" width={36} height={36} className="h-9 w-9" />
-      <span>
-        House of <span className="text-hoa-gold">Awesome</span>
-      </span>
+      <Image
+        src="/images/lia-uggla.webp"
+        alt=""
+        width={56}
+        height={56}
+        className="h-10 w-10 sm:h-12 sm:w-12"
+      />
+      <Wordmark className="text-lg sm:text-xl" />
     </Link>
+  );
+}
+
+export function Wordmark({ className = "" }: { className?: string }) {
+  return (
+    <span className={`font-display font-bold tracking-[-0.015em] text-hoa-ink ${className}`}>
+      House of <span className="text-hoa-gold">Awesome</span>
+    </span>
   );
 }

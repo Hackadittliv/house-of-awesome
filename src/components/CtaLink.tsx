@@ -4,17 +4,35 @@ type CtaLinkProps = {
   href: string;
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "ghost";
+  size?: "lg" | "sm";
   className?: string;
 };
 
-const variants = {
-  primary: "bg-hoa-gold text-hoa-bg hover:bg-hoa-gold-hover",
-  secondary: "border border-hoa-gold text-hoa-gold hover:bg-hoa-gold hover:text-hoa-bg",
-  ghost: "text-hoa-gold hover:text-hoa-gold-hover underline-offset-4 hover:underline",
+const base =
+  "inline-flex items-center justify-center gap-2 font-display text-sm font-medium transition-colors";
+
+const sizes = {
+  lg: "min-h-12 rounded-full px-8 text-center",
+  sm: "min-h-11 rounded-lia-md px-3 py-2",
 };
 
-export function CtaLink({ href, children, variant = "primary", className = "" }: CtaLinkProps) {
-  const classes = `inline-flex min-h-11 items-center justify-center rounded-sm px-5 py-2.5 text-sm font-medium tracking-wide transition-colors ${variants[variant]} ${className}`;
+const variants = {
+  primary: "bg-hoa-gold text-hoa-espresso hover:bg-hoa-gold/90",
+  secondary: "border border-hoa-line bg-hoa-bg text-hoa-ink hover:bg-hoa-bronze",
+  ghost: "text-hoa-gold underline-offset-4 hover:underline",
+};
+
+export function CtaLink({
+  href,
+  children,
+  variant = "primary",
+  size = "lg",
+  className = "",
+}: CtaLinkProps) {
+  const classes =
+    variant === "ghost"
+      ? `${base} min-h-11 ${variants.ghost} ${className}`
+      : `${base} ${sizes[size]} ${variants[variant]} ${className}`;
 
   if (/^(https?:|mailto:|tel:)/.test(href)) {
     return (

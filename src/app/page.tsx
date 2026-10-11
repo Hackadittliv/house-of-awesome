@@ -3,7 +3,8 @@ import Image from "next/image";
 import { Container } from "@/components/Container";
 import { CtaLink } from "@/components/CtaLink";
 import { Disclaimer } from "@/components/Disclaimer";
-import { Eyebrow } from "@/components/Eyebrow";
+import { Wordmark } from "@/components/Logo";
+import { SectionIntro } from "@/components/SectionIntro";
 import { ServiceCard } from "@/components/ServiceCard";
 import { formatSek, getBookableServices, getMemberships, site } from "@/lib/content";
 import { SHORT_CALL_SLUG, bookingUrl } from "@/lib/links";
@@ -20,14 +21,17 @@ export const metadata = {
 
 const highlights = [
   {
+    label: "Tillgång",
     title: "Öppet dygnet runt",
     text: "Som medlem har du tillgång till huset alla dagar, dygnet runt. Kom när det passar dig.",
   },
   {
+    label: "Utrustning",
     title: "Utrustning i framkant",
     text: "Tryckkammare, Celloxy IHHT, EWOT och rödljus i samma hus. Vi tar bara in det vi själva använder.",
   },
   {
+    label: "Vägledning",
     title: "Personlig vägledning",
     text: "Coachning, mätningar och en plan som följer dig över tid, oavsett ålder och utgångsläge.",
   },
@@ -39,96 +43,108 @@ const protocol = [
   { step: "3", title: "Ljus", text: "Rödljus som avslut, ett skönt sätt att varva ner." },
 ];
 
+const card = "rounded-2xl border border-hoa-gold/20 bg-hoa-secondary/20 p-5";
+
 export default function HomePage() {
   const services = getBookableServices();
   const lowestMembership = Math.min(...getMemberships().map((plan) => plan.pricePerMonth));
 
   return (
     <>
-      <section className="relative isolate overflow-hidden border-b border-hoa-line">
-        <Image
-          src="/images/stora-hoga-landskap.webp"
-          alt="Utsikt över ängar och vatten i kvällsljus vid Stora Höga"
-          fill
-          preload
-          sizes="100vw"
-          className="-z-20 object-cover"
-        />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-hoa-bg via-hoa-bg/85 to-hoa-bg/40" />
-        <Container className="py-20 sm:py-28 lg:py-36">
-          <Eyebrow>Stora Höga · Longevity</Eyebrow>
-          <h1 className="mt-4 max-w-3xl font-display text-5xl leading-[1.05] text-hoa-ink sm:text-6xl lg:text-7xl">
+      <section className="px-4 pt-10 pb-16 text-center md:pt-16 md:pb-24">
+        <div className="mx-auto max-w-3xl">
+          <p className="font-display text-3xl font-bold text-hoa-ink md:text-5xl">Välkommen till</p>
+          <Image
+            src="/images/lia-uggla.webp"
+            alt=""
+            width={256}
+            height={256}
+            preload
+            className="mx-auto mt-6 h-28 w-28 md:h-36 md:w-36"
+          />
+          <p className="mt-4">
+            <Wordmark className="text-4xl md:text-6xl" />
+          </p>
+          <p className="subheading mt-4 text-xl text-hoa-ink md:text-3xl">
+            Longevity i Stora Höga
+          </p>
+          <h1 className="mt-10 text-3xl text-hoa-ink md:text-5xl">
             Träning, återhämtning och longevity under ett tak.
           </h1>
-          <p className="mt-6 max-w-xl text-lg leading-8 text-hoa-ink">
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-hoa-ink-muted">
             House of Awesome är vårt hus i Stora Höga för dig som vill träna smart, återhämta dig
             och följa din hälsa över tid.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <CtaLink href={bookingUrl(null, "home_hero")}>Boka tid</CtaLink>
             <CtaLink href="/tjanster" variant="secondary">
               Se alla tjänster
             </CtaLink>
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section aria-labelledby="hojdpunkter">
+      <section aria-labelledby="hojdpunkter" className="pb-16 md:pb-24">
         <h2 id="hojdpunkter" className="sr-only">
           Därför House of Awesome
         </h2>
-        <Container className="grid gap-6 py-16 md:grid-cols-3">
-          {highlights.map((item) => (
-            <div key={item.title} className="border-t border-hoa-gold/50 pt-5">
-              <h3 className="font-display text-2xl text-hoa-ink">{item.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-hoa-ink-muted">{item.text}</p>
-            </div>
-          ))}
+        <Container>
+          <ul className="grid gap-4 sm:grid-cols-3">
+            {highlights.map((item) => (
+              <li key={item.title} className={card}>
+                <p className="text-sm font-semibold uppercase tracking-widest text-hoa-gold">
+                  {item.label}
+                </p>
+                <h3 className="mt-3 text-lg text-hoa-ink md:text-xl">{item.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-hoa-ink/80">{item.text}</p>
+              </li>
+            ))}
+          </ul>
         </Container>
       </section>
 
-      <section aria-labelledby="tjanster-rubrik" className="border-t border-hoa-line bg-hoa-bg-muted">
-        <Container className="py-16 sm:py-20">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <Eyebrow>Tjänster</Eyebrow>
-              <h2 id="tjanster-rubrik" className="mt-3 font-display text-4xl text-hoa-ink">
-                Boka direkt
-              </h2>
-            </div>
-            <CtaLink href="/tjanster" variant="ghost" className="self-start px-0 sm:self-auto">
-              Alla tjänster och behandlingar
-            </CtaLink>
-          </div>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <section aria-labelledby="tjanster-rubrik" className="bg-hoa-secondary/50 py-16 md:py-24">
+        <Container>
+          <SectionIntro
+            id="tjanster-rubrik"
+            eyebrow="Tjänster"
+            eyebrowTone="gold"
+            title="Boka direkt"
+            lead="Pass och behandlingar som du bokar och betalar hos Life Is Awesome."
+          />
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 md:mt-16 lg:grid-cols-3">
             {services.map((service) => (
               <ServiceCard key={service.slug} service={service} placement="home_services" />
             ))}
           </div>
+          <div className="mt-10 text-center">
+            <CtaLink href="/tjanster" variant="secondary">
+              Alla tjänster och behandlingar
+            </CtaLink>
+          </div>
         </Container>
       </section>
 
-      <section aria-labelledby="protokoll-rubrik">
-        <Container className="py-16 sm:py-20">
-          <Eyebrow>Signaturpass</Eyebrow>
-          <h2 id="protokoll-rubrik" className="mt-3 font-display text-4xl text-hoa-ink">
-            The Awesome Protocol
-          </h2>
-          <p className="mt-3 max-w-2xl text-hoa-ink-muted">
-            60 minuter, tre steg, ett komplett pass. Ingår i Longevity Plus och Longevity Max.
-          </p>
-          <ol className="mt-10 grid gap-5 md:grid-cols-3">
+      <section aria-labelledby="protokoll-rubrik" className="py-16 md:py-24">
+        <Container>
+          <SectionIntro
+            id="protokoll-rubrik"
+            eyebrow="Signaturpass"
+            title="The Awesome Protocol"
+            lead="60 minuter, tre steg, ett komplett pass. Ingår i Longevity Plus och Longevity Max."
+          />
+          <ol className="mx-auto mt-12 grid max-w-6xl list-none gap-4 sm:grid-cols-3 md:mt-16">
             {protocol.map((item) => (
-              <li key={item.step} className="border border-hoa-line bg-hoa-bg-elevated p-6">
-                <p className="font-display text-3xl text-hoa-gold">{item.step}</p>
-                <h3 className="mt-2 text-lg uppercase tracking-[0.12em] text-hoa-ink">
-                  {item.title}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-hoa-ink-muted">{item.text}</p>
+              <li key={item.step} className={`${card} flex flex-col`}>
+                <span aria-hidden className="text-sm font-semibold tracking-widest text-hoa-gold">
+                  STEG {item.step}
+                </span>
+                <h3 className="mt-3 text-lg text-hoa-ink md:text-xl">{item.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-hoa-ink/80">{item.text}</p>
               </li>
             ))}
           </ol>
-          <div className="mt-8">
+          <div className="mt-10 text-center">
             <CtaLink href="/tjanster/awesome-protocol" variant="secondary">
               Läs mer om passet
             </CtaLink>
@@ -136,23 +152,27 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section aria-labelledby="medlemskap-rubrik" className="border-y border-hoa-line bg-hoa-bg-elevated">
-        <Container className="grid gap-10 py-16 sm:py-20 lg:grid-cols-2 lg:items-center">
-          <div>
-            <Eyebrow>Medlemskap</Eyebrow>
-            <h2 id="medlemskap-rubrik" className="mt-3 font-display text-4xl text-hoa-ink">
-              Din hälsa, på dina villkor
-            </h2>
-            <p className="mt-4 max-w-xl text-hoa-ink-muted">
+      <section aria-labelledby="medlemskap-rubrik" className="py-16 md:py-24">
+        <Container className="grid gap-10 lg:grid-cols-2 lg:items-center">
+          <div className="rounded-2xl border border-hoa-bronze/40 bg-hoa-bronze/10 p-6 md:p-8">
+            <SectionIntro
+              id="medlemskap-rubrik"
+              eyebrow="Medlemskap"
+              title="Din hälsa, på dina villkor"
+              align="left"
+            />
+            <p className="mt-4 leading-relaxed text-hoa-ink/80">
               Alla medlemskap ger gymmet dygnet runt, en introduktion och en träningsplan.
               Skillnaden är hur mycket rödljus och hur många pass med The Awesome Protocol som
-              ingår. Från {formatSek(lowestMembership)} per månad.
+              ingår. Från{" "}
+              <span className="font-semibold text-hoa-gold">{formatSek(lowestMembership)}</span>{" "}
+              per månad.
             </p>
             <div className="mt-8">
               <CtaLink href="/medlemskap">Jämför medlemskap</CtaLink>
             </div>
           </div>
-          <div className="relative aspect-[4/5] w-full max-w-md justify-self-center overflow-hidden border border-hoa-line lg:justify-self-end">
+          <div className="relative aspect-[4/5] w-full max-w-md justify-self-center overflow-hidden rounded-2xl border border-hoa-gold/20 lg:justify-self-end">
             <Image
               src="/images/tryckkammare.webp"
               alt="Tryckkammaren i House of Awesome"
@@ -164,40 +184,46 @@ export default function HomePage() {
         </Container>
       </section>
 
-      <section aria-labelledby="huset-rubrik">
-        <Container className="py-16 sm:py-20">
-          <Eyebrow>Huset</Eyebrow>
-          <h2 id="huset-rubrik" className="mt-3 font-display text-4xl text-hoa-ink">
-            Ett hus i Stora Höga
-          </h2>
-          <p className="mt-4 max-w-2xl text-hoa-ink-muted">
-            Vi saknade länge en plats där träning, återhämtning och personlig vägledning finns
-            samlat. Så vi byggde den själva. House of Awesome drivs av Patrik och Alexandra,
-            samma team som står bakom Life Is Awesome.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <CtaLink href="/om" variant="secondary">
-              Om huset
-            </CtaLink>
-            <CtaLink href="/besok" variant="ghost">
-              Hitta hit
-            </CtaLink>
+      <section aria-labelledby="huset-rubrik" className="py-16 md:py-24">
+        <Container className="grid gap-10 lg:grid-cols-2 lg:items-center">
+          <div className="relative order-last aspect-[4/3] w-full overflow-hidden rounded-2xl border border-hoa-gold/20 lg:order-first">
+            <Image
+              src="/images/stora-hoga-landskap.webp"
+              alt="Utsikt över ängar och vatten i kvällsljus vid Stora Höga"
+              fill
+              sizes="(min-width: 1024px) 36rem, 92vw"
+              className="object-cover"
+            />
+          </div>
+          <div>
+            <SectionIntro id="huset-rubrik" eyebrow="Huset" title="Ett hus i Stora Höga" align="left" />
+            <p className="mt-4 text-lg leading-relaxed text-hoa-ink/80">
+              Vi saknade länge en plats där träning, återhämtning och personlig vägledning finns
+              samlat. Så vi byggde den själva. House of Awesome drivs av Patrik och Alexandra,
+              samma team som står bakom Life Is Awesome.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <CtaLink href="/om" variant="secondary">
+                Om huset
+              </CtaLink>
+              <CtaLink href="/besok" variant="secondary">
+                Hitta hit
+              </CtaLink>
+            </div>
           </div>
         </Container>
       </section>
 
-      <section aria-labelledby="starta-rubrik" className="border-t border-hoa-line bg-hoa-bg-muted">
-        <Container className="flex flex-col gap-6 py-14 lg:flex-row lg:items-center lg:justify-between">
-          <div className="max-w-xl">
-            <h2 id="starta-rubrik" className="font-display text-3xl text-hoa-ink">
-              Osäker på var du ska börja?
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-hoa-ink-muted">
-              Boka ett kostnadsfritt samtal på tio minuter. Vi lyssnar på dina mål och hjälper dig
-              välja rätt första steg.
-            </p>
+      <section aria-labelledby="starta-rubrik" className="bg-hoa-secondary/50 py-12 md:py-16">
+        <Container className="text-center">
+          <SectionIntro
+            id="starta-rubrik"
+            title="Osäker på var du ska börja?"
+            lead="Boka ett kostnadsfritt samtal på tio minuter. Vi lyssnar på dina mål och hjälper dig välja rätt första steg."
+          />
+          <div className="mt-8">
+            <CtaLink href={bookingUrl(SHORT_CALL_SLUG, "home_cta")}>Boka ett kort samtal</CtaLink>
           </div>
-          <CtaLink href={bookingUrl(SHORT_CALL_SLUG, "home_cta")}>Boka ett kort samtal</CtaLink>
         </Container>
       </section>
 

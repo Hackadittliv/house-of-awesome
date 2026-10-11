@@ -1,48 +1,90 @@
 @import "tailwindcss";
 
+/* Samma värden som lifeisawesome.se (awesome-life-hub, src/index.css). */
 :root {
-  --hoa-bg: #0b0b0b;
-  --hoa-bg-elevated: #14110c;
-  --hoa-bg-muted: #1b1711;
-  --hoa-gold: #d4af5f;
-  --hoa-gold-hover: #e4c77a;
-  --hoa-gold-dim: #8a7038;
-  --hoa-ink: #f4efe4;
-  --hoa-ink-muted: #b8ae9a;
-  --hoa-line: #2a261c;
-  --hoa-danger: #c45c4a;
+  --hoa-bg: #000000;
+  --hoa-card: #050505;
+  --hoa-espresso: #251709;
+  --hoa-secondary: #321f0c;
+  --hoa-bronze: #ac6d2a;
+  --hoa-gold: #efc55d;
+  --hoa-ink: #fdf5e2;
+  --hoa-bone: #fdfdfc;
+  --hoa-ink-muted: #cdbfa2;
+  --hoa-line: #35291d;
+  --hoa-danger: #a82828;
+  --hoa-shadow-gold: 0 8px 32px -8px rgb(239 197 93 / 0.45);
+  --hoa-gradient-hero:
+    radial-gradient(circle at 30% 20%, rgb(239 197 93 / 0.12), transparent 55%),
+    radial-gradient(circle at 80% 70%, rgb(172 109 42 / 0.1), transparent 60%);
 }
 
 @theme inline {
   --color-hoa-bg: var(--hoa-bg);
-  --color-hoa-bg-elevated: var(--hoa-bg-elevated);
-  --color-hoa-bg-muted: var(--hoa-bg-muted);
+  --color-hoa-card: var(--hoa-card);
+  --color-hoa-espresso: var(--hoa-espresso);
+  --color-hoa-secondary: var(--hoa-secondary);
+  --color-hoa-bronze: var(--hoa-bronze);
   --color-hoa-gold: var(--hoa-gold);
-  --color-hoa-gold-hover: var(--hoa-gold-hover);
-  --color-hoa-gold-dim: var(--hoa-gold-dim);
   --color-hoa-ink: var(--hoa-ink);
+  --color-hoa-bone: var(--hoa-bone);
   --color-hoa-ink-muted: var(--hoa-ink-muted);
   --color-hoa-line: var(--hoa-line);
-  --font-sans: var(--font-geist-sans);
-  --font-display: var(--font-display);
+  --color-hoa-danger: var(--hoa-danger);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-jakarta);
+  --radius-lia: 1rem;
+  --radius-lia-md: calc(1rem - 2px);
+  --shadow-gold: var(--hoa-shadow-gold);
 }
 
-html,
-body {
-  background: var(--hoa-bg);
-  color: var(--hoa-ink);
+@layer base {
+  html,
+  body {
+    background-color: var(--hoa-bg);
+    color: var(--hoa-ink);
+  }
+
+  body {
+    font-family: var(--font-inter), system-ui, sans-serif;
+    background-image: var(--hoa-gradient-hero);
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-jakarta), system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+
+  .subheading {
+    font-family: var(--font-jakarta), system-ui, sans-serif;
+    font-weight: 600;
+    font-style: italic;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--hoa-gold) 35%, transparent);
+    color: var(--hoa-ink);
+  }
+
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--hoa-gold);
+    outline-offset: 3px;
+  }
 }
 
-body {
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-}
-
-::selection {
-  background: color-mix(in srgb, var(--hoa-gold) 35%, transparent);
-  color: var(--hoa-ink);
-}
-
-:focus-visible {
-  outline: 2px solid var(--hoa-gold);
-  outline-offset: 3px;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
