@@ -36,7 +36,7 @@ export function formatPriceLabel(label: string | null): string | null {
     const [, fromPrice, count, single] = match;
     return `${single} per gång, eller ${fromPrice} per gång med klippkort för ${count} gånger`;
   }
-  return label.replace(/(\d+)-kort/g, "klippkort med $1 gånger");
+  return label.replace(/(\d+)-kort/g, "klippkort med $1 gånger").replace(/\s+[-–—]\s+/g, ", ");
 }
 
 function toService(copy: ServiceCopy, event: LiaEventType | undefined): Service {
