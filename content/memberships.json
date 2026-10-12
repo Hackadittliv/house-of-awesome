@@ -1,0 +1,46 @@
+[
+  {
+    "priceId": "hoa_gym_monthly",
+    "name": "Gym",
+    "pricePerMonth": 599,
+    "tagline": "Ett starkt fundament för hela livet.",
+    "items": ["Gym dygnet runt", "4 rödljusbehandlingar per månad"],
+    "featured": false,
+    "spots": null
+  },
+  {
+    "priceId": "hoa_longevity_monthly",
+    "name": "Longevity",
+    "pricePerMonth": 899,
+    "tagline": "Träning och återhämtning i balans.",
+    "items": ["Gym dygnet runt", "8 rödljusbehandlingar per månad"],
+    "featured": false,
+    "spots": null
+  },
+  {
+    "priceId": "hoa_longevity_plus_monthly",
+    "name": "Longevity Plus",
+    "pricePerMonth": 1495,
+    "tagline": "Kraft, syre och ljus varje vecka.",
+    "items": [
+      "Gym dygnet runt",
+      "4 pass The Awesome Protocol per månad, med kraft, EWOT och rödljus"
+    ],
+    "featured": true,
+    "spots": null
+  },
+  {
+    "priceId": "hoa_longevity_max_monthly",
+    "name": "Longevity Max",
+    "pricePerMonth": 2495,
+    "tagline": "För dig som vill satsa fullt ut.",
+    "items": [
+      "Gym dygnet runt",
+      "8 pass The Awesome Protocol per månad, med kraft, EWOT och rödljus",
+      "Mätning med InBody varje kvartal",
+      "Personlig longevityplan som vi följer upp tillsammans"
+    ],
+    "featured": false,
+    "spots": 20
+  }
+]

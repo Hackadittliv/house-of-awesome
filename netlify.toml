@@ -4,8 +4,16 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  NEXT_PUBLIC_SITE_URL = "https://houseofawesome.se"
 
 [dev]
   command = "npm run dev"
   targetPort = 3000
   framework = "#auto"
+
+# Säkerhetshuvuden för sidorna sätts i next.config.ts, eftersom Netlify bara lägger
+# huvuden härifrån på statiska filer och inte på sidor som Next.js serverar.
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"

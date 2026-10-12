@@ -4,18 +4,14 @@ export type NavItem = {
 };
 
 export const primaryNav: NavItem[] = [
-  { href: "/", label: "Hem" },
-  { href: "/upplevelsen", label: "Upplevelsen" },
-  { href: "/sessioner", label: "Sessioner" },
-  { href: "/showroom", label: "Showroom" },
+  { href: "/tjanster", label: "Tjänster" },
   { href: "/medlemskap", label: "Medlemskap" },
-  { href: "/besok", label: "Besök" },
+  { href: "/om", label: "Om huset" },
+  { href: "/besok", label: "Besök och kontakt" },
+  { href: "/faq", label: "Frågor och svar" },
 ];
 
-export const secondaryNav: NavItem[] = [
-  { href: "/faq", label: "FAQ" },
-  { href: "/kontakt", label: "Kontakt" },
-  { href: "/om", label: "Om" },
+export const legalNav: NavItem[] = [
+  { href: "/integritetspolicy", label: "Integritetspolicy" },
+  { href: "/cookies", label: "Cookies" },
 ];
-
-export const allNav: NavItem[] = [...primaryNav, ...secondaryNav];

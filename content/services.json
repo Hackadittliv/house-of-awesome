@@ -1,0 +1,230 @@
+[
+  {
+    "slug": "hbot-60",
+    "kind": "bookable",
+    "category": "syre",
+    "name": "Tryckkammare (HBOT), 60 minuter",
+    "shortName": "Tryckkammare 60 min",
+    "lead": "Vila i en tryckkammare och andas syre under förhöjt tryck.",
+    "body": [
+      "I tryckkammaren ligger du bekvämt och vilar medan trycket höjs. Du andas syre under hela passet, i en lugn och avskild miljö.",
+      "Före första sessionen fyller du i en hälsodeklaration. Vi går igenom den tillsammans innan du börjar."
+    ],
+    "points": [
+      "En timme av lugn och vila",
+      "Hälsodeklaration före första sessionen",
+      "Klippkort finns för dig som vill komma regelbundet"
+    ],
+    "image": "/images/tryckkammare.webp",
+    "imageAlt": "Tryckkammaren i House of Awesome med syrgasutrustning bredvid",
+    "healthDeclaration": true
+  },
+  {
+    "slug": "hbot-80",
+    "kind": "bookable",
+    "category": "syre",
+    "name": "Tryckkammare (HBOT), 80 minuter",
+    "shortName": "Tryckkammare 80 min",
+    "lead": "En längre session i tryckkammaren, med mer tid för vila.",
+    "body": [
+      "Samma upplägg som passet på 60 minuter, med tjugo minuter extra i kammaren. Passar dig som redan har provat och vill ha en längre stund.",
+      "Före första sessionen fyller du i en hälsodeklaration. Vi går igenom den tillsammans innan du börjar."
+    ],
+    "points": [
+      "Längre tid i kammaren",
+      "Hälsodeklaration före första sessionen",
+      "Klippkort finns för dig som vill komma regelbundet"
+    ],
+    "image": "/images/tryckkammare.webp",
+    "imageAlt": "Tryckkammaren i House of Awesome med syrgasutrustning bredvid",
+    "healthDeclaration": true
+  },
+  {
+    "slug": "ihht-50",
+    "kind": "bookable",
+    "category": "syre",
+    "name": "Celloxy IHHT",
+    "shortName": "Celloxy IHHT",
+    "lead": "Höghöjdsinspirerad träning medan du sitter eller ligger still.",
+    "body": [
+      "Du andas via en mask medan luften växlar mellan syrefattig luft, som på hög höjd, och syrerik luft. Metoden är inspirerad av höghöjdsträning.",
+      "Allt sker i vila. Du behöver varken svettas eller lyfta vikter, och lederna slipper belastning."
+    ],
+    "points": [
+      "Sker i vila, utan svett och utan vikter",
+      "Ingen belastning på leder och muskler",
+      "Utrustning från Celloxy"
+    ]
+  },
+  {
+    "slug": "ewot-15",
+    "kind": "bookable",
+    "category": "syre",
+    "name": "EWOT, träning med extra syre",
+    "shortName": "EWOT",
+    "lead": "Kort intervallträning där du andas syrerik luft via mask.",
+    "body": [
+      "EWOT (träning med extra syre) är korta intervaller där du tränar medan du andas luft med hög syrehalt via en mask.",
+      "Passet är kort och intensivt, och intensiteten anpassas efter din nivå. EWOT är också hjärtat i vårt signaturpass The Awesome Protocol."
+    ],
+    "points": [
+      "Kort och tidseffektivt",
+      "Intensitet efter din nivå",
+      "Fungerar fint tillsammans med rödljus"
+    ]
+  },
+  {
+    "slug": "redlight-20",
+    "kind": "bookable",
+    "category": "ljus",
+    "name": "Rödljus",
+    "shortName": "Rödljus",
+    "lead": "Rött och nära infrarött ljus i en lugn behandling.",
+    "body": [
+      "Du ligger bekvämt i rödljus för hela kroppen och slappnar av i tjugo minuter.",
+      "Många tycker att det är ett skönt avslut efter träningen, särskilt under årets mörka månader. Rödljus ingår i alla våra medlemskap."
+    ],
+    "points": [
+      "Tjugo minuter av avkoppling",
+      "Ett skönt avslut efter träningen",
+      "Ingår i alla medlemskap"
+    ]
+  },
+  {
+    "slug": "coaching-45",
+    "kind": "bookable",
+    "category": "samtal",
+    "name": "Longevity coach",
+    "shortName": "Longevity coach",
+    "lead": "Din personliga guide för träning, kost, sömn och återhämtning.",
+    "body": [
+      "Vi går igenom din livsstil, dina vanor och dina mål. Tillsammans bygger vi ett upplägg som går att leva med i vardagen.",
+      "Coachningen sker digitalt, så du kan delta var du än bor. Den ersätter inte medicinsk rådgivning."
+    ],
+    "points": [
+      "En långsiktig plan för träning, kost, sömn och återhämtning",
+      "Vanor som passar ditt liv och din takt",
+      "Digitalt, oavsett var i landet du bor"
+    ]
+  },
+  {
+    "slug": "forsta-halsosamtal",
+    "kind": "bookable",
+    "category": "samtal",
+    "name": "Kort samtal med Patrik",
+    "shortName": "Kort samtal",
+    "lead": "Ett första samtal om var du står och vad du vill.",
+    "body": [
+      "Tio minuter via videosamtal där vi lyssnar på dina mål och hjälper dig hitta ett tryggt första steg.",
+      "Samtalet är kostnadsfritt, utan köpkrav och utan diagnos. Ett bra sätt att börja om du är osäker på vad som passar dig."
+    ],
+    "points": [
+      "Kostnadsfritt och utan köpkrav",
+      "Via videosamtal, var du än bor",
+      "Hjälp att välja rätt första steg"
+    ]
+  },
+  {
+    "slug": "awesome-protocol",
+    "kind": "inquiry",
+    "category": "traning",
+    "name": "The Awesome Protocol",
+    "shortName": "Awesome Protocol",
+    "lead": "Vårt signaturpass på 60 minuter: Kraft, Syre och Ljus.",
+    "durationLabel": "60 minuter",
+    "body": [
+      "Tre steg i ett och samma pass. Först kraft med kettlebells och funktionell styrka. Sedan syre med EWOT. Sist ljus, med rödljus som avslut.",
+      "Passet ingår i medlemskapen Longevity Plus och Longevity Max. Vill du prova utan medlemskap, hör av dig så hittar vi en tid."
+    ],
+    "points": [
+      "Kraft: kettlebells och funktionell styrka",
+      "Syre: intervaller med EWOT",
+      "Ljus: rödljus som avslut"
+    ]
+  },
+  {
+    "slug": "inbody",
+    "kind": "inquiry",
+    "category": "traning",
+    "name": "InBody och personlig plan",
+    "shortName": "InBody",
+    "lead": "En tydlig bild av hur din kropp är sammansatt.",
+    "body": [
+      "En mätning med InBody visar bland annat muskelmassa, fettfördelning och vätskebalans.",
+      "Vi går igenom resultatet tillsammans och lägger upp en plan för dina mål. Mätningen varje kvartal ingår i Longevity Max."
+    ],
+    "points": [
+      "Muskelmassa, fettfördelning och vätskebalans",
+      "Genomgång av resultatet tillsammans med oss",
+      "En plan för dina mål"
+    ]
+  },
+  {
+    "slug": "vitamindropp",
+    "kind": "inquiry",
+    "category": "halsa",
+    "name": "Vitamindropp",
+    "shortName": "Vitamindropp",
+    "lead": "Intravenös vitaminbehandling, endast efter bedömning av ansvarig vårdgivare.",
+    "body": [
+      "En intravenös behandling är ett medicinskt ingrepp och erbjuds endast när ansvarig, behörig vårdgivare bedömer att det är lämpligt.",
+      "Innehåll och upplägg ordineras och dokumenteras av ansvarig vårdgivare. Indikation, risker, interaktioner och kontraindikationer gås igenom före behandling. Behandlingen ges av legitimerad personal."
+    ],
+    "points": [
+      "Erbjuds endast när ansvarig, behörig vårdgivare bedömer att det är lämpligt",
+      "Indikation, risker, interaktioner och kontraindikationer gås igenom före behandling",
+      "Behandlingen ges av legitimerad personal"
+    ]
+  },
+  {
+    "slug": "blodprov",
+    "kind": "inquiry",
+    "category": "halsa",
+    "name": "Blodprovtagning",
+    "shortName": "Blodprov",
+    "lead": "Tydlig information före provtagning.",
+    "body": [
+      "Vilka prover som kan erbjudas beror på aktuell frågeställning, ansvarig vårdgivare och laboratoriets utbud. Du får information om syfte, metod, begränsningar och pris före beställning.",
+      "Provtagning utförs av behörig personal när det krävs. Resultat behöver tolkas tillsammans med symtom, historik och annan relevant information. Vid medicinska frågor hänvisas du till ansvarig legitimerad vårdgivare."
+    ],
+    "points": [
+      "Tillgängliga analyser och provtagningskrav bekräftas innan tid bokas",
+      "Provtagning utförs av behörig personal när det krävs",
+      "Ett provsvar är inte i sig en diagnos"
+    ]
+  },
+  {
+    "slug": "funktionsmedicin",
+    "kind": "inquiry",
+    "category": "halsa",
+    "name": "Funktionsmedicin",
+    "shortName": "Funktionsmedicin",
+    "lead": "En helhetssyn på din hälsa.",
+    "body": [
+      "Funktionsmedicin väger ihop livsstil, kost, sömn, stress och provsvar till en samlad bild, som ett komplement till den vård du redan har.",
+      "Vägledningen ställer inte diagnos och ersätter inte vård eller behandling."
+    ],
+    "points": [
+      "En helhetsbild av livsstil och hälsomarkörer",
+      "Långsiktiga vanor framför snabba lösningar",
+      "Ett komplement till den vård du redan har"
+    ]
+  },
+  {
+    "slug": "manuella-behandlingar",
+    "kind": "inquiry",
+    "category": "kropp",
+    "name": "Manuella behandlingar",
+    "shortName": "Manuella behandlingar",
+    "lead": "Massage och manuell terapi.",
+    "body": [
+      "Behandlingar med händerna för dig som vill varva ner och mjuka upp kroppen efter träning.",
+      "Hör av dig så berättar vi vilka behandlingar som finns just nu."
+    ],
+    "points": [
+      "Massage och manuell terapi",
+      "Ett skönt komplement till träningen",
+      "Tid efter förfrågan"
+    ]
+  }
+]

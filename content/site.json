@@ -1,36 +1,43 @@
 {
   "name": "House of Awesome",
   "shortName": "HOA",
-  "tagline": "Longevityklinik och professionell showroom i Stora Höga.",
-  "locale": "sv",
+  "url": "https://houseofawesome.se",
+  "tagline": "Longevity, träning och återhämtning i Stora Höga.",
+  "description": "House of Awesome i Stora Höga samlar tryckkammare, IHHT, EWOT, rödljus, gym och personlig coachning under ett tak. Drivs av Life Is Awesome AB.",
+  "locale": "sv_SE",
   "formerName": "The House of Wellness",
-  "sibling": {
-    "name": "Life Is Awesome",
-    "shortName": "LIA",
-    "href": "https://lifeisawesome.se"
+  "operator": {
+    "legalName": "Life Is Awesome AB",
+    "orgNr": "559389-8363",
+    "registeredAddress": "Krossekärr 517, 473 94 Henån",
+    "url": "https://lifeisawesome.se",
+    "privacyPolicyUrl": "https://lifeisawesome.se/integritetspolicy",
+    "termsUrl": "https://lifeisawesome.se/villkor"
+  },
+  "contact": {
+    "email": "info@lifeisawesome.se",
+    "phone": "+46733490836",
+    "phoneDisplay": "073 349 08 36"
   },
   "address": {
     "street": "Brålandsvägen 29",
+    "postalCode": "444 60",
     "city": "Stora Höga",
-    "country": "Sverige"
+    "region": "Västra Götalands län",
+    "country": "SE",
+    "countryName": "Sverige"
   },
-  "hoursNote": "Öppettider meddelas senare (TBD).",
-  "ctas": {
-    "booking": {
-      "label": "Boka via Life Is Awesome",
-      "href": "https://lifeisawesome.se/boka"
-    },
-    "b2b": {
-      "label": "LIA Professional",
-      "href": "https://lifeisawesome.se/professional"
-    }
+  "hours": {
+    "members": "Medlemmar har tillgång till huset dygnet runt, alla dagar.",
+    "staffed": "Lediga tider för behandlingar och samtal ser du i bokningen."
   },
-  "plannedPartners": [
-    "OneBase",
-    "CellOxy/TUR",
-    "Morozko",
-    "Vasper",
-    "CAROL",
-    "ZaZen"
-  ]
+  "booking": {
+    "base": "https://lifeisawesome.se/boka",
+    "membership": "https://lifeisawesome.se/medlem",
+    "b2b": "https://lifeisawesome.se/professional",
+    "utmSource": "houseofawesome",
+    "utmMedium": "referral",
+    "utmCampaign": "hoa_site"
+  },
+  "showroomPartners": ["OneBase", "CellOxy", "Morozko", "Vasper", "CAROL", "Zazen"]
 }

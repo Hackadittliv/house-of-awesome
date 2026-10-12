@@ -1,0 +1,69 @@
+{
+  "source": "Supabase ndtvsngguoejqgijwzye, booking_event_types där is_active och is_public är sanna",
+  "fetchedAt": "2026-10-11T21:09:28.525Z",
+  "services": [
+    {
+      "slug": "forsta-halsosamtal",
+      "title_sv": "Kort samtal med Patrik",
+      "duration_minutes": 10,
+      "price_label_sv": "Gratis",
+      "location_type": "meet",
+      "requires_payment": false,
+      "sort_order": 1
+    },
+    {
+      "slug": "coaching-45",
+      "title_sv": "Coaching: Livsstilsoptimering",
+      "duration_minutes": 45,
+      "price_label_sv": "1 500 kr",
+      "location_type": "meet",
+      "requires_payment": true,
+      "sort_order": 2
+    },
+    {
+      "slug": "hbot-60",
+      "title_sv": "HBOT Tryckluftskammare 60 min",
+      "duration_minutes": 60,
+      "price_label_sv": "Från 900 kr (10-kort), styckpris 1 000 kr",
+      "location_type": "in_person",
+      "requires_payment": true,
+      "sort_order": 10
+    },
+    {
+      "slug": "hbot-80",
+      "title_sv": "HBOT Tryckluftskammare 80 min",
+      "duration_minutes": 80,
+      "price_label_sv": "Från 1 000 kr (10-kort), styckpris 1 100 kr",
+      "location_type": "in_person",
+      "requires_payment": true,
+      "sort_order": 11
+    },
+    {
+      "slug": "ihht-50",
+      "title_sv": "Celloxy IHHT 50 min",
+      "duration_minutes": 50,
+      "price_label_sv": "Från 800 kr (10-kort), styckpris 900 kr",
+      "location_type": "in_person",
+      "requires_payment": true,
+      "sort_order": 20
+    },
+    {
+      "slug": "ewot-15",
+      "title_sv": "EWOT 15 min",
+      "duration_minutes": 15,
+      "price_label_sv": "Från 400 kr (10-kort), styckpris 500 kr",
+      "location_type": "in_person",
+      "requires_payment": true,
+      "sort_order": 21
+    },
+    {
+      "slug": "redlight-20",
+      "title_sv": "Rödljusterapi 20 min",
+      "duration_minutes": 20,
+      "price_label_sv": "Från 250 kr (10-kort), styckpris 350 kr",
+      "location_type": "in_person",
+      "requires_payment": true,
+      "sort_order": 22
+    }
+  ]
+}

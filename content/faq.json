@@ -2,31 +2,56 @@
   {
     "id": "vad-ar-hoa",
     "question": "Vad är House of Awesome?",
-    "answer": "House of Awesome är en longevityklinik och ett professionellt showroom i Stora Höga. Verksamheten bygger på utrustningsledda sessioner och ett fullt Professional-showroom — inte på en stor terapeutstab."
+    "answer": "House of Awesome är vårt hus i Stora Höga för träning, återhämtning och longevity. Här finns tryckkammare, Celloxy IHHT, EWOT, rödljus, ett gym som är öppet dygnet runt för medlemmar och personlig coachning."
+  },
+  {
+    "id": "vem-driver",
+    "question": "Vem driver House of Awesome?",
+    "answer": "Life Is Awesome AB, samma bolag som driver lifeisawesome.se. Patrik och Alexandra står bakom båda."
   },
   {
     "id": "hur-bokar-jag",
-    "question": "Hur bokar jag en session?",
-    "answer": "Bokning sker via Life Is Awesome. Fas 1 har ingen egen bokningsmotor på den här sajten."
+    "question": "Hur bokar jag en tid?",
+    "answer": "Välj en tjänst här på sajten och tryck på Boka. Du kommer då direkt till rätt tjänst i bokningen hos Life Is Awesome, där vi har en gemensam kalender för båda verksamheterna."
   },
   {
     "id": "priser",
-    "question": "Var hittar jag priser?",
-    "answer": "Priser i kronor publiceras inte här i fas 1. Aktuella tider och priser visas i Life Is Awesome bokning."
+    "question": "Vad kostar det?",
+    "answer": "Aktuellt pris står vid varje tjänst och i bokningen. Klippkort ger ett lägre pris per gång. Medlemskapen kostar från 599 kr per månad."
+  },
+  {
+    "id": "medlemskap",
+    "question": "Hur fungerar medlemskapen?",
+    "answer": "Alla medlemskap ger tillgång till gymmet dygnet runt, en introduktion och en träningsplan. Skillnaden är hur mycket rödljus och hur många pass med The Awesome Protocol som ingår. Bindningstiden är 12 månader."
+  },
+  {
+    "id": "halsodeklaration",
+    "question": "Behöver jag fylla i en hälsodeklaration?",
+    "answer": "Före första sessionen i tryckkammaren fyller du i en hälsodeklaration, och vi går igenom den tillsammans med dig. Intravenös vitaminbehandling erbjuds endast när ansvarig, behörig vårdgivare bedömer att det är lämpligt."
+  },
+  {
+    "id": "traning-eller-medicinskt",
+    "question": "Vilka delar är träning och vilka är medicinska?",
+    "answer": "Gymmet, The Awesome Protocol, EWOT, Celloxy IHHT, rödljus, sessionerna i tryckkammaren, coachning och InBody handlar om träning, återhämtning och vägledning. De medicinska delarna är vitamindropp och provtagning. En intravenös behandling är ett medicinskt ingrepp och erbjuds endast när ansvarig, behörig vårdgivare bedömer att det är lämpligt, och behandlingen ges av legitimerad personal. Provtagning utförs av behörig personal när det krävs. Vägledningen ställer inte diagnos och ersätter inte vård eller behandling. Har du symtom eller en diagnos, kontakta hälso- och sjukvården för medicinsk bedömning."
+  },
+  {
+    "id": "avboka",
+    "question": "Kan jag avboka?",
+    "answer": "Du avbokar via länken i din bokningsbekräftelse. Betalda bokningar hanteras enligt villkoren hos Life Is Awesome."
   },
   {
     "id": "var",
-    "question": "Var ligger kliniken?",
-    "answer": "Brålandsvägen 29, Stora Höga. Öppettider meddelas senare."
+    "question": "Var ligger ni?",
+    "answer": "Brålandsvägen 29, 444 60 Stora Höga, i Stenungsunds kommun."
   },
   {
-    "id": "showroom-b2b",
-    "question": "Kan företag besöka showroom?",
-    "answer": "Ja — showroom är kopplat till LIA Professional. B2B-förfrågningar går dit, inte via en separat HOA-butik i fas 1."
+    "id": "foretag",
+    "question": "Kan företag och kliniker se utrustningen?",
+    "answer": "Ja. Huset fungerar också som showroom för professionell utrustning. Företag och kliniker hör av sig via Life Is Awesome Professional."
   },
   {
-    "id": "how-rebrand",
-    "question": "Är det samma som The House of Wellness?",
-    "answer": "House of Awesome är namnbytet från The House of Wellness. Innehållet här är nytt — kliniken är showroom och utrustningsledda sessioner, inte en kopia av tidigare HOW-sidor."
+    "id": "tidigare-namn",
+    "question": "Är det samma ställe som The House of Wellness?",
+    "answer": "Ja, House of Awesome hette tidigare The House of Wellness. Namnet är nytt och utbudet har förnyats."
   }
 ]
