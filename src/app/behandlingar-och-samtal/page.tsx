@@ -97,6 +97,11 @@ export default function Page() {
               ) : (
                 <Soon>Bokningslänk kommer snart</Soon>
               )}
+              {p.website ? (
+                <a href={p.website.href} target="_blank" rel="noopener noreferrer" className="text-sm text-hoa-gold underline-offset-4 hover:underline">
+                  Läs mer på {p.website.label}
+                </a>
+              ) : null}
               {p.services.length ? (
                 <CtaLink href={p.services[0].href} size="sm" className="mt-auto w-fit">Boka hos {p.name.split(" ")[0]}</CtaLink>
               ) : null}
