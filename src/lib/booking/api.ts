@@ -29,13 +29,14 @@ export class BookingApiError extends Error {
   }
 }
 
-async function callFunction<T>(name: string, body: Record<string, unknown>): Promise<T> {
+async function callFunction<T>(name: string, body: Record<string, unknown>, accessToken?: string): Promise<T> {
   const response = await fetch(`${liaSupabaseUrl}/functions/v1/${name}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       apikey: liaSupabaseAnonKey,
-      Authorization: `Bearer ${liaSupabaseAnonKey}`,
+      // Inloggad (t.ex. Studion): användarens token, annars anon key.
+      Authorization: `Bearer ${accessToken ?? liaSupabaseAnonKey}`,
     },
     body: JSON.stringify(body),
   });
@@ -196,4 +197,50 @@ export function requestConsultation(input: RequestInput): Promise<{ ok: true }> 
     ...(input.route ? { route: input.route } : {}),
     ...input.utm,
   });
+}
+
+/** Studion: rumshyra för godkända instruktörer. Kräver inloggning mot LIA. */
+export const STUDION_SLUG = "studion-hyra";
+
+export async function getStudionSlots(fromDate: string, toDate: string, accessToken: string): Promise<Slot[]> {
+  const data = await callFunction<{ slots: Slot[] }>(
+    "get-availability",
+    { event_type_slug: STUDION_SLUG, from_date: fromDate, to_date: toDate },
+    accessToken,
+  );
+  return data.slots;
+}
+
+export function createStudionBooking(args: {
+  startAt: string;
+  hours: number;
+  name: string;
+  email: string;
+  notes: string;
+  accessToken: string;
+}): Promise<BookingResult> {
+  return callFunction<BookingResult>(
+    "create-booking",
+    {
+      event_type_slug: STUDION_SLUG,
+      start_at: args.startAt,
+      hours: args.hours,
+      guest_name: args.name,
+      guest_email: args.email,
+      guest_notes: args.notes || null,
+      location_type: "in_person",
+      site: BOOKING_SITE,
+    },
+    args.accessToken,
+  );
+}
+
+/** Skickar en inloggningslänk från LIA:s Supabase Auth. Länken leder tillbaka hit. */
+export async function sendStudionLoginLink(email: string, redirectTo: string): Promise<void> {
+  const response = await fetch(`${liaSupabaseUrl}/auth/v1/otp?redirect_to=${encodeURIComponent(redirectTo)}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", apikey: liaSupabaseAnonKey },
+    body: JSON.stringify({ email, create_user: true }),
+  });
+  if (!response.ok) throw new BookingApiError(response.status, `HTTP ${response.status}`);
 }
