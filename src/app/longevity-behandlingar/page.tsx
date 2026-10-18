@@ -1,5 +1,5 @@
 import { CtaLink } from "@/components/CtaLink";
-import { Bullets, Card, Grid, Hero, Section, Soon } from "@/components/v2/ui";
+import { Bullets, Card, Grid, Hero, Section } from "@/components/v2/ui";
 import { SHORT_CALL_SLUG, bookingUrl } from "@/lib/links";
 import { pageMetadata } from "@/lib/seo";
 
@@ -34,12 +34,12 @@ export default function Page() {
             <p className="text-xs text-hoa-ink-muted">Hälsodeklaration före första behandlingen, bland annat för öronproblem och klaustrofobi.</p>
             <CtaLink href={bookingUrl("hbot-60", "longevity_hbot")} size="sm" className="mt-auto w-fit">Boka</CtaLink>
           </Card>
-          <Card id="rodljus-pemf" label="3 · Ljus och puls" title="Rödljus + PEMF" text={<p>Rött ljus på 660 nm kombinerat med PEMF. En lugn stund för återhämtning.</p>}>
-            <Soon>Mer information kommer snart</Soon>
+          <Card id="rodljus-pemf" label="3 · Ljus och puls" title="Rödljus + PEMF" text={<p>Rött ljus på 660 nm kombinerat med PEMF. Du ligger bekvämt och slappnar av i en lugn och behaglig behandling.</p>}>
+            <Bullets items={["Ett skönt avslut efter träningen", "Särskilt uppskattat under de mörka årstiderna", "Ingår i alla gymmedlemskap"]} />
             <CtaLink href={bookingUrl("redlight-20", "longevity_redlight")} size="sm" className="mt-auto w-fit">Boka</CtaLink>
           </Card>
-          <Card id="ewot" label="4 · Syre" title="EWOT" text={<p>Intervallträning med högkoncentrerat syre via mask.</p>}>
-            <Soon>Mer information kommer snart</Soon>
+          <Card id="ewot" label="4 · Syre" title="EWOT" text={<p>Intervallträning med högkoncentrerat syre via mask. Kort, intensivt och tidseffektivt. Hjärtat i The Awesome Protocol.</p>}>
+            <Bullets items={["Ett nytt sätt att utmana kondition och uthållighet", "Intensitet anpassad efter din nivå", "Kombinera med rödljus för ett komplett pass"]} />
             <CtaLink href={bookingUrl("ewot-15", "longevity_ewot")} size="sm" className="mt-auto w-fit">Boka</CtaLink>
           </Card>
         </Grid>

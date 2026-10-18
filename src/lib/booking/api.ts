@@ -158,6 +158,13 @@ export async function getPaymentStatus(sessionId: string): Promise<PaymentStatus
 
 export type InterestType = "free_10min" | "paid_60min" | "hbot" | "celloxy" | "coaching" | "other";
 
+/**
+ * Mottagare för en förfrågan. Utan route går den till husets inkorg.
+ * Själva adressen slås upp i request-consultation på servern (vitlista),
+ * så webbläsaren kan bara välja en känd nyckel, aldrig en fri adress.
+ */
+export type RequestRoute = "rebecca";
+
 export type RequestInput = {
   firstName: string;
   lastName: string;
@@ -168,6 +175,7 @@ export type RequestInput = {
   sourceSlug: string | null;
   honeypot: string;
   utm: Record<string, string>;
+  route?: RequestRoute;
 };
 
 export function requestConsultation(input: RequestInput): Promise<{ ok: true }> {
@@ -185,6 +193,7 @@ export function requestConsultation(input: RequestInput): Promise<{ ok: true }> 
     privacy_notice_acknowledged: true,
     privacy_notice_version: PRIVACY_NOTICE_VERSION,
     site: BOOKING_SITE,
+    ...(input.route ? { route: input.route } : {}),
     ...input.utm,
   });
 }

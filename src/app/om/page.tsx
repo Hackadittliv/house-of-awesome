@@ -1,5 +1,5 @@
 import { CtaLink } from "@/components/CtaLink";
-import { Card, Grid, Hero, Section, Soon } from "@/components/v2/ui";
+import { Card, Grid, Hero, Section } from "@/components/v2/ui";
 import { pageMetadata } from "@/lib/seo";
 
 import { site } from "@/lib/content";
@@ -18,6 +18,15 @@ const team = [
   ["Delägare", "Per Berglund", "Delägare och investerare genom EB Invest. Bidrar med erfarenhet av att bygga bolag."],
 ];
 
+// Kortad från "Vår story" på lifeisawesome.se/om-oss.
+const story = [
+  ["En vanlig familj", "Vi heter Patrik och Alexandra och har tre barn. Vi levde ett vanligt liv med jobb och vardag, tills hälsan blev akut."],
+  ["När kroppen sa något annat", "Alexandra blev långvarigt dålig. Energin försvann och vardagen förändrades. Tester såg ofta bra ut, men kroppen sa något helt annat."],
+  ["Rätt ordning spelar roll", "Vi testade, läste, reste och betalade. En insikt kom långsamt: även bra metoder kan bli fel om du börjar i fel ände."],
+  ["Kartan växte fram", "Patrik pratade med läkare, terapeuter, forskare och människor som tagit sig tillbaka. Alexandra började lyssna på kroppen igen: mat, mage, rytm och återhämtning."],
+  ["Därför finns huset", "Vi vill göra vägen kortare för dig. Här samlar vi det vi själva hade behövt, i ett hus i Stora Höga."],
+];
+
 export default function Page() {
   return (
     <>
@@ -26,8 +35,17 @@ export default function Page() {
         <div className="mx-auto max-w-2xl space-y-6 text-center text-hoa-ink/90">
           <p>House of Awesome drivs av Life is Awesome AB. Vi utvecklar protokoll med noggrant utvalda teknikpartners och provar dem här i vårt eget hus.</p>
           <p>Genom Life is Awesome Professional hjälper vi andra att bygga framtidens hälsoanläggning.</p>
-          <Soon>Hela vår story kommer snart</Soon>
-          <div><CtaLink href={site.operator.url} variant="secondary">Till lifeisawesome.se</CtaLink></div>
+        </div>
+      </Section>
+      <Section id="story" eyebrow="Vår story" title="Vi byggde platsen vi själva hade behövt" band>
+        <div className="mx-auto max-w-2xl space-y-8">
+          {story.map(([title, text]) => (
+            <article key={title} className="space-y-2">
+              <h3 className="text-xl text-hoa-ink">{title}</h3>
+              <p className="leading-relaxed text-hoa-ink/85">{text}</p>
+            </article>
+          ))}
+          <div className="text-center"><CtaLink href={`${site.operator.url.replace(/\/$/, "")}/om-oss`} variant="secondary">Läs hela storyn på lifeisawesome.se</CtaLink></div>
         </div>
       </Section>
       <Section eyebrow="Teamet" title="Människorna bakom huset" band>

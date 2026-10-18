@@ -1,4 +1,4 @@
-import { Hero, Section, Soon } from "@/components/v2/ui";
+import { Bullets, Hero, Section } from "@/components/v2/ui";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -7,14 +7,24 @@ export const metadata = pageMetadata({
   path: "/zazen-scalar",
 });
 
+// Källa: LIA Professional, partnersidan för ZaZen Health Solutions (lifeisawesome.se), som bygger på tillverkarens produktsidor och tekniska blad.
 export default function Page() {
   return (
     <>
       <Hero eyebrow="Fältet" title="Hela huset i ett Zazen Scalar-fält" lead="Zazen Scalar-panelerna finns i hela lokalen och omger dig medan du tränar, vilar och behandlas." />
       <Section title="Vad det är">
-        <div className="mx-auto max-w-2xl space-y-6 text-center">
-          <p className="text-hoa-ink/90">Zazen Health Solutions tillverkar Scalar 300 Core och 500 Core.</p>
-          <Soon>Mer om tekniken kommer snart</Soon>
+        <div className="mx-auto max-w-2xl space-y-6">
+          <p className="text-center text-hoa-ink/90">
+            Zazen Health Solutions tillverkar Scalar 300 Core och 500 Core, två elektriska wellnessprodukter som tillverkaren kallar scalar-generatorer.
+          </p>
+          <Bullets
+            items={[
+              "Två format: en fristående 300 Core och en större kvadratisk 500 Core-panel",
+              "Tillverkaren anger 24 V DC matning och högst 24 W effekt för båda modellerna",
+              "Kliv in och upplev miljön själv",
+            ]}
+          />
+          <p className="text-center text-sm text-hoa-ink-muted">Vi beskriver tekniken utifrån format och tillverkarens tekniska data, utan medicinska effektlöften.</p>
         </div>
       </Section>
     </>
