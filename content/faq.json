@@ -45,6 +45,11 @@
     "answer": "Brålandsvägen 29, 444 60 Stora Höga, i Stenungsunds kommun."
   },
   {
+    "id": "hund",
+    "question": "Finns det djur i huset?",
+    "answer": "Ja, vi har en hund i huset. Hunden håller till på en avgränsad plats, skild från behandlingsrummen."
+  },
+  {
     "id": "foretag",
     "question": "Kan företag och kliniker se utrustningen?",
     "answer": "Ja. Huset fungerar också som showroom för professionell utrustning. Företag och kliniker hör av sig via Life Is Awesome Professional."

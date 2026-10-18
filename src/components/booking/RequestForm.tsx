@@ -2,17 +2,22 @@
 
 import { useState } from "react";
 
-import { Field, Notice, PrivacyText, primaryButtonClass } from "@/components/booking/fields";
-import { BookingApiError, requestConsultation } from "@/lib/booking/api";
+import { Field, Notice, PrivacyText, inputClass, primaryButtonClass } from "@/components/booking/fields";
+import { BookingApiError, requestConsultation, type RequestRoute } from "@/lib/booking/api";
 import { bookingCopy as t } from "@/lib/booking/copy";
 import { interestFor, utmFrom } from "@/lib/booking/format";
 
 type Props = {
   serviceSlug: string | null;
   serviceName: string | null;
+  /** Skickar förfrågan till en annan mottagare än huset, se RequestRoute. */
+  route?: RequestRoute;
+  /** Valbara upplägg, t.ex. längd och plats. Valet följer med i meddelandet. */
+  options?: string[];
 };
 
-export function RequestForm({ serviceSlug, serviceName }: Props) {
+export function RequestForm({ serviceSlug, serviceName, route, options }: Props) {
+  const [option, setOption] = useState(options?.[0] ?? "");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -32,10 +37,11 @@ export function RequestForm({ serviceSlug, serviceName }: Props) {
         email: email.trim(),
         phone: phone.trim(),
         interestType: interestFor(serviceSlug),
-        message: [serviceName ? `${t.requestService}: ${serviceName}` : null, message.trim() || null].filter(Boolean).join("\n\n"),
+        message: [serviceName ? `${t.requestService}: ${serviceName}` : null, option ? `${t.requestOption}: ${option}` : null, message.trim() || null].filter(Boolean).join("\n\n"),
         sourceSlug: serviceSlug ? `hoa:${serviceSlug}` : "hoa",
         honeypot,
         utm: utmFrom(window.location.search),
+        route,
       });
       setState("sent");
     } catch (error) {
@@ -58,6 +64,16 @@ export function RequestForm({ serviceSlug, serviceName }: Props) {
         <p className="text-sm text-hoa-ink-muted">
           {t.requestService}: <span className="text-hoa-ink">{serviceName}</span>
         </p>
+      ) : null}
+      {options?.length ? (
+        <label className="block text-sm text-hoa-ink-muted" htmlFor="option">
+          {t.requestOption}
+          <select id="option" name="option" value={option} onChange={(event) => setOption(event.target.value)} className={inputClass}>
+            {options.map((o) => (
+              <option key={o} value={o}>{o}</option>
+            ))}
+          </select>
+        </label>
       ) : null}
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label={t.firstName} name="first_name" required autoComplete="given-name" maxLength={80} value={firstName} onChange={setFirstName} />

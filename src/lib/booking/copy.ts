@@ -70,6 +70,7 @@ export const bookingCopy = {
   requestTitle: "Skicka en förfrågan",
   requestLead: "Berätta vad du är intresserad av så hör vi av oss inom 24 timmar med förslag på tid.",
   requestService: "Tjänst",
+  requestOption: "Upplägg",
   requestSent: "Tack! Vi hör av oss inom 24 timmar.",
   requestSentLead: "En bekräftelse är på väg till din e-post.",
   requestError: "Förfrågan gick inte att skicka. Försök igen eller mejla oss.",
