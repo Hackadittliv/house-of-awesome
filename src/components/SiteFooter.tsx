@@ -4,90 +4,65 @@ import { Container } from "@/components/Container";
 import { Wordmark } from "@/components/Logo";
 import { CookieSettingsButton } from "@/components/consent/CookieSettingsButton";
 import { formatAddress, site } from "@/lib/content";
-import { b2bUrl, bookingUrl, mailtoUrl, telUrl } from "@/lib/links";
-import { legalNav, primaryNav } from "@/lib/nav";
+import { b2bUrl, mailtoUrl, telUrl } from "@/lib/links";
+import { aboutNav, legalNav, primaryNav } from "@/lib/nav";
 
 const linkClass = "text-sm text-hoa-ink-muted transition-colors hover:text-hoa-gold";
+const head = "text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold";
 
 export function SiteFooter() {
   return (
     <footer className="mt-auto border-t border-hoa-line bg-hoa-bg">
-      <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+      <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
-          <p>
-            <Wordmark className="text-xl" />
-          </p>
-          <p className="mt-3 max-w-md text-sm leading-6 text-hoa-ink-muted">{site.tagline}</p>
-          <address className="mt-4 space-y-1 text-sm not-italic text-hoa-ink">
-            <p>{formatAddress()}</p>
-            <p>
-              <a href={telUrl()} className="hover:text-hoa-gold">
-                {site.contact.phoneDisplay}
-              </a>
-            </p>
-            <p>
-              <a href={mailtoUrl()} className="hover:text-hoa-gold">
-                {site.contact.email}
-              </a>
-            </p>
-          </address>
+          <Wordmark className="text-xl" />
+          <p className="mt-3 text-sm text-hoa-ink-muted">Där vetenskap, själ och rörelse möts.</p>
+          <p className="mt-1 text-xs text-hoa-ink-muted">Drivs av Life Is Awesome.</p>
         </div>
-
-        <nav aria-label="Sidfot">
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold">Sidor</p>
+        <nav aria-label="House of Awesome">
+          <p className={head}>House of Awesome</p>
           <ul className="mt-4 space-y-2">
-            {primaryNav.map((item) => (
+            {[...primaryNav, ...aboutNav].map((item) => (
               <li key={item.href}>
-                <Link href={item.href} className={linkClass}>
-                  {item.label}
-                </Link>
+                <Link href={item.href} className={linkClass}>{item.label}</Link>
               </li>
             ))}
           </ul>
         </nav>
-
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold">
-            Life Is Awesome
-          </p>
+        <nav aria-label="Utforska">
+          <p className={head}>Utforska</p>
           <ul className="mt-4 space-y-2">
-            <li>
-              <a href={bookingUrl(null, "footer")} className={linkClass}>
-                Boka tid
-              </a>
-            </li>
-            <li>
-              <a href={b2bUrl("footer")} className={linkClass}>
-                Professional, för företag
-              </a>
-            </li>
-            <li>
-              <a href={site.operator.url} className={linkClass}>
-                lifeisawesome.se
-              </a>
-            </li>
+            <li><a href={site.operator.url} className={linkClass}>Börja här</a></li>
+            <li><a href={site.operator.url} className={linkClass}>Recept</a></li>
+            <li><a href={site.operator.url} className={linkClass}>Podcasts</a></li>
+            <li><a href={site.operator.url} className={linkClass}>Parasitkollen</a></li>
+            <li><a href={b2bUrl("footer")} className={linkClass}>För verksamheter</a></li>
           </ul>
+        </nav>
+        <div>
+          <p className={head}>Kontakt</p>
+          <address className="mt-4 space-y-2 text-sm not-italic text-hoa-ink">
+            <p><a href={mailtoUrl()} className="hover:text-hoa-gold">{site.contact.email}</a></p>
+            <p><a href={telUrl()} className="hover:text-hoa-gold">073-349 08 36</a></p>
+            <p>{formatAddress()}</p>
+          </address>
         </div>
       </Container>
-
       <div className="border-t border-hoa-line">
-        <Container className="flex flex-col gap-3 py-5 text-xs text-hoa-ink-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {new Date().getFullYear()} {site.operator.legalName}, org.nr {site.operator.orgNr}.
-            House of Awesome drivs av {site.operator.legalName}.
+        <Container className="space-y-3 py-6 text-xs leading-5 text-hoa-ink-muted">
+          <p className="max-w-3xl">
+            Innehållet är generell information och ersätter ingen medicinsk rådgivning, diagnos eller behandling.
+            Vi erbjuder friskvård som ett komplement till hälso- och sjukvården. Vid akuta eller livshotande symtom, ring 112.
           </p>
-          <ul className="flex flex-wrap gap-x-4 gap-y-2">
-            {legalNav.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href} className="hover:text-hoa-gold">
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-            <li>
-              <CookieSettingsButton className="hover:text-hoa-gold" />
-            </li>
-          </ul>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p>© {new Date().getFullYear()} {site.operator.legalName}, org.nr {site.operator.orgNr}.</p>
+            <ul className="flex flex-wrap gap-x-4 gap-y-2">
+              {legalNav.map((item) => (
+                <li key={item.href}><Link href={item.href} className="hover:text-hoa-gold">{item.label}</Link></li>
+              ))}
+              <li><CookieSettingsButton className="hover:text-hoa-gold" /></li>
+            </ul>
+          </div>
         </Container>
       </div>
     </footer>
