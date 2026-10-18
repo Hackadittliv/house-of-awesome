@@ -30,6 +30,7 @@ const faq = [
   { q: "Behöver jag vara i bra form för att börja?", a: "Nej. Upplägget anpassas efter dig, oavsett om du är 25 eller 75, nybörjare eller van." },
   { q: "Jag är osäker på vilken behandling jag ska välja. Vad gör jag?", a: "Boka en kostnadsfri rådgivning på 10 minuter. Vi lyssnar på dina mål och föreslår vad som passar dig. Inget köpkrav." },
   { q: "Finns det bindningstid?", a: "Behandlingar bokas styckvis utan abonnemang. Gymmedlemskapen har 12 månaders bindningstid." },
+  { q: "Finns det djur i huset?", a: "Ja, vi har en hund i huset. Hunden håller till på en avgränsad plats, skild från behandlingsrummen." },
   { q: "Ersätter ni vården?", a: "Nej. Vi erbjuder friskvård som ett komplement till hälso- och sjukvården. Har du symtom eller en diagnos, kontakta vården för medicinsk bedömning." },
 ];
 
@@ -58,6 +59,10 @@ export default function HomePage() {
             ))}
           </ul>
           <p className="mt-4 text-sm text-hoa-ink-muted">Samma grund, olika mål. Vi möter dig där du är.</p>
+          <p className="mx-auto mt-6 flex max-w-md items-center justify-center gap-2 rounded-full border border-hoa-gold/30 bg-hoa-secondary/20 px-4 py-2 text-sm text-hoa-ink-muted">
+            <span aria-hidden>🐾</span>
+            <span>Vi har en hund i huset. Hunden håller till på en avgränsad plats, skild från behandlingsrummen.</span>
+          </p>
         </div>
       </section>
 
