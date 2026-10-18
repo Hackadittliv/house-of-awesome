@@ -235,12 +235,16 @@ export function createStudionBooking(args: {
   );
 }
 
-/** Skickar en inloggningslänk från LIA:s Supabase Auth. Länken leder tillbaka hit. */
+/**
+ * Skickar en inloggningslänk från LIA:s Supabase Auth. Länken leder tillbaka hit.
+ * create_user: false, så bara befintliga konton (skapas när LIA-admin godkänner
+ * instruktören) får en länk. Okänd e-post ger fel från Auth.
+ */
 export async function sendStudionLoginLink(email: string, redirectTo: string): Promise<void> {
   const response = await fetch(`${liaSupabaseUrl}/auth/v1/otp?redirect_to=${encodeURIComponent(redirectTo)}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", apikey: liaSupabaseAnonKey },
-    body: JSON.stringify({ email, create_user: true }),
+    body: JSON.stringify({ email, create_user: false }),
   });
   if (!response.ok) throw new BookingApiError(response.status, `HTTP ${response.status}`);
 }

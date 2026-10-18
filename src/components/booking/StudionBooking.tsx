@@ -6,7 +6,7 @@ import { ClientOnly } from "@/components/booking/ClientOnly";
 import { Notice, inputClass, primaryButtonClass, secondaryButtonClass } from "@/components/booking/fields";
 import { BookingApiError, createStudionBooking, getStudionSlots, sendStudionLoginLink, type Slot } from "@/lib/booking/api";
 import { addDays, formatDateTime, formatDayLabel, stockholmDate } from "@/lib/booking/format";
-import { maxConsecutiveHours, mondayOf, slotsByDayHour, studionCopy as t, weekDays } from "@/lib/booking/studion";
+import { maxConsecutiveHours, mondayOf, slotsByDayHour, studionCopy as t, weekDays, weekRows } from "@/lib/booking/studion";
 
 const TOKEN_KEY = "hoa-studion-session";
 type Session = { accessToken: string; email: string; expiresAt: number };
@@ -52,21 +52,25 @@ export function StudionBooking() {
 
 function StudionInner() {
   const [session, setSession] = useState<Session | null>(() => readSession());
-  if (!session) return <Login />;
-  return (
-    <Week
-      session={session}
-      onLogout={() => {
-        sessionStorage.removeItem(TOKEN_KEY);
-        setSession(null);
-      }}
-    />
-  );
+  const [expired, setExpired] = useState(false);
+  const logout = (wasExpired: boolean) => {
+    sessionStorage.removeItem(TOKEN_KEY);
+    setExpired(wasExpired);
+    setSession(null);
+  };
+  // Token utan refresh: logga ut när den går ut, i stället för att visa "ej godkänd".
+  useEffect(() => {
+    if (!session) return;
+    const id = window.setTimeout(() => logout(true), Math.max(session.expiresAt - Date.now(), 0));
+    return () => window.clearTimeout(id);
+  }, [session]);
+  if (!session) return <Login expired={expired} />;
+  return <Week session={session} onLogout={() => logout(false)} onExpired={() => logout(true)} />;
 }
 
-function Login() {
+function Login({ expired }: { expired: boolean }) {
   const [email, setEmail] = useState("");
-  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "unknown" | "error">("idle");
   return (
     <form
       className="space-y-4"
@@ -76,22 +80,25 @@ function Login() {
         try {
           await sendStudionLoginLink(email.trim(), `${window.location.origin}/studion`);
           setState("sent");
-        } catch {
-          setState("error");
+        } catch (error) {
+          // create_user: false: okänd e-post ger 400/422 från Auth.
+          setState(error instanceof BookingApiError && (error.status === 400 || error.status === 422) ? "unknown" : "error");
         }
       }}
     >
+      {expired && <Notice tone="error">{t.expired}</Notice>}
       <h2 className="text-xl">{t.loginTitle}</h2>
       <p>{t.loginLead}</p>
       <input type="email" required autoComplete="email" className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} />
       <button type="submit" className={primaryButtonClass} disabled={state === "sending"}>{t.loginButton}</button>
       {state === "sent" && <Notice>{t.loginSent}</Notice>}
+      {state === "unknown" && <Notice tone="error">{t.notApproved}</Notice>}
       {state === "error" && <Notice tone="error">{t.loginError}</Notice>}
     </form>
   );
 }
 
-function Week({ session, onLogout }: { session: Session; onLogout: () => void }) {
+function Week({ session, onLogout, onExpired }: { session: Session; onLogout: () => void; onExpired: () => void }) {
   const [monday, setMonday] = useState(() => mondayOf(stockholmDate(new Date())));
   const [slots, setSlots] = useState<Slot[] | null>(null);
   const [status, setStatus] = useState<"ok" | "error" | "forbidden">("ok");
@@ -112,12 +119,14 @@ function Week({ session, onLogout }: { session: Session; onLogout: () => void })
       })
       .catch((error: unknown) => {
         if (cancelled) return;
-        setStatus(error instanceof BookingApiError && (error.status === 401 || error.status === 403) ? "forbidden" : "error");
+        if (error instanceof BookingApiError && error.status === 401) return onExpired();
+        setStatus(error instanceof BookingApiError && error.status === 403 ? "forbidden" : "error");
         setSlots([]);
       });
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monday, session.accessToken, refresh]);
 
   function goToWeek(next: string) {
@@ -131,7 +140,8 @@ function Week({ session, onLogout }: { session: Session; onLogout: () => void })
   }
 
   const days = weekDays(monday);
-  const grid = useMemo(() => slotsByDayHour(slots ?? []), [slots]);
+  const rows = useMemo(() => weekRows(days), [monday]); // eslint-disable-line react-hooks/exhaustive-deps
+  const grid = useMemo(() => slotsByDayHour(slots ?? [], days), [slots, monday]); // eslint-disable-line react-hooks/exhaustive-deps
   const maxHours = picked && slots ? maxConsecutiveHours(slots, picked.start) : 1;
 
   async function book() {
@@ -152,7 +162,8 @@ function Week({ session, onLogout }: { session: Session; onLogout: () => void })
       load();
     } catch (error) {
       if (error instanceof BookingApiError && error.status === 409) setResult("taken");
-      else if (error instanceof BookingApiError && (error.status === 401 || error.status === 403)) setResult("forbidden");
+      else if (error instanceof BookingApiError && error.status === 401) onExpired();
+      else if (error instanceof BookingApiError && error.status === 403) setResult("forbidden");
       else setResult("error");
     }
   }
@@ -186,11 +197,11 @@ function Week({ session, onLogout }: { session: Session; onLogout: () => void })
               </tr>
             </thead>
             <tbody>
-              {Array.from({ length: 24 }, (_, hour) => (
-                <tr key={hour}>
-                  <td className="pr-2 align-top tabular-nums opacity-70">{String(hour).padStart(2, "0")}:00</td>
+              {rows.map((row) => (
+                <tr key={row.key}>
+                  <td className="pr-2 align-top tabular-nums opacity-70">{row.label}</td>
                   {days.map((day) => {
-                    const slot = grid.get(day)?.get(hour);
+                    const slot = grid.get(day)?.get(row.key);
                     const active = picked?.start === slot?.start;
                     return (
                       <td key={day} className="p-0.5">
