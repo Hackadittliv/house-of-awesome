@@ -59,7 +59,7 @@ export default function HomePage() {
             ))}
           </ul>
           <p className="mt-4 text-sm text-hoa-ink-muted">Samma grund, olika mål. Vi möter dig där du är.</p>
-          <p className="mx-auto mt-6 flex max-w-md items-center justify-center gap-2 rounded-full border border-hoa-gold/30 bg-hoa-secondary/20 px-4 py-2 text-sm text-hoa-ink-muted">
+          <p className="mx-auto mt-6 flex max-w-md items-start gap-3 rounded-2xl border border-hoa-gold/30 bg-hoa-secondary/20 px-4 py-3 text-left text-sm text-hoa-ink-muted">
             <span aria-hidden>🐾</span>
             <span>Vi har en hund i huset. Hunden håller till på en avgränsad plats, skild från behandlingsrummen.</span>
           </p>
