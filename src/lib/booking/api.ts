@@ -248,3 +248,19 @@ export async function sendStudionLoginLink(email: string, redirectTo: string): P
   });
   if (!response.ok) throw new BookingApiError(response.status, `HTTP ${response.status}`);
 }
+
+export async function createGiftCardCheckout(args: {
+  email: string;
+  metadata: Record<string, string>;
+  returnUrl: string;
+}): Promise<string> {
+  const data = await callFunction<{ clientSecret: string }>("create-checkout", {
+    priceId: "gift_card_custom",
+    customerEmail: args.email,
+    returnUrl: args.returnUrl,
+    quantity: 1,
+    requestId: crypto.randomUUID(),
+    metadata: args.metadata,
+  });
+  return data.clientSecret;
+}
