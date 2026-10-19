@@ -56,7 +56,7 @@ export function SiteFooter() {
             Vi erbjuder friskvård som ett komplement till hälso- och sjukvården. Vid akuta eller livshotande symtom, ring 112.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p>© {new Date().getFullYear()} {sellerLine}</p>
+            <p>© {new Date().getFullYear()} {site.operator.legalName}</p>
             <ul className="flex flex-wrap gap-x-4 gap-y-2">
               {legalNav.map((item) => (
                 <li key={item.href}><Link href={item.href} className="hover:text-hoa-gold">{item.label}</Link></li>
