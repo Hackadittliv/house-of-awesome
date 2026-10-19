@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { EmbeddedCheckout } from "@/components/booking/EmbeddedCheckout";
 import { RequestForm } from "@/components/booking/RequestForm";
+import { SellerNote } from "@/components/SellerNote";
 import { Field, Notice, PrivacyText, primaryButtonClass, secondaryButtonClass } from "@/components/booking/fields";
 import {
   BookingApiError,
@@ -318,6 +319,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
           </h2>
           <p className="text-sm text-hoa-ink-muted">{t.paymentLead}</p>
           <EmbeddedCheckout clientSecret={clientSecret} />
+          <SellerNote />
         </section>
       ) : null}
     </div>

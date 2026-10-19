@@ -4,7 +4,9 @@ import { useState } from "react";
 
 import { EmbeddedCheckout } from "@/components/booking/EmbeddedCheckout";
 import { Field, Notice, primaryButtonClass, secondaryButtonClass } from "@/components/booking/fields";
+import { SellerNote } from "@/components/SellerNote";
 import { BookingApiError, createGiftCardCheckout } from "@/lib/booking/api";
+import { paymentReceiverLine } from "@/lib/seller";
 import {
   GIFT_CARD_MAX_SEK,
   GIFT_CARD_MIN_SEK,
@@ -72,7 +74,9 @@ export function GiftCardForm() {
     return (
       <div className="space-y-4">
         <p className="text-center text-sm text-hoa-ink-muted">Presentkort {kr(amountSek)}</p>
+        <p className="text-center text-xs text-hoa-ink-muted">{paymentReceiverLine}</p>
         <EmbeddedCheckout clientSecret={clientSecret} />
+        <SellerNote className="text-center" />
         <button type="button" className={secondaryButtonClass} onClick={() => setClientSecret(null)}>
           Ändra
         </button>
@@ -138,7 +142,7 @@ export function GiftCardForm() {
         <button type="submit" disabled={busy} className={primaryButtonClass}>
           {busy ? "Öppnar betalning..." : `Köp presentkort ${Number.isFinite(amountSek) && amountSek > 0 ? kr(amountSek) : ""}`.trim()}
         </button>
-        <p className="mt-3 text-xs text-hoa-ink-muted">Digitalt presentkort, giltigt i ett år.</p>
+        <p className="mt-3 text-xs text-hoa-ink-muted">Digitalt presentkort, giltigt i ett år. {paymentReceiverLine}</p>
       </div>
     </form>
   );

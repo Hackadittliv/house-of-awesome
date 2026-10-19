@@ -6,6 +6,7 @@ import { Prose } from "@/components/Prose";
 import { site } from "@/lib/content";
 import { trackers } from "@/lib/consent";
 import { mailtoUrl } from "@/lib/links";
+import { paymentReceiverLine } from "@/lib/seller";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -39,10 +40,10 @@ export default function IntegritetspolicyPage() {
 
           <h2>Bokning, betalning och medlemskap</h2>
           <p>
-            När du bokar en tid, köper ett medlemskap eller fyller i en hälsodeklaration gör du det
-            på lifeisawesome.se. De uppgifterna behandlas av samma bolag enligt{" "}
-            <a href={operator.privacyPolicyUrl}>integritetspolicyn hos Life Is Awesome</a>, som
-            beskriver vilka uppgifter som samlas in, varför och hur länge de sparas.
+            När du bokar en tid, köper ett presentkort eller medlemskap eller fyller i en hälsodeklaration
+            behandlas uppgifterna av {operator.legalName} i samma bokningssystem som lifeisawesome.se.{" "}
+            {paymentReceiverLine} Vilka uppgifter som samlas in, varför och hur länge de sparas står i{" "}
+            <a href={operator.privacyPolicyUrl}>integritetspolicyn hos Life Is Awesome</a>.
           </p>
 
           <h2>Vad vi behandlar på den här sajten</h2>
