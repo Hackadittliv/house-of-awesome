@@ -1,6 +1,6 @@
 import { CtaLink } from "@/components/CtaLink";
 import { Card, Grid, Hero, Section, Soon } from "@/components/v2/ui";
-import { mailtoUrl } from "@/lib/links";
+import { GiftCardForm } from "@/components/giftcard/GiftCardForm";
 import { b2bUrl } from "@/lib/links";
 import { pageMetadata } from "@/lib/seo";
 
@@ -27,8 +27,8 @@ export default function Page() {
         </Grid>
         <div className="mt-8 text-center"><Soon>Webbutiken kommer snart</Soon></div>
       </Section>
-      <Section id="presentkort" eyebrow="Presentkort" title="Ge bort en upplevelse" lead="Presentkort på sessioner, medlemskap eller en longevity-resa." band>
-        <div className="text-center"><CtaLink href={mailtoUrl("Presentkort")}>Beställ presentkort</CtaLink></div>
+      <Section id="presentkort" eyebrow="Presentkort" title="Ge bort en upplevelse" lead="Välj belopp och betala direkt. Koden kommer via e-post." band>
+        <GiftCardForm />
       </Section>
     </>
   );
