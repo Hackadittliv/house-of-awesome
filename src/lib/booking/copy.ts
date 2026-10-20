@@ -1,6 +1,8 @@
 // All synlig text i bokningsflödet. Bokningskomponenterna renderas i webbläsaren,
 // så copy-reglerna körs mot den här modulen i tests/booking-copy.test.ts.
 
+import { paymentReceiverLine } from "@/lib/seller";
+
 export const bookingCopy = {
   listTitle: "Boka en tid",
   listLead: "Välj tjänst, dag och tid. Du får en bekräftelse med kalenderfil direkt till din e-post.",
@@ -43,7 +45,7 @@ export const bookingCopy = {
   bookingError: "Bokningen gick inte igenom. Försök igen eller kontakta oss.",
   tooMany: "För många försök på kort tid. Vänta en stund och försök igen.",
   paymentTitle: "Betalning",
-  paymentLead: "Tiden hålls åt dig medan betalningen pågår. Betalningen tas emot av Life Is Awesome AB.",
+  paymentLead: `Tiden hålls åt dig medan betalningen pågår. ${paymentReceiverLine}`,
   paymentUnavailable:
     "Betalningen kunde inte startas. Din tid hålls kvar en kort stund, så försök gärna igen. Hör av dig om det inte fungerar.",
   paymentNeedsRequest:

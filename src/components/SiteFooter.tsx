@@ -6,6 +6,7 @@ import { CookieSettingsButton } from "@/components/consent/CookieSettingsButton"
 import { formatAddress, site } from "@/lib/content";
 import { b2bUrl, mailtoUrl, telUrl } from "@/lib/links";
 import { aboutNav, legalNav, primaryNav } from "@/lib/nav";
+import { sellerLine, sellerTermsUrl, termsLabel } from "@/lib/seller";
 
 const linkClass = "text-sm text-hoa-ink-muted transition-colors hover:text-hoa-gold";
 const head = "text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold";
@@ -17,7 +18,7 @@ export function SiteFooter() {
         <div className="lg:col-span-2">
           <Wordmark className="text-xl" />
           <p className="mt-3 text-sm text-hoa-ink-muted">Där vetenskap, själ och rörelse möts.</p>
-          <p className="mt-1 text-xs text-hoa-ink-muted">Drivs av Life Is Awesome.</p>
+          <p className="mt-1 text-xs text-hoa-ink-muted">{sellerLine}</p>
         </div>
         <nav aria-label="House of Awesome">
           <p className={head}>House of Awesome</p>
@@ -55,11 +56,12 @@ export function SiteFooter() {
             Vi erbjuder friskvård som ett komplement till hälso- och sjukvården. Vid akuta eller livshotande symtom, ring 112.
           </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p>© {new Date().getFullYear()} {site.operator.legalName}, org.nr {site.operator.orgNr}.</p>
+            <p>© {new Date().getFullYear()} {site.operator.legalName}</p>
             <ul className="flex flex-wrap gap-x-4 gap-y-2">
               {legalNav.map((item) => (
                 <li key={item.href}><Link href={item.href} className="hover:text-hoa-gold">{item.label}</Link></li>
               ))}
+              <li><a href={sellerTermsUrl} className="hover:text-hoa-gold">{termsLabel}</a></li>
               <li><CookieSettingsButton className="hover:text-hoa-gold" /></li>
             </ul>
           </div>
