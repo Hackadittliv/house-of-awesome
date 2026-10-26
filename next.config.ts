@@ -57,6 +57,9 @@ const nextConfig: NextConfig = {
       { source: "/upplevelsen", destination: "/om", permanent: true },
       { source: "/kontakt", destination: "/besok", permanent: true },
       { source: "/showroom/:path*", destination: "/om#showroom", permanent: true },
+      // Manuella behandlingar är dolda sedan oktober 2026.
+      { source: "/tjanster/manuella-behandlingar", destination: "/behandlingar-och-samtal", statusCode: 301 },
+      { source: "/boka/manuella-behandlingar", destination: "/behandlingar-och-samtal", statusCode: 301 },
       ...(bookingEnabled
         ? []
         : [

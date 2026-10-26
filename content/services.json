@@ -213,22 +213,5 @@
       "Långsiktiga vanor framför snabba lösningar",
       "Ett komplement till den vård du redan har"
     ]
-  },
-  {
-    "slug": "manuella-behandlingar",
-    "kind": "inquiry",
-    "category": "kropp",
-    "name": "Manuella behandlingar",
-    "shortName": "Manuella behandlingar",
-    "lead": "Manuell terapi för kropp och återhämtning.",
-    "body": [
-      "Behandlingar med händerna för dig som vill varva ner och mjuka upp kroppen efter träning.",
-      "Hör av dig så berättar vi vilka behandlingar som finns just nu."
-    ],
-    "points": [
-      "Manuell terapi efter dina behov",
-      "Ett skönt komplement till träningen",
-      "Tid efter förfrågan"
-    ]
   }
 ]

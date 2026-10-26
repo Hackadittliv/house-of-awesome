@@ -1,6 +1,6 @@
 import { CtaLink } from "@/components/CtaLink";
 import { Avatar, Card, Grid, Hero, Section, Soon } from "@/components/v2/ui";
-import { bookingUrl, inquiryUrl, mailtoUrl } from "@/lib/links";
+import { SHORT_CALL_SLUG, bookingUrl, inquiryUrl, mailtoUrl } from "@/lib/links";
 import { PORTRAITS } from "@/lib/people";
 import { practitioners } from "@/lib/practitioners";
 import { REBECCA } from "@/lib/rebecca";
@@ -22,7 +22,7 @@ function Monogram({ name }: { name: string }) {
 }
 
 export default function Page() {
-  const book = bookingUrl("manuella-behandlingar", "beh_card");
+  const book = bookingUrl(SHORT_CALL_SLUG, "beh_samtal");
   return (
     <>
       <Hero eyebrow="Behandlingar & samtal" title="För kropp och sinne" lead="Healing, bioresonans, coachning och samtal.">

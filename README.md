@@ -44,7 +44,7 @@ Gamla skelettsidor (`/sessioner`, `/upplevelsen`, `/kontakt`, `/showroom/...`) s
 * `content/services.snapshot.json` är en ögonblicksbild av LIA:s publika `booking_event_types` (slug, titel, längd, pris, plats). Den uppdateras med `npm run sync:services`, se kommentaren i `scripts/sync-services.mjs`. Bygget hämtar ingenting över nätet.
 * `content/services.json` innehåller HOA:s egna texter per tjänst, skrivna utan hälsopåståenden. LIA:s beskrivningar i databasen används inte eftersom flera av dem innehåller sådana påståenden.
 * Ett test säkerställer att varje publik tjänst i LIA har en HOA text. Lägger LIA till en ny tjänst och snapshoten uppdateras, faller testet tills texten finns.
-* Tjänster utan egen kalender i LIA (Awesome Protocol, InBody, vitamindropp, blodprov, funktionsmedicin, manuella behandlingar) leder till det kostnadsfria korta samtalet och till mejl.
+* Tjänster utan egen kalender i LIA (Awesome Protocol, InBody, vitamindropp, blodprov, funktionsmedicin) leder till det kostnadsfria korta samtalet och till mejl.
 
 ## Samtycke och analys
 
