@@ -15,8 +15,8 @@
       "Hälsodeklaration före första sessionen",
       "Klippkort finns för dig som vill komma regelbundet"
     ],
-    "image": "/images/tryckkammare.webp",
-    "imageAlt": "Tryckkammaren i House of Awesome med syrgasutrustning bredvid",
+    "image": "/images/tryckkammare-hoa-portratt.webp",
+    "imageAlt": "Den vita tryckkammaren i House of Awesome framför väggen med Life Is Awesome logga",
     "healthDeclaration": true
   },
   {
@@ -35,8 +35,8 @@
       "Hälsodeklaration före första sessionen",
       "Klippkort finns för dig som vill komma regelbundet"
     ],
-    "image": "/images/tryckkammare.webp",
-    "imageAlt": "Tryckkammaren i House of Awesome med syrgasutrustning bredvid",
+    "image": "/images/tryckkammare-hoa-portratt.webp",
+    "imageAlt": "Den vita tryckkammaren i House of Awesome framför väggen med Life Is Awesome logga",
     "healthDeclaration": true
   },
   {
@@ -54,7 +54,9 @@
       "Sker i vila, utan svett och utan vikter",
       "Ingen belastning på leder och muskler",
       "Utrustning från Celloxy"
-    ]
+    ],
+    "image": "/images/celloxy-ihht-portratt.webp",
+    "imageAlt": "Kvinna vilar med Celloxy-mask under en IHHT session i House of Awesome"
   },
   {
     "slug": "ewot-15",
@@ -88,7 +90,9 @@
       "Tjugo minuter av avkoppling",
       "Ett skönt avslut efter träningen",
       "Ingår i alla medlemskap"
-    ]
+    ],
+    "image": "/images/rodljus-portratt.webp",
+    "imageAlt": "En person ligger avslappnad under rödljuspanelen i House of Awesome"
   },
   {
     "slug": "coaching-45",
@@ -208,23 +212,6 @@
       "En helhetsbild av livsstil och hälsomarkörer",
       "Långsiktiga vanor framför snabba lösningar",
       "Ett komplement till den vård du redan har"
-    ]
-  },
-  {
-    "slug": "manuella-behandlingar",
-    "kind": "inquiry",
-    "category": "kropp",
-    "name": "Manuella behandlingar",
-    "shortName": "Manuella behandlingar",
-    "lead": "Massage och manuell terapi.",
-    "body": [
-      "Behandlingar med händerna för dig som vill varva ner och mjuka upp kroppen efter träning.",
-      "Hör av dig så berättar vi vilka behandlingar som finns just nu."
-    ],
-    "points": [
-      "Massage och manuell terapi",
-      "Ett skönt komplement till träningen",
-      "Tid efter förfrågan"
     ]
   }
 ]

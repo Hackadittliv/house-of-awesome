@@ -1,5 +1,6 @@
 import { CtaLink } from "@/components/CtaLink";
-import { Card, Grid, Hero, Section } from "@/components/v2/ui";
+import { Avatar, Card, Grid, Hero, Section } from "@/components/v2/ui";
+import { PORTRAITS } from "@/lib/people";
 import { pageMetadata } from "@/lib/seo";
 
 import { site } from "@/lib/content";
@@ -10,12 +11,12 @@ export const metadata = pageMetadata({
   path: "/om",
 });
 
-const team = [
-  ["Medgrundare", "Patrik Nilsson", "Certifierad Wim Hof Method-instruktör och trebarnspappa. Byggde tidigare ett åkeri med 200 lastbilar. Leder utveckling och partnerskap."],
-  ["Medgrundare", "Alexandra Schneider", "Ansvarar för innehåll och drift. Medförfattare till boken Allt ligger i livsstilen."],
-  ["Coach", "Lukas Eliasson", "Coach och ansvarig för gymmet och Basläger. Bygger träningskonceptet och tar hand om medlemmarna."],
-  ["Digitalt", "Christian Wederbrand", "Bygger den digitala plattformen: webb, bokning, medlemsportal och partnernätverket."],
-  ["Delägare", "Per Berglund", "Delägare och investerare genom EB Invest. Bidrar med erfarenhet av att bygga bolag."],
+const team: [string, string, string, keyof typeof PORTRAITS | null][] = [
+  ["Medgrundare", "Patrik Nilsson", "Certifierad Wim Hof Method-instruktör och trebarnspappa. Byggde tidigare ett åkeri med 200 lastbilar. Leder utveckling och partnerskap.", "patrik"],
+  ["Medgrundare", "Alexandra Schneider", "Ansvarar för innehåll och drift. Medförfattare till boken Allt ligger i livsstilen.", null],
+  ["Coach", "Lucas Eliasson", "Coach och ansvarig för gymmet och Basläger. Bygger träningskonceptet och tar hand om medlemmarna.", "lucas"],
+  ["Digitalt", "Christian Wederbrand", "Bygger den digitala plattformen: webb, bokning, medlemsportal och partnernätverket.", null],
+  ["Delägare", "Per Berglund", "Delägare och investerare genom EB Invest. Bidrar med erfarenhet av att bygga bolag.", null],
 ];
 
 // Kortad från "Vår story" på lifeisawesome.se/om-oss.
@@ -50,7 +51,11 @@ export default function Page() {
       </Section>
       <Section eyebrow="Teamet" title="Människorna bakom huset" band>
         <Grid>
-          {team.map(([role, name, text]) => <Card key={name} label={role} title={name} text={text} />)}
+          {team.map(([role, name, text, portrait]) => (
+            <Card key={name} label={role} title={name} text={text}>
+              {portrait ? <Avatar {...PORTRAITS[portrait]} /> : null}
+            </Card>
+          ))}
         </Grid>
       </Section>
     </>

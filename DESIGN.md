@@ -55,4 +55,4 @@ Notera: lifeisawesome.se använder i dag Plus Jakarta Sans även i brödtext. In
 
 ## Bilder
 
-Fas 0 lånar LIA:s guldfärgade uggla och LIA:s bilder (landskapet vid Stora Höga, tryckkammaren, Patrik och Alexandra) i `public/images`. Bilder visas via `next/image` med `rounded-2xl` och 1 px guld 20 %. De byts mot egna HOA bilder när de finns.
+Fas 0 lånar LIA:s guldfärgade uggla och LIA:s bilder (landskapet vid Stora Höga, Patrik och Alexandra) i `public/images`. Egna HOA bilder av Lucas Eliasson (Picture Perfect, oktober 2026): porträtt i `public/images/team` samt Celloxy, tryckkammaren och rödljuset. Liggande 4:3 versioner används i korten, stående 4:5 versioner på tjänstesidorna. Porträtt visas som runda avatarer. Bilder visas via `next/image` med `rounded-2xl` och 1 px guld 20 %. De byts mot egna HOA bilder när de finns.

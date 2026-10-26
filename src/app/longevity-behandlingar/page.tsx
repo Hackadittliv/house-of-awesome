@@ -18,7 +18,7 @@ export default function Page() {
       </Hero>
       <Section>
         <Grid cols={2}>
-          <Card id="celloxy-ihht" label="1 · Cellträning utan svett" title="Celloxy IHHT" text={<>
+          <Card id="celloxy-ihht" label="1 · Cellträning utan svett" title="Celloxy IHHT" image={{ src: "/images/celloxy-ihht.webp", alt: "Kvinna vilar i en behandlingsstol med Celloxy-mask, bredvid står Celloxy-maskinen" }} text={<>
             <p className="mb-3 text-hoa-ink-muted">Intermittent hypoxi-hyperoxi-träning. Växlar mellan 16 och 9 % syre och upp till 36 % syre.</p>
             <p>Tänk höghöjdsträning, fast bekvämt liggande. Du andas växelvis syrefattig och syrerik luft genom en mask. Metoden utgår från forskningen om hur cellerna känner av syre. Allt du behöver göra är att andas och slappna av.</p>
           </>}>
@@ -26,7 +26,7 @@ export default function Page() {
             <p className="text-xs text-hoa-ink-muted">Övervakad session. Lämplighet bedöms före start.</p>
             <CtaLink href={bookingUrl("ihht-50", "longevity_ihht")} size="sm" className="mt-auto w-fit">Boka</CtaLink>
           </Card>
-          <Card id="tryckkammare" label="2 · Syre under tryck" title="Tryckkammare (HBOT)" text={<>
+          <Card id="tryckkammare" label="2 · Syre under tryck" title="Tryckkammare (HBOT)" image={{ src: "/images/tryckkammare-hoa.webp", alt: "Den vita tryckkammaren i House of Awesome med en bänk i ljust trä" }} text={<>
             <p className="mb-3 text-hoa-ink-muted">1,5 ATA med 93 till 95 % syre.</p>
             <p>Luta dig tillbaka och vila. En stund av lugn för både kropp och huvud, oavsett om du tränar hårt eller bara vill ge dig själv något extra.</p>
           </>}>
@@ -34,7 +34,7 @@ export default function Page() {
             <p className="text-xs text-hoa-ink-muted">Hälsodeklaration före första behandlingen, bland annat för öronproblem och klaustrofobi.</p>
             <CtaLink href={bookingUrl("hbot-60", "longevity_hbot")} size="sm" className="mt-auto w-fit">Boka</CtaLink>
           </Card>
-          <Card id="rodljus-pemf" label="3 · Ljus och puls" title="Rödljus + PEMF" text={<p>Rött ljus på 660 nm kombinerat med PEMF. Du ligger bekvämt och slappnar av i en lugn och behaglig behandling.</p>}>
+          <Card id="rodljus-pemf" label="3 · Ljus och puls" title="Rödljus + PEMF" image={{ src: "/images/rodljus.webp", alt: "En person ligger avslappnad under rödljuspanelen i House of Awesome" }} text={<p>Rött ljus på 660 nm kombinerat med PEMF. Du ligger bekvämt och slappnar av i en lugn och behaglig behandling.</p>}>
             <Bullets items={["Ett skönt avslut efter träningen", "Särskilt uppskattat under de mörka årstiderna", "Ingår i alla gymmedlemskap"]} />
             <CtaLink href={bookingUrl("redlight-20", "longevity_redlight")} size="sm" className="mt-auto w-fit">Boka</CtaLink>
           </Card>

@@ -40,7 +40,6 @@ export const offerGroup: MenuGroup = {
       href: "/behandlingar-och-samtal",
       label: "Behandlingar & samtal",
       sections: [
-        { href: "/behandlingar-och-samtal#massage", label: "Massage" },
         { href: "/behandlingar-och-samtal#healing", label: "Healing" },
         { href: "/behandlingar-och-samtal#coachning", label: "Coachning & vägledning" },
         { href: "/behandlingar-och-samtal#samtal", label: "Trauma & samtal" },

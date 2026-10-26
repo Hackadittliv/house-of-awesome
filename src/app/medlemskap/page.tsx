@@ -30,7 +30,7 @@ export default function Page() {
           <Card label="Kraft" title="Gymmet" text="Styrka för hela kroppen, anpassad efter din nivå." />
           <Card label="Syre" title="EWOT" text="Intervallträning med högkoncentrerat syre." />
           <Card label="Återhämtning" title="Rödljus" text="Ingår i alla medlemskap." />
-          <Card id="baslager" label="Coachat" title="Basläger" text={'Funktionell träning med kettlebells och vikter, ledd av coach Lukas "Raw" Eliasson.'} />
+          <Card id="baslager" label="Coachat" title="Basläger" text={'Funktionell träning med kettlebells och vikter, ledd av coach Lucas "Raw" Eliasson.'} />
         </Grid>
       </Section>
       <Section id="medlemskap" eyebrow="Medlemskap" title="Din hälsa, på dina villkor" lead="Alla medlemskap ger dig gymmet dygnet runt och en egen träningsplan." band>
