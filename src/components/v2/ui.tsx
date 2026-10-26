@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { ReactNode } from "react";
 
 import { Container } from "@/components/Container";
@@ -65,12 +66,15 @@ export function Grid({ children, cols = 3 }: { children: ReactNode; cols?: 2 | 3
   return <div className={`grid gap-4 ${c}`}>{children}</div>;
 }
 
+export type CardImage = { src: string; alt: string };
+
 export function Card({
   id,
   label,
   title,
   text,
   price,
+  image,
   children,
   featured = false,
 }: {
@@ -79,6 +83,7 @@ export function Card({
   title: string;
   text?: ReactNode;
   price?: string;
+  image?: CardImage;
   children?: ReactNode;
   featured?: boolean;
 }) {
@@ -89,12 +94,26 @@ export function Card({
         featured ? "border-2 border-hoa-gold bg-hoa-secondary/30 shadow-gold" : "border border-hoa-gold/20 bg-hoa-secondary/20"
       }`}
     >
+      {image ? (
+        <div className="relative mb-2 aspect-[4/3] overflow-hidden rounded-xl border border-hoa-gold/20">
+          <Image src={image.src} alt={image.alt} fill sizes="(min-width: 768px) 34rem, 90vw" className="object-cover" />
+        </div>
+      ) : null}
       {label ? <p className="text-xs font-semibold uppercase tracking-[0.25em] text-hoa-bronze">{label}</p> : null}
       <h3 className="text-xl text-hoa-ink">{title}</h3>
       {price ? <p className="font-display text-2xl font-bold text-hoa-gold">{price}</p> : null}
       {text ? <div className="text-sm leading-relaxed text-hoa-ink/80">{text}</div> : null}
       {children}
     </article>
+  );
+}
+
+export function Avatar({ src, alt, size = "md" }: { src: string; alt: string; size?: "md" | "lg" }) {
+  const box = size === "lg" ? "size-40" : "size-24";
+  return (
+    <div className={`relative ${box} shrink-0 overflow-hidden rounded-full border border-hoa-gold/40 bg-hoa-secondary/40`}>
+      <Image src={src} alt={alt} fill sizes={size === "lg" ? "10rem" : "6rem"} className="object-cover object-top" />
+    </div>
   );
 }
 

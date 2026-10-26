@@ -16,7 +16,7 @@ export const metadata = {
 const areas = [
   { href: "/longevity-behandlingar", title: "Longevity-behandlingar", text: "Celloxy IHHT, tryckkammare, rödljus + PEMF och EWOT." },
   { href: "/funktionsmedicin", title: "Funktionsmedicin", text: "Blodprover, DNA-metylering, borrelia, tungmetaller och mögel." },
-  { href: "/behandlingar-och-samtal", title: "Behandlingar & samtal", text: "Massage, healing, bioresonans, trauma och samtal." },
+  { href: "/behandlingar-och-samtal", title: "Behandlingar & samtal", text: "Healing, bioresonans, trauma och samtal." },
   { href: "/medlemskap", title: "Gym & medlemskap", text: "Longevity-gym dygnet runt, från 599 kr/mån." },
   { href: "/awesome-protocol", title: "The Awesome Protocol", text: "Kraft, syre och ljus. Vårt signaturpass på 60 minuter." },
   { href: "/klinik-24-7", title: "24/7-klinik", text: "Obemannad longevity-klinik med bokning i mobilen." },
@@ -81,7 +81,7 @@ export default function HomePage() {
       <Section eyebrow="Kom igång" title="Två enkla sätt att börja" lead="Vet du vad du vill ha? Boka direkt. Osäker? Prata med oss först, det kostar ingenting.">
         <Grid cols={2}>
           <Card label="Jag vet vad jag vill ha" title="Boka behandling" text="Välj behandling och tid direkt i bokningen. Du får information om upplägg och eventuell hälsodeklaration innan du kommer.">
-            <Bullets items={["Celloxy IHHT, tryckkammare, rödljus + PEMF, EWOT", "Blodprovtagning och vitamindropp", "Massage, healing, coachning och samtal"]} />
+            <Bullets items={["Celloxy IHHT, tryckkammare, rödljus + PEMF, EWOT", "Blodprovtagning och vitamindropp", "Healing, coachning och samtal"]} />
             <CtaLink href={book} className="mt-3 w-full sm:w-fit">Boka behandling</CtaLink>
           </Card>
           <Card label="Jag känner mig osäker" title="Kostnadsfri rådgivning" text="Ett kort samtal på 10 minuter där vi lyssnar och hjälper dig hitta rätt. Inget köpkrav." featured>
