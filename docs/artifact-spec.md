@@ -61,7 +61,7 @@ Blodprover, DNA-metylering, borrelia, tungmetaller och mögel.
 Utforska →
 Behandlingar & samtal
 
-Massage, healing, bioresonans, trauma och samtal.
+Healing, bioresonans, trauma och samtal.
 
 Utforska →
 Gym & medlemskap
@@ -106,7 +106,7 @@ Välj behandling och tid direkt i bokningen. Du får information om upplägg och
 
 Celloxy IHHT, tryckkammare, rödljus + PEMF, EWOT
 Blodprovtagning och vitamindropp
-Massage, healing, coachning och samtal
+Healing, coachning och samtal
 Boka behandling
 JAG KÄNNER MIG OSÄKER
 Kostnadsfri rådgivning
@@ -299,7 +299,7 @@ Rött 660 nm och nä
 
 ## 4. Behandlingar & samtal (#manuellt)
 
-> **TODO:** Början av sidan: intro, massage, healing (kända priser: 45 min 950 kr på plats / 750 kr distans, 75 min 1 500 kr), bioresonans, början av coachningskortet. Texten saknas eller är avklippt i läsarens transkript. Fylls i från artefakten, uppfinn inget.
+> **TODO:** Början av sidan: intro, healing (kända priser: 45 min 950 kr på plats / 750 kr distans, 75 min 1 500 kr), bioresonans, början av coachningskortet. Texten saknas eller är avklippt i läsarens transkript. Fylls i från artefakten, uppfinn inget.
 
 ```text
 ess och återhämtning och gör en plan du faktiskt orkar leva efter.
@@ -338,7 +338,7 @@ Energimedicinsk healingterapi (EMHT). Behandlingar på plats i huset eller på d
 Bild och kort presentation läggs in
 LE
 COACH
-Lukas Eliasson
+Lucas Eliasson
 
 Coach i huset. Träning, Basläger och The Awesome Protocol, med fokus på en stark kropp som håller hela livet.
 
@@ -376,7 +376,7 @@ Ingår i alla medlemskap.
 COACHAT
 Basläger
 
-Funktionell träning med kettlebells och vikter, ledd av coach Lukas "Raw" Eliasson.
+Funktionell träning med kettlebells och vikter, ledd av coach Lucas "Raw" Eliasson.
 
 MEDLEMSKAP
 Din hälsa, på dina villkor
@@ -684,7 +684,7 @@ Ingen skärm, ingen stress.
 15.00
 Natur eller behandling
 
-Vandring längs kusten, massage eller healing.
+Vandring längs kusten, healing eller vila.
 
 17.30
 Föreläsning eller samtal
@@ -794,7 +794,7 @@ Ansvarar för innehåll och drift. Medförfattare till boken Allt ligger i livss
 
 LE
 COACH
-Lukas Eliasson
+Lucas Eliasson
 
 Coach och ansvarig för gymmet och Basläger. Bygger träningskonceptet och tar hand om medlemmarna.
 

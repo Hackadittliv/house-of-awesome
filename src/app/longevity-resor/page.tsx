@@ -15,7 +15,7 @@ const day = [
   ["09.30", "The Awesome Protocol", "Kraft, syre och ljus."],
   ["11.30", "Tryckkammare", "Lugn tid för återhämtning."],
   ["13.00", "Lunch och vila", "Ingen skärm, ingen stress."],
-  ["15.00", "Natur eller behandling", "Vandring längs kusten, massage eller healing."],
+  ["15.00", "Natur eller behandling", "Vandring längs kusten, healing eller vila."],
   ["17.30", "Föreläsning eller samtal", "Sömn, ljus, kost och stress. En kunskap om dagen."],
   ["21.30", "Sömnrutin", "Mörkt, svalt och mätt med wearable."],
 ];
