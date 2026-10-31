@@ -22,8 +22,8 @@ function MobileEntry({ entry, onNavigate }: { entry: MenuEntry; onNavigate: () =
   return (
     <li>
       <div className="flex items-center justify-between gap-3">
-        <Link href={entry.href} onClick={onNavigate} className="inline-flex min-h-12 items-center text-lg text-hoa-ink">
-          {entry.label}
+        <Link href={entry.href} onClick={onNavigate} className="inline-flex min-h-12 min-w-0 items-center text-lg text-hoa-ink">
+          <span className="min-w-0">{entry.label}</span>
         </Link>
         {entry.sections ? (
           <button
@@ -31,7 +31,7 @@ function MobileEntry({ entry, onNavigate }: { entry: MenuEntry; onNavigate: () =
             aria-expanded={open}
             aria-label={`${open ? "Fäll ihop" : "Fäll ut"} ${entry.label}`}
             onClick={() => setOpen(!open)}
-            className="inline-flex h-12 w-12 items-center justify-center"
+            className="inline-flex h-12 w-12 shrink-0 items-center justify-center"
           >
             <Plus open={open} />
           </button>

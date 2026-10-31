@@ -47,22 +47,36 @@ describe.each(pages)("longevity: $content.path", ({ content, Page, metadata, pla
   });
 
   it("har v2-rubriker och en h2 per innehållsblock inklusive avslutet", () => {
-    const h1 = html.match(/<h1\b[^>]*class="([^"]+)"/);
-    expect(h1?.[1].split(" ")).toEqual(expect.arrayContaining(["text-4xl", "md:text-6xl"]));
-    const h2s = [...html.matchAll(/<h2\b[^>]*class="([^"]+)"/g)];
+    const h1 = html.match(/<h1\b[^>]*class="([^"]+)"[^>]*>/);
+    expect(h1?.[1].split(" ")).toContain("hoa-h1");
+    expect(h1?.[0]).toMatch(/style="--hoa-fit:[\d.]+"/);
+    const h2s = [...html.matchAll(/<h2\b[^>]*class="([^"]+)"[^>]*>/g)];
     expect(h2s).toHaveLength(content.sections.length + 1);
-    for (const h2 of h2s) expect(h2[1].split(" ")).toEqual(expect.arrayContaining(["text-3xl", "md:text-4xl"]));
-    for (const section of content.sections) expect(html).toContain(`id="${section.id}-rubrik"`);
-    expect(html).toMatch(/<section\b[^>]*id="boka-samtal"/);
-    expect(html).toContain('id="boka-samtal-rubrik"');
-    expect(html).not.toMatch(/<div class="max-w-3xl space-y-4 leading-7[^"]*"><\/div>/);
+    for (const h2 of h2s) {
+      expect(h2[1].split(" ")).toContain("hoa-h2");
+      expect(h2[0]).toMatch(/style="--hoa-fit:[\d.]+"/);
+    }
+    const blocks = [...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)];
+    for (const id of [...content.sections.map((section) => section.id), "boka-samtal"]) {
+      const block = blocks.find((section) => section[1].includes(`id="${id}"`));
+      expect(block, id).toBeDefined();
+      expect(block![2].match(/<h2\b/g), id).toHaveLength(1);
+      expect(block![2]).toContain(`id="${id}-rubrik"`);
+      expect(block![2]).toMatch(/<div\b[^>]*class="@container\b[^>]*>\s*<h2\b/);
+    }
+    // Prose börjar med @container; spärren får inte bero på första klassen.
+    const emptyDivs = [...html.matchAll(/<div\b[^>]*class="([^"]*)"[^>]*>\s*<\/div>/g)];
+    for (const div of emptyDivs) {
+      expect(["max-w-3xl", "space-y-4", "leading-7"].every((cls) => div[1].split(" ").includes(cls)), "tom Prose").toBe(false);
+    }
   });
 
   it("har obandat avslut före SharedBottom och inga två band i följd", () => {
     const sections = [...html.matchAll(/<section\b[^>]*class="([^"]+)"/g)];
     expect(sections).toHaveLength(content.sections.length + 2);
-    const bands = sections.map((section) => section[1].includes("bg-hoa-secondary/"));
-    // SharedBottom (bandad) följer direkt efter avslutet i layouten.
+    const bands = sections.map((section) => section[1].split(" ").includes("hoa-surface-light"));
+    // Hero ärver mörk yta. Ett mörkt avslut följs av SharedBottom:s sammanhängande ljusa CTA och nyhetsbrev.
+    expect(sections.at(-1)?.[1].split(" ")).toContain("hoa-surface-dark");
     expect(bands.at(-1)).toBe(false);
     expect(bands.at(-2)).toBe(true);
     for (let index = 1; index < bands.length; index++) expect(bands[index] && bands[index - 1]).toBe(false);
@@ -87,9 +101,16 @@ describe.each(pages)("longevity: $content.path", ({ content, Page, metadata, pla
 
   it("länkar till båda andra sidorna", () => {
     expect(content.links.map((link) => link.href).sort()).toEqual(pages.map(({ content: other }) => other.path).filter((path) => path !== content.path).sort());
+    const nav = html.match(/<nav\b[^>]*aria-label="Läs vidare"[^>]*>([\s\S]*?)<\/nav>/)?.[1] ?? "";
+    const links = [...nav.matchAll(/<a\b[^>]*class="([^"]+)"[^>]*>/g)];
+    expect(links).toHaveLength(2);
+    for (const link of links) {
+      expect(link[1].split(" ")).toEqual(expect.arrayContaining(["inline-flex", "min-h-11", "min-w-11", "text-hoa-ink", "underline"]));
+      expect(link[1]).not.toMatch(/text-hoa-gold|rounded|no-underline/);
+    }
     for (const link of content.links) {
-      expect(html).toContain(`href="${link.href}"`);
-      expect(html).toContain(escaped(link.label));
+      expect(nav).toContain(`href="${link.href}"`);
+      expect(nav).toContain(escaped(link.label));
     }
   });
 
@@ -142,6 +163,7 @@ describe.each([false, true])("publicering = %s", (published) => {
 });
 
 it("använder samma publiceringsflagga i faktisk meny, sidfot och sitemap", () => {
+  expect(LONGEVITY_PUBLISHED).toBe(false);
   expect(mainMenu).toEqual(getMainMenu(LONGEVITY_PUBLISHED));
   expect(offerGroup).toEqual(getOfferGroup(LONGEVITY_PUBLISHED));
   expect(aboutNav).toEqual(getAboutNav(LONGEVITY_PUBLISHED));

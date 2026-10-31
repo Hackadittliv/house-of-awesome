@@ -69,7 +69,7 @@ export function LongevityPage({ content, placement, portrait = false }: {
           <ul className="flex flex-wrap justify-center gap-x-8 gap-y-2">
             {content.links.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="inline-flex min-h-11 items-center text-hoa-gold underline underline-offset-4">{link.label}</Link>
+                <Link href={link.href} className="inline-flex min-h-11 min-w-11 items-center text-hoa-ink underline underline-offset-4 hover:decoration-2">{link.label}</Link>
               </li>
             ))}
           </ul>
