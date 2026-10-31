@@ -99,3 +99,26 @@ export type FaqItem = {
   question: string;
   answer: string;
 };
+
+export type LongevitySection = {
+  id: string;
+  heading: string;
+  body?: string[];
+  points?: string[];
+  bodyAfter?: string[];
+  steps?: { title: string; text: string }[];
+  items?: { title: string; text: string }[];
+};
+
+export type LongevityPageContent = {
+  path: string;
+  title: string;
+  metaDescription: string;
+  eyebrow: string;
+  h1: string;
+  lead: string;
+  sections: LongevitySection[];
+  cta: { heading: string; text: string; buttonLabel: string };
+  disclaimer: string;
+  links: { label: string; href: string }[];
+};

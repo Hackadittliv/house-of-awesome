@@ -1,0 +1,235 @@
+{
+  "anne": {
+    "path": "/anne-wevers",
+    "title": "Anne Wevers, hälsovetare och PNI-terapeut",
+    "metaDescription": "Hälsovetaren och PNI-terapeuten Anne Wevers ger stöd kring trötthet, stress, återhämtning, mage och metabol hälsa. Ett komplement till vården.",
+    "eyebrow": "Terapeut inom klinisk psykoneuroimmunologi",
+    "h1": "Anne Wevers",
+    "lead": "Hälsovetare och PNI-terapeut som hjälper dig att se helheten i livsstil, stress och återhämtning. Anne saknar legitimation som hälso- och sjukvårdspersonal, och hennes stöd är ett komplement till vården.",
+    "sections": [
+      {
+        "id": "utbildning",
+        "heading": "Utbildning och bakgrund",
+        "points": [
+          "Hälsovetare med två masterexamina",
+          "Klinisk PNI-terapeut med fyra års utbildning i hur immunsystem, nervsystem, hormoner och psyke samverkar",
+          "Doktorand som forskar vid Universidad de Granada",
+          "Executive MBA samt vidareutbildning i psykologi och nutrition"
+        ]
+      },
+      {
+        "id": "helheten",
+        "heading": "När du vill se helheten",
+        "body": [
+          "Du har kanske träffat flera specialister, gjort tester och provat mycket. Anne hjälper dig att se helheten.",
+          "Ni pratar om din historia, din livsstil och ditt mående. Har du provsvar går ni igenom dem ur ett livsstilsperspektiv, med fokus på vanor, kost och återhämtning."
+        ]
+      },
+      {
+        "id": "det-har-gor-anne",
+        "heading": "Det här gör Anne",
+        "points": [
+          "Tar fram ett personligt hälsoupplägg för livsstil, kost och återhämtning",
+          "Hjälper dig att avgöra om en hälsokartläggning passar dina mål, och i så fall vilken",
+          "Går igenom dina provsvar tillsammans med dig ur ett livsstilsperspektiv",
+          "Följer dig under hela processen och justerar upplägget i samråd med dig"
+        ]
+      },
+      {
+        "id": "stod",
+        "heading": "Anne kan vara ett stöd vid bland annat",
+        "points": [
+          "Långvarig trötthet",
+          "Långvarig stress och sämre återhämtning",
+          "Besvär med magen",
+          "Frågor om metabol hälsa"
+        ],
+        "bodyAfter": [
+          "Allt börjar med ett samtal om din situation och dina mål. Symtom som behöver utredas tar du upp med vården."
+        ]
+      }
+    ],
+    "cta": {
+      "heading": "Ta första steget",
+      "text": "Boka ett kostnadsfritt samtal på 10 minuter med Patrik. Ni pratar om dina mål och om Anne är rätt för dig.",
+      "buttonLabel": "Boka kort samtal med Patrik"
+    },
+    "disclaimer": "Anne är inte legitimerad hälso- och sjukvårdspersonal. Hon ställer inga diagnoser och ger ingen medicinsk behandling. Hennes arbete är ett komplement till vården och ersätter varken medicinsk utredning eller behandling. Har du symtom eller en sjukdom, kontakta vården. Vid livshotande tillstånd, ring 112.",
+    "links": [
+      {
+        "label": "Longevity Blodanalys",
+        "href": "/longevity-blodanalys"
+      },
+      {
+        "label": "För företag",
+        "href": "/halsostrategi-for-foretag"
+      }
+    ]
+  },
+  "blodanalys": {
+    "path": "/longevity-blodanalys",
+    "title": "Longevity Blodanalys för män och kvinnor",
+    "metaDescription": "Utvalda biomarkörer för män och kvinnor, en uppskattning av biologisk ålder och skriftlig återkoppling. En hälsokartläggning, ingen medicinsk utredning.",
+    "eyebrow": "För män och kvinnor",
+    "h1": "Longevity Blodanalys",
+    "lead": "Ta reda på var du står i dag och lägg grunden för var du vill vara i morgon.",
+    "sections": [
+      {
+        "id": "om-analysen",
+        "heading": "Hur mår din kropp på insidan?",
+        "body": [
+          "Din kronologiska ålder vet du redan. Longevity Blodanalys ger dig en ögonblicksbild av utvalda hälsomarkörer i dag och en grund att bygga vidare på. Vi har tagit fram analysen tillsammans med hälsovetaren och PNI-terapeuten Anne Wevers.",
+          "Paketen är olika för män och kvinnor. Biomarkörerna är utvalda med fokus på långsiktig hälsa, till exempel ämnesomsättning, hormoner och näringsstatus. Analysen ger också en uppskattning av din biologiska ålder."
+        ]
+      },
+      {
+        "id": "sa-gar-det-till",
+        "heading": "Så går det till",
+        "steps": [
+          {
+            "title": "Blodprov",
+            "text": "Du lämnar ett blodprov, och det analyseras av ett ackrediterat laboratorium."
+          },
+          {
+            "title": "Skriftlig uppföljning",
+            "text": "Du får en personlig sammanställning av dina resultat, förklarad så att den går att förstå och med fokus på det som spelar störst roll för dig. Sammanställningen utgår från ett livsstilsperspektiv och är ingen medicinsk bedömning."
+          },
+          {
+            "title": "Din longevityplan (tillval)",
+            "text": "Vill du gå vidare tar vi fram ett personligt hälsoupplägg utifrån dina resultat och dina mål."
+          }
+        ]
+      },
+      {
+        "id": "longevityplan",
+        "heading": "Din personliga longevityplan",
+        "body": [
+          "Planen bygger på dina egna resultat och kombinerar livsstil, kost och återhämtning med vår longevityutrustning:"
+        ],
+        "points": [
+          "Tryckkammare (HBOT)",
+          "IHHT (intervallträning med växlande syrenivåer)",
+          "Rödljus",
+          "Bastu",
+          "Kallbad",
+          "Med mera"
+        ],
+        "bodyAfter": [
+          "Planen har tydliga och mätbara mål. Med nya blodprover följer vi upp dina värden över tid. Du ser själv utvecklingen, och vi justerar planen längs vägen.",
+          "Resultat varierar mellan individer och vi lämnar inga garantier. Före första sessionen i tryckkammaren fyller du i en hälsodeklaration."
+        ]
+      }
+    ],
+    "cta": {
+      "heading": "Vill du veta mer?",
+      "text": "Boka ett kostnadsfritt samtal på 10 minuter med Patrik. Ni går igenom vilket paket som passar dig och hur upplägget fungerar. Priset får du veta i samtalet.",
+      "buttonLabel": "Boka kort samtal med Patrik"
+    },
+    "disclaimer": "Longevity Blodanalys är en hälsokartläggning och ingen medicinsk utredning. Den biologiska åldern är en uppskattning och ingen exakt mätning. Om resultaten visar avvikande värden hänvisar vi dig till din vårdcentral eller läkare. Har du symtom eller en sjukdom, kontakta vården.",
+    "links": [
+      {
+        "label": "Läs mer om Anne",
+        "href": "/anne-wevers"
+      },
+      {
+        "label": "För företag",
+        "href": "/halsostrategi-for-foretag"
+      }
+    ]
+  },
+  "foretag": {
+    "path": "/halsostrategi-for-foretag",
+    "title": "Longevity Hälsostrategi för företag",
+    "metaDescription": "En förebyggande hälsostrategi för hela bolaget: Longevity Blodanalys, företagsportal med anonymiserad data på gruppnivå, workshops och föreläsningar.",
+    "eyebrow": "Life is Awesome i samarbete med Whole Labs och Anne Wevers",
+    "h1": "Longevity Hälsostrategi för företag",
+    "lead": "En långsiktig hälsostrategi för hela bolaget, med mätbara mål och fokus på förebyggande hälsoarbete.",
+    "sections": [
+      {
+        "id": "halsoarbete",
+        "heading": "Hälsoarbete som börjar tidigare",
+        "body": [
+          "Life is Awesome erbjuder, tillsammans med Whole Labs och dess grundare Anne Wevers, en ny sorts hälsoarbete för företag. Anne är hälsovetare med två masterexamina och är utbildad inom klinisk psykoneuroimmunologi, som handlar om hur immunsystem, nervsystem, hormoner och psyke samverkar. Hon forskar också på doktorsnivå vid Universidad de Granada. Hennes specialitet är att göra biomarkörer begripliga och omsätta dem i konkreta hälsoupplägg för livsstil, kost och återhämtning.",
+          "Ofta kommer hälsoinsatser in först när något redan har hänt. Vi vill börja tidigare, som ett komplement till företagshälsovården, med en långsiktig hälsostrategi för hela bolaget. Tillsammans sätter vi mätbara mål och följer utvecklingen över tid. Arbetet syftar till bättre förutsättningar för hälsa, energi och välmående i vardagen."
+        ]
+      },
+      {
+        "id": "sa-skiljer-vi-oss",
+        "heading": "Så skiljer vi oss",
+        "items": [
+          {
+            "title": "Förebyggande i stället för reaktivt",
+            "text": "Fokus ligger på vanor och livsstil i ett tidigt skede."
+          },
+          {
+            "title": "Mätbart",
+            "text": "Ni följer utvecklingen i anonymiserade siffror på gruppnivå."
+          },
+          {
+            "title": "Skräddarsytt",
+            "text": "Upplägget anpassas efter er verksamhet och hälsokultur."
+          },
+          {
+            "title": "Longevityfokus",
+            "text": "Vi arbetar med långsiktig hälsa och prestation."
+          }
+        ]
+      },
+      {
+        "id": "det-har-ingar",
+        "heading": "Det här ingår",
+        "items": [
+          {
+            "title": "Longevity Blodanalys",
+            "text": "Biomarkörer som är utvalda för män respektive kvinnor, med individuell skriftlig återkoppling till varje medarbetare."
+          },
+          {
+            "title": "Egen företagsportal",
+            "text": "Ni följer bolagets utveckling på gruppnivå över tid, med anonymiserad data där varje grupp som visas har minst 10 personer."
+          },
+          {
+            "title": "Wearables (tillval)",
+            "text": "Med samtycke från varje medarbetare ser ni förändringar i sömn och stress på gruppnivå."
+          },
+          {
+            "title": "Aktiviteter, föreläsningar och workshops",
+            "text": "Innehållet anpassas efter ert bolag."
+          },
+          {
+            "title": "Arbetsplatsoptimering",
+            "text": "Vi gör det lättare att göra hälsosamma val på jobbet."
+          }
+        ]
+      },
+      {
+        "id": "smidigt-och-tryggt",
+        "heading": "Smidigt och tryggt",
+        "body": [
+          "Provtagning sker på arbetsplatsen eller hos en samarbetspartner i närheten. Behandlingar som tillval utförs av legitimerad vårdpersonal via vår medicinska partner."
+        ],
+        "points": [
+          "Deltagandet är frivilligt",
+          "Varje medarbetare lämnar sitt uttryckliga samtycke innan provtagning och innan wearables används",
+          "Varje medarbetare äger sina egna resultat",
+          "Bolaget ser bara anonymiserad data på gruppnivå, och varje grupp som visas har minst 10 personer"
+        ]
+      }
+    ],
+    "cta": {
+      "heading": "Låt oss prata om er hälsostrategi",
+      "text": "Boka ett kostnadsfritt samtal på 10 minuter med Patrik.",
+      "buttonLabel": "Boka kort samtal med Patrik"
+    },
+    "disclaimer": "Longevity Hälsostrategi är ett förebyggande hälsoarbete och ett komplement till företagshälsovård och vård. Longevity Blodanalys är en hälsokartläggning och ingen medicinsk utredning. Vid avvikande värden hänvisas medarbetaren till vårdcentral eller läkare. Anne Wevers är inte legitimerad hälso- och sjukvårdspersonal och ställer inga diagnoser.",
+    "links": [
+      {
+        "label": "Läs mer om Anne",
+        "href": "/anne-wevers"
+      },
+      {
+        "label": "Longevity Blodanalys",
+        "href": "/longevity-blodanalys"
+      }
+    ]
+  }
+}

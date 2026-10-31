@@ -11,15 +11,18 @@ export function Hero({
   eyebrow,
   title,
   lead,
+  portrait,
   children,
 }: {
   eyebrow?: string;
   title: string;
   lead?: string;
+  portrait?: ReactNode;
   children?: ReactNode;
 }) {
   return (
     <section className="px-4 pt-14 pb-12 text-center md:pt-20 md:pb-16">
+      {portrait ? <div className="mb-8 flex justify-center">{portrait}</div> : null}
       <div className="mx-auto max-w-2xl space-y-5">
         {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
         <h1 className="text-4xl leading-tight text-hoa-ink md:text-6xl">{title}</h1>
@@ -32,6 +35,7 @@ export function Hero({
 
 export function Section({
   id,
+  titleId,
   eyebrow,
   title,
   lead,
@@ -39,6 +43,7 @@ export function Section({
   band = false,
 }: {
   id?: string;
+  titleId?: string;
   eyebrow?: string;
   title?: string;
   lead?: string;
@@ -51,7 +56,7 @@ export function Section({
         {title ? (
           <div className="mx-auto mb-10 max-w-2xl space-y-4 text-center">
             {eyebrow ? <Eyebrow tone={band ? "gold" : "bronze"}>{eyebrow}</Eyebrow> : null}
-            <h2 className="text-3xl leading-tight text-hoa-ink md:text-4xl">{title}</h2>
+            <h2 id={titleId} className="text-3xl leading-tight text-hoa-ink md:text-4xl">{title}</h2>
             {lead ? <p className="text-lg leading-relaxed text-hoa-ink-muted">{lead}</p> : null}
           </div>
         ) : null}
