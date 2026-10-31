@@ -143,18 +143,19 @@ section.bg-hoa-secondary\/50,
     text-transform: none;
   }
 
-  /* Textlänkar känns igen utan färg. Knappkomponenter väljer no-underline. */
-  a:where([href]) {
+  /* Textlänkar känns igen utan färg. Knapp- och kortlänkar (rundade) undantas,
+     så bokningens kort och knappar behöver inga ändringar. */
+  a:where([href]:not([class*="rounded"])) {
     text-decoration-line: underline;
     text-underline-offset: 0.25em;
   }
 
-  a:where([href]:hover) {
+  a:where([href]:not([class*="rounded"]):hover) {
     text-decoration-thickness: 2px;
   }
 
   /* Sidhuvudets ordmärke och meny har ett eget navigationssammanhang. */
-  :where(header) a {
+  :where(.hoa-site-header) a {
     text-decoration-line: none;
   }
 
@@ -177,8 +178,10 @@ h2 {
 
 /* Äldre formulärklasser behåller sitt API men använder ytans säkra hover/fokus.
    Bokningskomponenterna behöver därför inga ändringar. */
-.hover\:bg-hoa-bronze:hover {
-  background-color: var(--hoa-hover);
+@media (hover: hover) {
+  .hover\:bg-hoa-bronze:hover {
+    background-color: var(--hoa-hover);
+  }
 }
 
 :where(input, textarea)::placeholder {

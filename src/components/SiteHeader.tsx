@@ -89,7 +89,7 @@ export function SiteHeader({ bookingHref }: { bookingHref: string }) {
   }, [open]);
 
   return (
-    <header className="hoa-surface-light sticky top-0 z-50 border-b border-hoa-light-line bg-hoa-light text-hoa-light-ink">
+    <header className="hoa-site-header hoa-surface-light sticky top-0 z-50 border-b border-hoa-light-line bg-hoa-light text-hoa-light-ink">
       <Container wide className="flex h-20 items-center justify-between gap-4 lg:h-24">
         <Logo />
 

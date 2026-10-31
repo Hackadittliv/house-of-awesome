@@ -48,8 +48,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#FDF5E2",
-  // Sidhuvudet är alltid ljust; mörka innehållsytor anger eget color-scheme i CSS.
-  colorScheme: "light",
+  // Sajten är mörk i grunden (:root har color-scheme: dark). Sidhuvudet och
+  // ljusa band sätter color-scheme: light via .hoa-surface-light.
+  colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

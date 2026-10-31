@@ -59,7 +59,7 @@ Sidhuvudet är krämfärgat och sticky, 80 px högt på mindre skärmar och 96 p
 
 Sektioner i v2 använder `py-14 md:py-20`, innehåll `max-w-6xl`, sidhuvud `max-w-[1400px]`. Sidmarginalerna är 1rem, 1,5rem och 2rem. Fokus har 2 px kontur och 3 px avstånd.
 
-Webbläsarens temafärg är samma krämton som sidhuvudet, `#FDF5E2`. Viewport anger `colorScheme: light` eftersom sidhuvudet alltid är ljust. Varje mörk innehållsyta behåller sitt uttryckliga `color-scheme: dark` i CSS.
+Webbläsarens temafärg är samma krämton som sidhuvudet, `#FDF5E2`. Viewport anger `colorScheme: dark`, som `:root`. Sidhuvudet och ljusa band sätter `color-scheme: light` via `.hoa-surface-light`. Textlänkar är understrukna; rundade knapp- och kortlänkar undantas.
 
 Startsidan följer Lucas ordning: mörk hero med fasadbild, Patrik och huset som en sammanhängande krämyta, svart utbud, ljusa personer, svart eventavsnitt och ljusa vanliga frågor.
 
