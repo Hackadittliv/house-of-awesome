@@ -55,11 +55,13 @@ describe.each(pages)("longevity: $content.path", ({ content, Page, metadata, pla
     for (const section of content.sections) expect(html).toContain(`id="${section.id}-rubrik"`);
   });
 
-  it("har ett bandat avslut utan två band i följd inom LongevityPage", () => {
+  it("har obandat avslut före SharedBottom och inga två band i följd", () => {
     const sections = [...html.matchAll(/<section\b[^>]*class="([^"]+)"/g)];
     expect(sections).toHaveLength(content.sections.length + 2);
     const bands = sections.map((section) => section[1].includes("bg-hoa-secondary/"));
-    expect(bands.at(-1)).toBe(true);
+    // SharedBottom (bandad) följer direkt efter avslutet i layouten.
+    expect(bands.at(-1)).toBe(false);
+    expect(bands.at(-2)).toBe(true);
     for (let index = 1; index < bands.length; index++) expect(bands[index] && bands[index - 1]).toBe(false);
   });
 

@@ -32,7 +32,7 @@ export function LongevityPage({ content, placement, portrait = false }: {
           id={section.id}
           titleId={`${section.id}-rubrik`}
           title={section.heading}
-          band={(content.sections.length - index) % 2 === 0}
+          band={(content.sections.length - index) % 2 === 1}
         >
           <div className="mx-auto max-w-3xl space-y-6">
             <Prose>
@@ -58,7 +58,7 @@ export function LongevityPage({ content, placement, portrait = false }: {
         </Section>
       ))}
 
-      <Section band titleId="introduktion" title={content.cta.heading} lead={content.cta.text}>
+      <Section titleId="boka-samtal" title={content.cta.heading} lead={content.cta.text}>
         <div className="mt-8 text-center">
           <CtaLink href={bookingUrl(SHORT_CALL_SLUG, `${placement}_cta`)}>{content.cta.buttonLabel}</CtaLink>
         </div>
