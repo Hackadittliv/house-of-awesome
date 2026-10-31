@@ -28,6 +28,7 @@ export async function generateMetadata({ params }: PageProps<"/tjanster/[slug]">
       .filter(Boolean)
       .join(" "),
     path: `/tjanster/${service.slug}`,
+    ownOgImage: true,
   });
 }
 

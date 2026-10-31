@@ -30,7 +30,7 @@ Kroppen har LIA:s svaga guldglöd (`--hoa-gradient-hero`) bakom en svart `main`,
 | Knappar och ordmärke | Plus Jakarta Sans | 500 i knappar, 700 i ordmärket |
 | Brödtext | Inter | 400 till 600 |
 
-Typsnitten laddas med `next/font` och serveras från den egna domänen. Webbläsaren gör inga anrop till Google, varken före eller efter samtycke. OG bilderna ritas med Plus Jakarta Sans från `@fontsource/plus-jakarta-sans` vid bygget.
+Typsnitten laddas med `next/font` och serveras från den egna domänen. Webbläsaren gör inga anrop till Google, varken före eller efter samtycke. Tjänsternas OG bilder ritas med Plus Jakarta Sans från `@fontsource/plus-jakarta-sans` vid bygget. Övriga sidor delar fasaden (`src/app/opengraph-image.jpg`).
 
 Notera: lifeisawesome.se använder i dag Plus Jakarta Sans även i brödtext. Inter är valt här enligt beställningen. Vill vi ha exakt samma brödtext räcker det att peka `--font-sans` på `--font-jakarta` i `globals.css`.
 
@@ -56,3 +56,5 @@ Notera: lifeisawesome.se använder i dag Plus Jakarta Sans även i brödtext. In
 ## Bilder
 
 Fas 0 lånar LIA:s guldfärgade uggla och LIA:s bilder (landskapet vid Stora Höga, Patrik och Alexandra) i `public/images`. Egna HOA bilder av Lucas Eliasson (Picture Perfect, oktober 2026): porträtt i `public/images/team` samt Celloxy, tryckkammaren och rödljuset. Liggande 4:3 versioner används i korten, stående 4:5 versioner på tjänstesidorna. Porträtt visas som runda avatarer. Bilder visas via `next/image` med `rounded-2xl` och 1 px guld 20 %. De byts mot egna HOA bilder när de finns.
+
+Fasaden finns i `public/images/house-of-awesome-fasad-{800,1440,2400}.webp` och visas i full bredd på startsidan med en srcset av de tre bredderna (`src/components/FacadeImage.tsx`). Samma bild i 1200 x 630 är OG bild för hela sajten utom tjänsterna.
