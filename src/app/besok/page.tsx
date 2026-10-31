@@ -54,7 +54,7 @@ export default function BesokPage() {
             <div>
               <dt className="sr-only">Telefon</dt>
               <dd>
-                <a href={telUrl()} className="text-hoa-ink hover:text-hoa-gold">
+                <a href={telUrl()} className="text-hoa-ink underline underline-offset-4 hover:text-hoa-gold">
                   {site.contact.phoneDisplay}
                 </a>
               </dd>
@@ -62,7 +62,7 @@ export default function BesokPage() {
             <div>
               <dt className="sr-only">Mejl</dt>
               <dd>
-                <a href={mailtoUrl()} className="break-all text-hoa-ink hover:text-hoa-gold">
+                <a href={mailtoUrl()} className="break-all text-hoa-ink underline underline-offset-4 hover:text-hoa-gold">
                   {site.contact.email}
                 </a>
               </dd>

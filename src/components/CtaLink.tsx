@@ -17,9 +17,9 @@ const sizes = {
 };
 
 const variants = {
-  primary: "bg-hoa-gold text-hoa-espresso hover:bg-hoa-gold/90",
-  secondary: "border border-hoa-line bg-hoa-bg text-hoa-ink hover:bg-hoa-hover",
-  ghost: "text-hoa-gold underline-offset-4 hover:underline",
+  primary: "bg-hoa-gold text-hoa-espresso no-underline hover:bg-hoa-gold/90",
+  secondary: "border border-hoa-line bg-hoa-bg text-hoa-ink no-underline hover:bg-hoa-hover",
+  ghost: "text-hoa-gold underline underline-offset-4 hover:decoration-2",
 };
 
 export function CtaLink({

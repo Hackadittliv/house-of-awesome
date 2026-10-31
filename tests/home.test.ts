@@ -103,7 +103,7 @@ describe("startsidan", () => {
   it("har Möte med Patrik med porträtt och ett kort som bokar samtalet", () => {
     const part = section("mote-med-patrik");
     expect(textOf(part)).toContain("Hälsa har blivit för krångligt. Vi gör det enkelt igen.");
-    expect(textOf(part)).toContain("Kostnadsfritt samtal på 10 minuter med Patrik Nilsson Grundare av Life is Awesome");
+    expect(textOf(part)).toContain("Kostnadsfritt samtal på 10 minuter med Patrik Nilsson Medgrundare av Life Is Awesome");
     expect(part).toContain(`alt="${PORTRAITS.patrik.alt}"`);
     expect(anchors(part)).toContainEqual({ href: bookingUrl(SHORT_CALL_SLUG, "home_patrik"), text: "Boka samtal med Patrik" });
   });
@@ -124,6 +124,7 @@ describe("startsidan", () => {
     for (const href of ["/medlemskap", "/awesome-protocol", "/funktionsmedicin", "/behandlingar-och-samtal", "/tjanster/vitamindropp", "/tjanster/blodprov"]) {
       expect(anchors(part).map((link) => link.href)).toContain(href);
     }
+    expect(anchors(part)).toContainEqual({ href: "/behandlingar-och-samtal", text: "Behandlingar och samtal" });
   });
 
   it("visar Lucas, Rebecca och Patrik med porträtt", () => {

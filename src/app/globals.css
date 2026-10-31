@@ -17,10 +17,11 @@
     radial-gradient(circle at 80% 70%, rgb(172 109 42 / 0.1), transparent 60%);
 }
 
-/* En hel palett återställs även för mörka öar inuti ett ljust band. */
+/* En hel palett återställs även för mörka öar inuti ett ljust band.
+   JSON-LD efter innehållet ska inte påverka vilket band som avslutar main. */
 :root,
 .hoa-surface-dark,
-main:has(> :is(.hoa-surface-light, section.bg-hoa-secondary\/50):last-child) + [data-shared-bottom] > .hoa-bottom-cta {
+main:has(> :is(.hoa-surface-light, section.bg-hoa-secondary\/50):nth-last-child(1 of :not(script))) + [data-shared-bottom] > .hoa-bottom-cta {
   --hoa-bg: #000000;
   --hoa-card: #050505;
   --hoa-espresso: #251709;
@@ -139,6 +140,22 @@ section.bg-hoa-secondary\/50,
     font-family: var(--font-jakarta), system-ui, sans-serif;
     font-weight: 600;
     font-style: italic;
+    text-transform: none;
+  }
+
+  /* Textlänkar känns igen utan färg. Knappkomponenter väljer no-underline. */
+  a:where([href]) {
+    text-decoration-line: underline;
+    text-underline-offset: 0.25em;
+  }
+
+  a:where([href]:hover) {
+    text-decoration-thickness: 2px;
+  }
+
+  /* Sidhuvudets ordmärke och meny har ett eget navigationssammanhang. */
+  :where(header) a {
+    text-decoration-line: none;
   }
 
   ::selection {

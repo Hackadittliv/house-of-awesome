@@ -47,8 +47,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
-  colorScheme: "dark",
+  themeColor: "#FDF5E2",
+  // Sidhuvudet är alltid ljust; mörka innehållsytor anger eget color-scheme i CSS.
+  colorScheme: "light",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

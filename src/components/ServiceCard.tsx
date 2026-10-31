@@ -34,14 +34,14 @@ export function ServiceCard({ service, placement }: { service: Service; placemen
       <div className="mt-auto flex flex-wrap items-center gap-3 pt-6">
         <a
           href={service.bookable ? bookingUrl(service.slug, placement) : inquiryUrl(service.slug, placement)}
-          className="inline-flex min-h-11 items-center justify-center rounded-lia-md bg-hoa-gold px-4 py-2 font-display text-sm font-medium text-hoa-espresso transition-colors hover:bg-hoa-gold/90"
+          className="inline-flex min-h-11 items-center justify-center rounded-lia-md bg-hoa-gold px-4 py-2 font-display text-sm font-medium text-hoa-espresso no-underline transition-colors hover:bg-hoa-gold/90"
         >
           {service.bookable ? "Boka" : "Gör en förfrågan"}
           <span className="sr-only">: {service.name}</span>
         </a>
         <Link
           href={`/tjanster/${service.slug}`}
-          className="inline-flex min-h-11 items-center justify-center rounded-lia-md border border-hoa-gold/40 px-4 py-2 font-display text-sm font-medium text-hoa-ink transition-colors hover:bg-hoa-gold/10"
+          className="inline-flex min-h-11 items-center justify-center rounded-lia-md border border-hoa-gold/40 px-4 py-2 font-display text-sm font-medium text-hoa-ink no-underline transition-colors hover:bg-hoa-gold/10"
         >
           Läs mer<span className="sr-only"> om {service.name}</span>
         </Link>

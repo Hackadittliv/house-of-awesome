@@ -45,7 +45,7 @@ const moreInHouse = [
   { href: "/medlemskap", label: "Gym och medlemskap" },
   { href: "/awesome-protocol", label: "The Awesome Protocol" },
   { href: "/funktionsmedicin", label: "Funktionsmedicin" },
-  { href: "/behandlingar-och-samtal", label: "Coachning och samtal" },
+  { href: "/behandlingar-och-samtal", label: "Behandlingar och samtal" },
   { href: "/tjanster/vitamindropp", label: "Vitamindropp" },
   { href: "/tjanster/blodprov", label: "Provtagning" },
 ];
@@ -126,7 +126,7 @@ export default function HomePage() {
               className="object-cover object-top"
             />
           </div>
-          <Card label="Kostnadsfritt samtal på 10 minuter med" title="Patrik Nilsson" text="Grundare av Life is Awesome" featured>
+          <Card label="Kostnadsfritt samtal på 10 minuter med" title="Patrik Nilsson" text="Medgrundare av Life Is Awesome" featured>
             <CtaLink href={bookingUrl(SHORT_CALL_SLUG, "home_patrik")} className="mt-2 w-full sm:w-fit">Boka samtal med Patrik</CtaLink>
           </Card>
         </div>
@@ -199,7 +199,7 @@ export default function HomePage() {
               <li key={m.href}>
                 <Link
                   href={m.href}
-                  className="inline-flex min-h-11 items-center rounded-full border border-hoa-line px-4 text-sm text-hoa-ink transition-colors hover:border-hoa-gold hover:text-hoa-gold"
+                  className="inline-flex min-h-11 items-center rounded-full border border-hoa-line px-4 text-sm text-hoa-ink no-underline transition-colors hover:border-hoa-gold hover:text-hoa-gold"
                 >
                   {m.label}
                 </Link>

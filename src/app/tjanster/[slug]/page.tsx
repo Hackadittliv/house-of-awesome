@@ -158,7 +158,7 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
                 <li key={other.slug}>
                   <Link
                     href={`/tjanster/${other.slug}`}
-                    className="inline-flex min-h-11 items-center rounded-full border border-hoa-gold/40 px-5 py-2 font-display text-sm font-medium text-hoa-ink transition-colors hover:bg-hoa-gold/10"
+                    className="inline-flex min-h-11 items-center rounded-full border border-hoa-gold/40 px-5 py-2 font-display text-sm font-medium text-hoa-ink no-underline transition-colors hover:bg-hoa-gold/10"
                   >
                     {other.name}
                   </Link>
