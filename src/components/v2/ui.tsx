@@ -127,11 +127,13 @@ export function Card({
   );
 }
 
-export function Avatar({ src, alt, size = "md" }: { src: string; alt: string; size?: "md" | "lg" }) {
+export type AvatarImage = CardImage & { unoptimized?: boolean };
+
+export function Avatar({ src, alt, unoptimized, size = "md" }: AvatarImage & { size?: "md" | "lg" }) {
   const box = size === "lg" ? "w-40" : "w-24";
   return (
     <div className={`relative aspect-square ${box} max-w-full shrink-0 overflow-hidden rounded-full bg-hoa-secondary/40`}>
-      <Image src={src} alt={alt} fill sizes={size === "lg" ? "10rem" : "6rem"} className="object-cover object-top" />
+      <Image src={src} alt={alt} unoptimized={unoptimized} fill sizes={size === "lg" ? "10rem" : "6rem"} className="object-cover object-top" />
     </div>
   );
 }

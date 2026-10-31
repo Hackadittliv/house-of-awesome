@@ -15,9 +15,13 @@ Allt innehåll ligger som JSON här. Typerna finns i `src/lib/types.ts`.
 
 `LONGEVITY_PUBLISHED` i `src/lib/longevity.ts` ska vara `false` tills Christian godkänner publicering. Flaggan styr `/anne-wevers`, `/longevity-blodanalys` och `/halsostrategi-for-foretag`:
 
-- Med `false` saknas länkarna i huvudmeny, sidfot och sitemap. Sidornas robotsmetadata är `noindex,nofollow,noimageindex`.
-- Vid Netlifys produktionsbygge, `process.env.CONTEXT === "production"`, anropar sidorna dessutom `notFound()` och ger HTTP 404.
-- I `deploy-preview`, `branch-deploy` och lokalt utan produktionskontext renderas sidorna fortsatt för granskning. `NODE_ENV=production` ensamt aktiverar inte spärren.
+- Med `false` saknas länkarna i huvudmeny, sidfot och sitemap. Tillåten förhandsvisning har robotsmetadata `noindex,nofollow,noimageindex`.
+- Sidorna tillåts endast om `LONGEVITY_PUBLISHED` är `true`, `CONTEXT` är `deploy-preview` eller `branch-deploy`, `NODE_ENV` är `development`, eller den uttryckliga lokala flaggan `LONGEVITY_PREVIEW=1` är satt.
+- Alla andra miljöer spärras, inklusive produktionsbygge utan `CONTEXT`, tom eller okänd kontext och `NODE_ENV=test`. Både sidorna och `generateMetadata()` anropar `notFound()`: HTTP 404 utan sidornas innehåll eller metadata.
+
+`LONGEVITY_PREVIEW=1` får bara sättas för lokal granskning, vid både bygge och `next start`, aldrig i Netlify production. Flaggan är ett uttryckligt undantag och öppnar även ett produktionsbygge. Använd samma `CONTEXT` vid bygge och serverstart; förgenererade sidor ändras inte av att enbart startmiljön ändras. Gör ett rent bygge när kontexten ändras.
+
+Grenen får inte mergas eller deployas till produktion förrän go-live-checklistan nedan är klar, inklusive Annes skriftliga samtycke, juristläsning och Christians OK. 404-spärren är ett extra skydd, inte en ersättning för checklistan.
 
 Longevitytexterna läses från `src/lib/longevity-content.ts`, och menyn skapas på servern. Texterna och de dolda menyposterna ska inte följa med i publika klientpaket.
 
@@ -29,9 +33,11 @@ Lokalt körs inte Netlifys edge-funktion. I produktion passerar funktionen trafi
 
 ### Beslut om bokningsknappar den 31 oktober 2026
 
-Christian beslutade den 31 oktober kl. 11:28 att alla CTA:er på longevitysidorna ska gå till befintliga `/boka/forsta-halsosamtal`. Knapptexten **Boka kort samtal med Patrik** följer det beslutet. Befintlig bokningshantering och vidarekoppling till Life Is Awesome används.
+Beslut av Christian 31 okt 2026, genomfört i commit 10c3cce.
 
-Efter beslutet togs `kostnadsfri-introduktion` bort den 31 oktober: tjänsten, tillhörande SQL, tidigare README-material och PGlite-skript. Materialet är arkiverat utanför repot och ska inte återinföras.
+Alla CTA:er på longevitysidorna ska gå till befintliga `/boka/forsta-halsosamtal`. Knapptexten **Boka kort samtal med Patrik** följer beslutet. Befintlig bokningshantering och vidarekoppling till Life Is Awesome används.
+
+Efter beslutet togs `kostnadsfri-introduktion` bort: tjänsten, tillhörande SQL, tidigare README-material och PGlite-skript. Det ska inte återinföras.
 
 ### Checklista inför publicering
 
@@ -49,9 +55,11 @@ Före publicering ska följande vara klart:
 
 ### Avindexering och faktisk borttagning
 
-Att sätta flaggan till `false` innebär avindexering, dolda menylänkar, frånvaro i sitemap och 404 för de tre sidorna i produktion efter nytt bygge. Det raderar inte innehåll eller bildfiler. Porträttet finns fortfarande på `/images/team/anne-wevers.webp` och kan nås direkt i produktion så länge filen ligger kvar.
+Att sätta flaggan till `false` innebär avindexering, dolda menylänkar, frånvaro i sitemap och 404 för de tre sidorna i produktion efter nytt bygge utan preview-undantag. Det raderar inte innehåll eller bildfiler.
 
-Om Anne drar tillbaka sitt samtycke ska sidorna, tillhörande innehåll och porträttet `public/images/team/anne-wevers.webp` raderas, och referenser tas bort. Därefter krävs nytt bygge och publicering av webbplatsen. Enbart `false` är inte faktisk borttagning.
+Porträttet ligger privat i `src/assets/anne-wevers.webp`. `/portratt/anne-wevers` kontrollerar samma spärr vid varje anrop innan filen läses och svarar med `private, no-store`. Bilden importeras inte statiskt: det skulle skapa en offentlig hashad kopia under `/_next/static`. Avatar använder bildrouten direkt, och Nexts bildoptimerare tillåter inte den adressen. Den gamla adressen `/images/team/anne-wevers.webp` ger 404 även i preview.
+
+Om Anne drar tillbaka sitt samtycke ska sidorna, tillhörande innehåll, porträttet `src/assets/anne-wevers.webp` och bildrouten raderas, och referenser tas bort. Därefter krävs nytt bygge och publicering av webbplatsen. Enbart `false` är inte faktisk borttagning. Eventuella bildkopior i äldre publiceringar och cacher behöver också tas bort.
 
 ## services.json
 
