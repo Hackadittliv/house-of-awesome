@@ -8,13 +8,15 @@ import { b2bUrl, mailtoUrl, telUrl } from "@/lib/links";
 import { aboutNav, legalNav, primaryNav } from "@/lib/nav";
 import { sellerLine, sellerTermsUrl, termsLabel } from "@/lib/seller";
 
-const linkClass = "text-sm text-hoa-ink-muted transition-colors hover:text-hoa-gold";
+// Fristående länkar har minst 44 x 44 px klickyta, även med text i 12 och 14 px.
+const target = "inline-flex min-h-11 min-w-11 items-center";
+const linkClass = `${target} text-sm text-hoa-ink-muted transition-colors hover:text-hoa-gold`;
 const head = "text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-auto border-t border-hoa-line bg-hoa-bg">
-      <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
+    <footer className="hoa-surface-dark mt-auto border-t border-hoa-line bg-hoa-bg">
+      <Container className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
           <Wordmark className="text-xl" />
           <p className="mt-3 text-sm text-hoa-ink-muted">Där vetenskap, själ och rörelse möts.</p>
@@ -22,7 +24,7 @@ export function SiteFooter() {
         </div>
         <nav aria-label="House of Awesome">
           <p className={head}>House of Awesome</p>
-          <ul className="mt-4 space-y-2">
+          <ul className="mt-2">
             {[...primaryNav, ...aboutNav].map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className={linkClass}>{item.label}</Link>
@@ -32,7 +34,7 @@ export function SiteFooter() {
         </nav>
         <nav aria-label="Utforska">
           <p className={head}>Utforska</p>
-          <ul className="mt-4 space-y-2">
+          <ul className="mt-2">
             <li><a href={site.operator.url} className={linkClass}>Börja här</a></li>
             <li><a href={site.operator.url} className={linkClass}>Recept</a></li>
             <li><a href={site.operator.url} className={linkClass}>Podcasts</a></li>
@@ -42,10 +44,10 @@ export function SiteFooter() {
         </nav>
         <div>
           <p className={head}>Kontakt</p>
-          <address className="mt-4 space-y-2 text-sm not-italic text-hoa-ink">
-            <p><a href={mailtoUrl()} className="hover:text-hoa-gold">{site.contact.email}</a></p>
-            <p><a href={telUrl()} className="hover:text-hoa-gold">073-349 08 36</a></p>
-            <p>{formatAddress()}</p>
+          <address className="mt-2 text-sm not-italic text-hoa-ink">
+            <p><a href={mailtoUrl()} className={`${target} hover:text-hoa-gold`}>{site.contact.email}</a></p>
+            <p><a href={telUrl()} className={`${target} hover:text-hoa-gold`}>073-349 08 36</a></p>
+            <p className="mt-2">{formatAddress()}</p>
           </address>
         </div>
       </Container>
@@ -57,12 +59,12 @@ export function SiteFooter() {
           </p>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p>© {new Date().getFullYear()} {site.operator.legalName}</p>
-            <ul className="flex flex-wrap gap-x-4 gap-y-2">
+            <ul className="flex flex-wrap gap-x-4">
               {legalNav.map((item) => (
-                <li key={item.href}><Link href={item.href} className="hover:text-hoa-gold">{item.label}</Link></li>
+                <li key={item.href}><Link href={item.href} className={`${target} hover:text-hoa-gold`}>{item.label}</Link></li>
               ))}
-              <li><a href={sellerTermsUrl} className="hover:text-hoa-gold">{termsLabel}</a></li>
-              <li><CookieSettingsButton className="hover:text-hoa-gold" /></li>
+              <li><a href={sellerTermsUrl} className={`${target} hover:text-hoa-gold`}>{termsLabel}</a></li>
+              <li><CookieSettingsButton className={`${target} cursor-pointer hover:text-hoa-gold`} /></li>
             </ul>
           </div>
         </Container>

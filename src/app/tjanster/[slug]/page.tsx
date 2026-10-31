@@ -6,8 +6,11 @@ import { Container } from "@/components/Container";
 import { CtaLink } from "@/components/CtaLink";
 import { Disclaimer } from "@/components/Disclaimer";
 import { Eyebrow } from "@/components/Eyebrow";
+import { HeadingText } from "@/components/HeadingText";
 import { JsonLd } from "@/components/JsonLd";
+import { cardClass } from "@/components/v2/ui";
 import { categoryLabels, formatDuration, getService, getServices, site } from "@/lib/content";
+import { fitStyle } from "@/lib/heading";
 import { bookingUrl, inquiryUrl, mailtoUrl } from "@/lib/links";
 import { breadcrumbJsonLd, pageMetadata, serviceJsonLd } from "@/lib/seo";
 
@@ -28,6 +31,7 @@ export async function generateMetadata({ params }: PageProps<"/tjanster/[slug]">
       .filter(Boolean)
       .join(" "),
     path: `/tjanster/${service.slug}`,
+    ownOgImage: true,
   });
 }
 
@@ -37,40 +41,41 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
   if (!service) notFound();
 
   const duration = formatDuration(service);
+  const moreTitle = `Fler inom ${categoryLabels[service.category].toLowerCase()}`;
   const related = getServices()
     .filter((other) => other.slug !== service.slug && other.category === service.category)
     .slice(0, 3);
 
   return (
     <>
-      <Container className="py-16 md:py-24">
+      <Container className="pt-6 pb-14 md:pt-10 md:pb-20">
         <nav aria-label="Brödsmulor" className="text-sm text-hoa-ink-muted">
-          <ol className="flex flex-wrap gap-2">
+          <ol className="flex flex-wrap items-center gap-x-1">
             <li>
-              <Link href="/" className="hover:text-hoa-gold">
+              <Link href="/" className="inline-flex min-h-11 min-w-11 items-center justify-center hover:text-hoa-gold">
                 Hem
               </Link>
             </li>
             <li aria-hidden>/</li>
             <li>
-              <Link href="/tjanster" className="hover:text-hoa-gold">
+              <Link href="/tjanster" className="inline-flex min-h-11 min-w-11 items-center justify-center px-1 hover:text-hoa-gold">
                 Tjänster
               </Link>
             </li>
             <li aria-hidden>/</li>
-            <li aria-current="page" className="text-hoa-ink">
+            <li aria-current="page" className="px-1 text-hoa-ink">
               {service.shortName}
             </li>
           </ol>
         </nav>
 
         <div
-          className={`mt-10 grid gap-12 ${service.image ? "lg:grid-cols-[1.2fr_0.8fr]" : "lg:grid-cols-[1.4fr_0.6fr]"}`}
+          className={`mt-6 grid grid-cols-1 gap-12 md:mt-8 ${service.image ? "lg:grid-cols-[1.2fr_0.8fr]" : "lg:grid-cols-[1.4fr_0.6fr]"}`}
         >
-          <div>
+          <div className="@container">
             <Eyebrow>{categoryLabels[service.category]}</Eyebrow>
-            <h1 className="mt-3 text-3xl leading-tight text-hoa-ink md:text-5xl">
-              {service.name}
+            <h1 className="mt-3 hoa-h1 leading-tight text-hoa-ink" style={fitStyle(service.name)}>
+              <HeadingText text={service.name} />
             </h1>
             <p className="mt-4 text-lg leading-8 text-hoa-ink">{service.lead}</p>
             <div className="mt-6 space-y-4 leading-7 text-hoa-ink-muted">
@@ -90,7 +95,7 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
 
           <aside className="h-fit space-y-6">
             {service.image ? (
-              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-hoa-gold/20">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl">
                 <Image
                   src={service.image}
                   alt={service.imageAlt ?? ""}
@@ -101,7 +106,7 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
                 />
               </div>
             ) : null}
-            <div className="rounded-2xl border border-hoa-gold/20 bg-hoa-secondary/20 p-5 md:p-6">
+            <div className={cardClass}>
               <dl className="space-y-3 text-sm">
                 {duration ? (
                   <div>
@@ -148,16 +153,16 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
 
       {related.length > 0 ? (
         <section aria-labelledby="fler-tjanster" className="bg-hoa-secondary/50">
-          <Container className="py-14">
-            <h2 id="fler-tjanster" className="text-2xl text-hoa-ink md:text-3xl">
-              Fler inom {categoryLabels[service.category].toLowerCase()}
+          <Container className="@container py-14">
+            <h2 id="fler-tjanster" className="hoa-h2 text-hoa-ink" style={fitStyle(moreTitle)}>
+              {moreTitle}
             </h2>
             <ul className="mt-6 flex flex-wrap gap-3">
               {related.map((other) => (
                 <li key={other.slug}>
                   <Link
                     href={`/tjanster/${other.slug}`}
-                    className="inline-flex min-h-11 items-center rounded-full border border-hoa-gold/40 px-5 py-2 font-display text-sm font-medium text-hoa-ink transition-colors hover:bg-hoa-gold/10"
+                    className="inline-flex min-h-11 items-center rounded-full border border-hoa-gold/40 px-5 py-2 font-display text-sm font-medium text-hoa-ink no-underline transition-colors hover:bg-hoa-gold/10"
                   >
                     {other.name}
                   </Link>

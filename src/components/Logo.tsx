@@ -15,7 +15,7 @@ export function Logo({ className = "" }: { className?: string }) {
         height={56}
         className="h-10 w-10 sm:h-12 sm:w-12"
       />
-      <Wordmark className="text-lg sm:text-xl" />
+      <Wordmark className="text-lg sm:text-xl @max-[17.5rem]:hidden" />
     </Link>
   );
 }
@@ -23,7 +23,7 @@ export function Logo({ className = "" }: { className?: string }) {
 export function Wordmark({ className = "" }: { className?: string }) {
   return (
     <span className={`font-display font-bold tracking-[-0.015em] text-hoa-ink ${className}`}>
-      House of <span className="text-hoa-gold">Awesome</span>
+      House of <span className="text-hoa-wordmark-accent">Awesome</span>
     </span>
   );
 }

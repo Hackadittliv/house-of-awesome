@@ -47,7 +47,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#FDF5E2",
+  // Sajten är mörk i grunden (:root har color-scheme: dark). Sidhuvudet och
+  // ljusa band sätter color-scheme: light via .hoa-surface-light.
   colorScheme: "dark",
 };
 

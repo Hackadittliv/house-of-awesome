@@ -2,14 +2,20 @@
 
 import { useState } from "react";
 
+import { fitStyle } from "@/lib/heading";
+
+const title = "Recept, poddavsnitt och longevity i din inkorg";
+
 /** Nyhetsbrevet saknar backend än. Formuläret skickar ingenting. */
 export function Newsletter() {
   const [done, setDone] = useState(false);
   return (
-    <section className="border-t border-hoa-line py-14 md:py-16">
-      <div className="mx-auto max-w-xl px-4 text-center">
+    <section className="hoa-newsletter border-t border-hoa-line py-14 md:py-16">
+      <div className="@container mx-auto max-w-xl px-4 text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-hoa-bronze">Månadsbrev</p>
-        <h2 className="mt-3 text-2xl text-hoa-ink md:text-3xl">Recept, poddavsnitt och longevity i din inkorg</h2>
+        <h2 className="mt-3 hoa-h2 text-hoa-ink" style={fitStyle(title)}>
+          {title}
+        </h2>
         <p className="mt-3 text-hoa-ink-muted">Konkreta tips, nyheter från huset och nya event. Avsluta när du vill.</p>
         {done ? (
           <p className="mt-6 text-hoa-gold" role="status">Tack! Månadsbrevet startar snart.</p>
@@ -27,7 +33,7 @@ export function Newsletter() {
               type="email"
               required
               placeholder="din@epost.se"
-              className="min-h-12 flex-1 rounded-full border border-hoa-line bg-hoa-bg px-5 text-hoa-ink placeholder:text-hoa-ink-muted"
+              className="min-h-12 min-w-0 flex-1 rounded-full border border-hoa-line bg-hoa-bg px-5 text-hoa-ink placeholder:text-hoa-ink-muted"
             />
             <button type="submit" className="min-h-12 rounded-full bg-hoa-gold px-8 font-display text-sm font-medium text-hoa-espresso hover:bg-hoa-gold/90">
               Prenumerera

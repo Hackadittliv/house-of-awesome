@@ -1,7 +1,9 @@
 import { Container } from "@/components/Container";
 import { CtaLink } from "@/components/CtaLink";
+import { FaqList } from "@/components/FaqList";
 import { JsonLd } from "@/components/JsonLd";
 import { PageHeader } from "@/components/PageHeader";
+import { Section } from "@/components/v2/ui";
 import { getFaqItems } from "@/lib/content";
 import { mailtoUrl } from "@/lib/links";
 import { faqJsonLd, pageMetadata } from "@/lib/seo";
@@ -16,38 +18,27 @@ export const metadata = pageMetadata({
 export default function FaqPage() {
   const items = getFaqItems();
 
+  // Samma avdelade lista som på startsidan, på ett krämband som avslutar main.
   return (
-    <Container className="py-16 md:py-24">
-      <PageHeader
-        eyebrow="Frågor och svar"
-        title="Vanliga frågor"
-        lead="Hittar du inte svaret här är du välkommen att mejla oss."
-      />
+    <>
+      <Container className="pt-14 pb-12 md:pt-20 md:pb-16">
+        <PageHeader
+          eyebrow="Frågor och svar"
+          title="Vanliga frågor"
+          lead="Hittar du inte svaret här är du välkommen att mejla oss."
+        />
+      </Container>
 
-      <div className="mx-auto mt-12 max-w-3xl space-y-3">
-        {items.map((item) => (
-          <details
-            key={item.id}
-            className="group rounded-2xl border border-hoa-gold/20 bg-hoa-secondary/20 px-5 open:border-hoa-gold/40"
-          >
-            <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-3 text-hoa-ink marker:hidden">
-              <h2 className="text-base md:text-lg">{item.question}</h2>
-              <span aria-hidden className="text-xl text-hoa-gold transition-transform group-open:rotate-45">
-                +
-              </span>
-            </summary>
-            <p className="pb-5 leading-relaxed text-hoa-ink/80">{item.answer}</p>
-          </details>
-        ))}
-      </div>
-
-      <div className="mt-10 text-center">
-        <CtaLink href={mailtoUrl("Fråga till House of Awesome")} variant="secondary">
-          Mejla en fråga
-        </CtaLink>
-      </div>
+      <Section band>
+        <FaqList items={items} heading="h2" className="mx-auto max-w-3xl" />
+        <div className="mt-10 text-center">
+          <CtaLink href={mailtoUrl("Fråga till House of Awesome")} variant="secondary">
+            Mejla en fråga
+          </CtaLink>
+        </div>
+      </Section>
 
       <JsonLd data={faqJsonLd(items)} />
-    </Container>
+    </>
   );
 }
