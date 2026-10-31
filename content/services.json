@@ -213,5 +213,22 @@
       "Långsiktiga vanor framför snabba lösningar",
       "Ett komplement till den vård du redan har"
     ]
+  },
+  {
+    "slug": "kostnadsfri-introduktion",
+    "kind": "inquiry",
+    "category": "samtal",
+    "name": "Kostnadsfri introduktion med Patrik",
+    "shortName": "Kostnadsfri introduktion",
+    "lead": "Boka ett kostnadsfritt samtal på 10 minuter med Patrik om dina mål och vilket upplägg som passar dig.",
+    "body": [
+      "Ni pratar om Anne Wevers, Longevity Blodanalys eller en hälsostrategi för företaget."
+    ],
+    "points": [
+      "10 minuter med Patrik",
+      "Gratis",
+      "Digitalt via videosamtal"
+    ],
+    "durationLabel": "10 minuter"
   }
 ]

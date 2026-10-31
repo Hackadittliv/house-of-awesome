@@ -64,7 +64,8 @@ const nextConfig: NextConfig = {
         ? []
         : [
             { source: "/boka", destination: `https://lifeisawesome.se/boka?${utm}`, permanent: false },
-            { source: "/boka/:slug", destination: `https://lifeisawesome.se/boka/:slug?${utm}`, permanent: false },
+            // Introduktionen ska visa sitt lokala reservläge även utan LIA-konfiguration.
+            { source: "/boka/:slug((?!kostnadsfri-introduktion$)[^/]+)", destination: `https://lifeisawesome.se/boka/:slug?${utm}`, permanent: false },
           ]),
     ];
   },

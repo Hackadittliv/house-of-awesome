@@ -8,13 +8,14 @@ import { BookingUnavailable } from "@/components/booking/BookingUnavailable";
 import { RequestForm } from "@/components/booking/RequestForm";
 import { bookingEnabled } from "@/lib/booking/config";
 import { bookingCopy as t } from "@/lib/booking/copy";
+import { isPendingIntroduction } from "@/lib/booking/introduction";
 import { getService, getServices } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return getServices().map((service) => ({ slug: service.slug }));
+  return getServices({ includePending: true }).map((service) => ({ slug: service.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/boka/[slug]">) {
@@ -32,6 +33,7 @@ export default async function BookServicePage({ params }: PageProps<"/boka/[slug
   const { slug } = await params;
   const service = getService(slug);
   if (!service) notFound();
+  const pending = isPendingIntroduction(service);
 
   return (
     <Container className="py-16 md:py-24">
@@ -42,12 +44,14 @@ export default async function BookServicePage({ params }: PageProps<"/boka/[slug
           </Link>
         </nav>
         <header className="space-y-3">
-          <Eyebrow>{service.bookable ? t.listBookableHeading : t.listRequestHeading}</Eyebrow>
+          <Eyebrow>{pending ? t.introductionEyebrow : service.bookable ? t.listBookableHeading : t.listRequestHeading}</Eyebrow>
           <h1 className="text-3xl leading-tight text-hoa-ink md:text-5xl">{service.name}</h1>
           <p className="text-lg leading-relaxed text-hoa-ink-muted">{service.lead}</p>
         </header>
 
-        {!bookingEnabled ? (
+        {pending ? (
+          <BookingUnavailable slug={service.slug} />
+        ) : !bookingEnabled ? (
           <BookingUnavailable slug={service.bookable ? service.slug : null} />
         ) : service.bookable ? (
           <BookingFlow slug={service.slug} serviceName={service.name} healthDeclaration={Boolean(service.healthDeclaration)} />

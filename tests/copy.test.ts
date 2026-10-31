@@ -8,6 +8,7 @@ import faq from "../content/faq.json";
 import memberships from "../content/memberships.json";
 import services from "../content/services.json";
 import site from "../content/site.json";
+import longevity from "../content/longevity.json";
 import { HEALTH_DISCLAIMER, getServices } from "@/lib/content";
 
 function strings(value: unknown): string[] {
@@ -62,6 +63,7 @@ describe("språkregler", () => {
     ...strings(faq),
     ...strings(memberships),
     ...strings(site),
+    ...strings(longevity),
     HEALTH_DISCLAIMER,
     ...getServices().map((service) => service.priceLabel ?? ""),
   ];

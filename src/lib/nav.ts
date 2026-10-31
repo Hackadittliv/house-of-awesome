@@ -46,6 +46,9 @@ export const offerGroup: MenuGroup = {
         { href: "/behandlingar-och-samtal#terapeuter", label: "Terapeuter & coacher" },
       ],
     },
+    { href: "/longevity-blodanalys", label: "Longevity Blodanalys" },
+    { href: "/anne-wevers", label: "Anne Wevers" },
+    { href: "/halsostrategi-for-foretag", label: "Hälsostrategi för företag" },
     {
       href: "/medlemskap",
       label: "Gym & träning",
@@ -101,6 +104,7 @@ export const primaryNav: NavItem[] = [
 
 export const aboutNav: NavItem[] = [
   { href: "/om", label: "Om oss" },
+  { href: "/anne-wevers", label: "Anne Wevers" },
   { href: "/kontakt", label: "Boka & kontakt" },
   { href: "/zazen-scalar", label: "Zazen Scalar" },
   { href: "/klinik-24-7", label: "24/7-klinik" },

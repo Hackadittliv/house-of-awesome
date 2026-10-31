@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { getServices, servicesSnapshot } from "@/lib/content";
+import { getServices, longevity, servicesSnapshot } from "@/lib/content";
 import { absoluteUrl } from "@/lib/seo";
 
 const CONTENT_UPDATED = new Date("2026-10-11");
@@ -30,6 +30,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const servicesUpdated = new Date(servicesSnapshot.fetchedAt);
 
   return [
+    ...Object.values(longevity).map((page) => ({
+      url: absoluteUrl(page.path),
+      lastModified: new Date("2026-10-31"),
+      priority: 0.8,
+    })),
     ...pages.map(({ path, priority }) => ({
       url: absoluteUrl(path),
       lastModified: CONTENT_UPDATED,
