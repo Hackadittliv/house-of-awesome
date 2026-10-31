@@ -15,7 +15,7 @@ export const metadata = pageMetadata({
 function Monogram({ name }: { name: string }) {
   const initials = name.split(" ").filter((p) => /^\p{Lu}/u.test(p)).map((p) => p[0]).slice(0, 2).join("");
   return (
-    <div aria-hidden className="flex size-16 items-center justify-center rounded-full border border-hoa-gold/40 bg-hoa-secondary/40 font-display text-xl text-hoa-gold">
+    <div aria-hidden className="flex size-16 items-center justify-center rounded-full bg-hoa-secondary/40 font-display text-xl text-hoa-gold">
       {initials}
     </div>
   );
@@ -53,7 +53,7 @@ export default function Page() {
         </Grid>
       </Section>
       <Section id="rebecca" eyebrow="Healing · EMHT" title={REBECCA.name} lead="Energimedicinsk healingterapi, på plats i huset eller på distans." band>
-        <div className="mx-auto grid max-w-3xl gap-6 md:grid-cols-[auto_1fr]">
+        <div className="mx-auto grid max-w-3xl grid-cols-1 gap-6 md:grid-cols-[auto_1fr]">
           <div className="flex justify-center md:block">
             <Avatar {...PORTRAITS.rebecca} size="lg" />
           </div>
@@ -62,7 +62,7 @@ export default function Page() {
             <ul className="space-y-2 text-sm text-hoa-ink">
               {REBECCA.options.map((o) => (
                 <li key={o.label} className="flex justify-between gap-4 border-b border-hoa-line pb-2">
-                  <span>{o.label}</span>
+                  <span className="min-w-0">{o.label}</span>
                   <span className="shrink-0 text-hoa-gold">{o.price}</span>
                 </li>
               ))}
@@ -77,11 +77,11 @@ export default function Page() {
             <Card key={p.id} id={p.id} label={p.company ? `${p.role} · ${p.company}` : p.role} title={p.name} text={p.intro}>
               <Monogram name={p.name} />
               {p.services.length ? (
-                <ul className="space-y-1 text-sm">
+                <ul className="text-sm">
                   {p.services.map((s) => (
                     <li key={s.href}>
-                      <a href={s.href} target="_blank" rel="noopener noreferrer" className="flex justify-between gap-3 text-hoa-ink underline-offset-4 hover:text-hoa-gold hover:underline">
-                        <span>{s.name}</span>
+                      <a href={s.href} target="_blank" rel="noopener noreferrer" className="flex min-h-11 items-center justify-between gap-3 py-1 text-hoa-ink underline-offset-4 hover:decoration-2">
+                        <span className="min-w-0">{s.name}</span>
                         <span className="shrink-0 text-hoa-gold">{s.price}</span>
                       </a>
                     </li>
@@ -91,7 +91,7 @@ export default function Page() {
                 <Soon>Bokningslänk kommer snart</Soon>
               )}
               {p.website ? (
-                <a href={p.website.href} target="_blank" rel="noopener noreferrer" className="text-sm text-hoa-gold underline-offset-4 hover:underline">
+                <a href={p.website.href} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 w-fit items-center text-sm text-hoa-ink underline-offset-4 hover:decoration-2">
                   Läs mer på {p.website.label}
                 </a>
               ) : null}

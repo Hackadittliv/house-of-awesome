@@ -13,14 +13,24 @@ export function absoluteUrl(path = "/"): string {
 export const BUSINESS_ID = `${site.url}/#verksamhet`;
 const ORGANIZATION_ID = `${site.operator.url}/#organisation`;
 
+/** Fasaden, samma fil och alt som src/app/opengraph-image.jpg och opengraph-image.alt.txt. */
+export const DEFAULT_OG_IMAGE = {
+  url: "/opengraph-image.jpg",
+  width: 1200,
+  height: 630,
+  alt: "Fasaden på House of Awesome i Stora Höga",
+};
+
 type PageMetaInput = {
   title: string;
   description: string;
   path: string;
   noindex?: boolean;
+  /** Segmentet har en egen opengraph-image (startsidan och tjänsterna). */
+  ownOgImage?: boolean;
 };
 
-export function pageMetadata({ title, description, path, noindex }: PageMetaInput): Metadata {
+export function pageMetadata({ title, description, path, noindex, ownOgImage }: PageMetaInput): Metadata {
   return {
     title,
     description,
@@ -32,6 +42,9 @@ export function pageMetadata({ title, description, path, noindex }: PageMetaInpu
       siteName: site.name,
       locale: site.locale,
       type: "website",
+      // Sidans openGraph ersätter layoutens, så standardbilden följer med här.
+      // Utan nyckeln images använder Next segmentets egen opengraph-image.
+      ...(ownOgImage ? {} : { images: [DEFAULT_OG_IMAGE] }),
     },
     twitter: { card: "summary_large_image", title, description },
     robots: noindex ? { index: false, follow: true } : undefined,
@@ -50,7 +63,7 @@ export function businessJsonLd() {
         alternateName: site.formerName,
         description: site.description,
         url: `${site.url}/`,
-        image: `${site.url}/images/stora-hoga-landskap.webp`,
+        image: `${site.url}/images/house-of-awesome-fasad-2400.webp`,
         logo: `${site.url}/images/lia-uggla.webp`,
         telephone: contact.phone,
         email: contact.email,

@@ -68,4 +68,4 @@ Tokens och layout i [DESIGN.md](./DESIGN.md): samma värden som lifeisawesome.se
 
 ## Bilder
 
-Tills HOA har egna bilder används LIA:s logga och bilder (`public/images`, `src/app/icon.png`, `src/assets` för OG bilder). Se PR:en för var egna HOA bilder skulle göra mest nytta.
+Tills HOA har egna bilder används LIA:s logga och bilder (`public/images`, `src/app/icon.png`, `src/assets` för tjänsternas OG bilder). Fasaden är husets egen bild och används på startsidan och som OG bild för övriga sidor. Se PR:en för var egna HOA bilder skulle göra mest nytta.

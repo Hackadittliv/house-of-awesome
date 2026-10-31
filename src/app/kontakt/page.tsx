@@ -11,6 +11,11 @@ export const metadata = pageMetadata({
   path: "/kontakt",
 });
 
+// Klickytor på minst 44 px. E-postadressen saknar mellanslag och kan inte brytas i en
+// inline-flex-länk, så den är ett block med w-fit, som i sidfoten och på /besok.
+const phoneLink = "inline-flex min-h-11 items-center text-hoa-gold hover:underline";
+const emailLink = "block w-fit max-w-full py-3 text-hoa-gold hover:underline";
+
 export default function Page() {
   return (
     <>
@@ -23,8 +28,8 @@ export default function Page() {
           <Card label="Hitta hit" title="Vägbeskrivning" text="Brålandsvägen 29, 444 60 Stora Höga">
             <CtaLink href={mapsUrl()} size="sm" variant="secondary" className="mt-auto w-fit">Öppna karta</CtaLink>
           </Card>
-          <Card title="E-post" text={<a href={mailtoUrl()} className="text-hoa-gold hover:underline">{site.contact.email}</a>} />
-          <Card title="Telefon" text={<a href={telUrl()} className="text-hoa-gold hover:underline">073-349 08 36</a>} />
+          <Card title="E-post" text={<a href={mailtoUrl()} className={emailLink}>{site.contact.email}</a>} />
+          <Card title="Telefon" text={<a href={telUrl()} className={phoneLink}>073-349 08 36</a>} />
           <Card title="Öppettider" text="Gym 24/7 för medlemmar. Bemannat enligt bokning." />
         </Grid>
       </Section>

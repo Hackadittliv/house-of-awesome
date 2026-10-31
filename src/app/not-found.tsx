@@ -3,9 +3,9 @@ import { CtaLink } from "@/components/CtaLink";
 
 export default function NotFound() {
   return (
-    <Container className="py-24">
+    <Container className="py-14 md:py-24">
       <p className="text-xs font-medium uppercase tracking-[0.2em] text-hoa-gold">404</p>
-      <h1 className="mt-3 text-3xl leading-tight text-hoa-ink md:text-5xl">Sidan finns inte</h1>
+      <h1 className="mt-3 hoa-h1 leading-tight text-hoa-ink">Sidan finns inte</h1>
       <p className="mt-4 max-w-md text-hoa-ink-muted">
         Adressen matchar ingen sida. Kanske hittar du det du söker bland våra tjänster.
       </p>

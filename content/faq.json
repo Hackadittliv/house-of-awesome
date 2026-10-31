@@ -10,6 +10,11 @@
     "answer": "Life Is Awesome AB, samma bolag som driver lifeisawesome.se. Patrik och Alexandra står bakom båda."
   },
   {
+    "id": "form",
+    "question": "Behöver jag vara i bra form för att börja?",
+    "answer": "Nej. Upplägget anpassas efter dig, oavsett om du är 25 eller 75, nybörjare eller van."
+  },
+  {
     "id": "hur-bokar-jag",
     "question": "Hur bokar jag en tid?",
     "answer": "Välj en tjänst här på sajten och tryck på Boka. Du kommer då direkt till rätt tjänst i bokningen hos Life Is Awesome, där vi har en gemensam kalender för båda verksamheterna."
