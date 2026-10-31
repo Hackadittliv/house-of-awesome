@@ -11,8 +11,10 @@ import sitemap from "@/app/sitemap";
 import { Disclaimer } from "@/components/Disclaimer";
 import { getService, HEALTH_DISCLAIMER, longevity, servicesSnapshot } from "@/lib/content";
 import { bookingUrl, SHORT_CALL_SLUG } from "@/lib/links";
-import { isGroup, mainMenu } from "@/lib/nav";
+import { LONGEVITY_PUBLISHED, longevityRobots } from "@/lib/longevity";
+import { aboutNav, getAboutNav, getMainMenu, getOfferGroup, isGroup, mainMenu, offerGroup } from "@/lib/nav";
 import { PORTRAITS } from "@/lib/people";
+import { getSitemap } from "@/lib/sitemap";
 import { findCopyViolations } from "../scripts/copy-rules.mjs";
 
 const bookingConfig = vi.hoisted(() => ({ enabled: false }));
@@ -61,24 +63,67 @@ describe.each(pages)("longevity: $content.path", ({ content, Page, metadata, pla
     }
   });
 
-  it("länkar till båda andra sidorna och finns i huvudmenyn och sitemap", () => {
+  it("länkar till båda andra sidorna", () => {
     expect(content.links.map((link) => link.href).sort()).toEqual(pages.map(({ content: other }) => other.path).filter((path) => path !== content.path).sort());
     for (const link of content.links) {
       expect(html).toContain(`href="${link.href}"`);
       expect(html).toContain(escaped(link.label));
     }
-    const menuPaths = mainMenu.flatMap((entry) => isGroup(entry) ? entry.items.map((item) => item.href) : [entry.href]);
-    expect(menuPaths).toContain(content.path);
-    expect(sitemap().map((entry) => new URL(entry.url).pathname)).toContain(content.path);
   });
 
   it("använder granskad metadata och brödsmulor", () => {
     expect(metadata.title).toBe(content.title);
     expect(metadata.description).toBe(content.metaDescription);
     expect(metadata.alternates?.canonical).toBe(content.path);
+    expect(metadata.robots).toEqual(longevityRobots(LONGEVITY_PUBLISHED));
     expect(html).toContain('"@type":"BreadcrumbList"');
     expect(html).toContain(content.path);
   });
+});
+
+describe.each([false, true])("publicering = %s", (published) => {
+  it("styr alla tre utbudslänkarna och huvudmenyn utan att röra övriga länkar", () => {
+    const menu = getMainMenu(published);
+    const paths = menu.flatMap((entry) => isGroup(entry) ? entry.items.map((item) => item.href) : [entry.href]);
+    const offers = getOfferGroup(published).items.map((item) => item.href);
+    for (const { content } of pages) {
+      expect(paths.includes(content.path)).toBe(published);
+      expect(offers.includes(content.path)).toBe(published);
+    }
+    expect(paths).toContain("/longevity-behandlingar");
+    expect(paths).toContain("/funktionsmedicin");
+    const pagePaths = pages.map(({ content }) => content.path);
+    const otherLinks = (enabled: boolean) => getMainMenu(enabled).flatMap((entry) => isGroup(entry)
+      ? [{ ...entry, items: entry.items.filter((item) => !pagePaths.includes(item.href)) }]
+      : [entry]);
+    expect(otherLinks(published)).toEqual(otherLinks(!published));
+  });
+
+  it("styr Anne i sidfoten och bevarar övriga sidfotslänkar", () => {
+    const nav = getAboutNav(published);
+    expect(nav.some((item) => item.href === longevity.anne.path)).toBe(published);
+    expect(nav.filter((item) => item.href !== longevity.anne.path)).toEqual(getAboutNav(false));
+  });
+
+  it("styr sitemap och bevarar övriga sidor och tjänster", () => {
+    const entries = getSitemap(published);
+    const paths = entries.map((entry) => new URL(entry.url).pathname);
+    for (const { content } of pages) expect(paths.includes(content.path)).toBe(published);
+    const pagePaths = pages.map(({ content }) => content.path);
+    expect(entries.filter((entry) => !pagePaths.includes(new URL(entry.url).pathname))).toEqual(getSitemap(false));
+    expect(paths).toContain("/tjanster/forsta-halsosamtal");
+  });
+
+  it("tar bort robotsbegränsningarna endast vid publicering", () => {
+    expect(longevityRobots(published)).toEqual(published ? undefined : { index: false, follow: false, noimageindex: true });
+  });
+});
+
+it("använder samma publiceringsflagga i faktisk meny, sidfot och sitemap", () => {
+  expect(mainMenu).toEqual(getMainMenu(LONGEVITY_PUBLISHED));
+  expect(offerGroup).toEqual(getOfferGroup(LONGEVITY_PUBLISHED));
+  expect(aboutNav).toEqual(getAboutNav(LONGEVITY_PUBLISHED));
+  expect(sitemap()).toEqual(getSitemap(LONGEVITY_PUBLISHED));
 });
 
 it("visar Anne med svensk alt-text i befintlig Avatar", () => {

@@ -9,6 +9,21 @@ Allt innehåll ligger som JSON här. Typerna finns i `src/lib/types.ts`.
 | `services.json` | HOA:s texter per tjänst | För hand |
 | `memberships.json` | De fyra HOA medlemskapen och deras Stripe pris i LIA | För hand |
 | `faq.json` | Vanliga frågor | För hand |
+| `longevity.json` | Anne Wevers, blodanalys och hälsostrategi för företag, typ `LongevityPageContent` | För hand |
+
+## Publicering av longevitysidorna
+
+`LONGEVITY_PUBLISHED` i `src/lib/longevity.ts` styr de tre sidornas länkar i huvudmeny och sidfot, sitemap samt robotsmetadata. Med `false` är länkarna dolda och sidorna har `noindex,nofollow,noimageindex`. Sidorna går fortsatt att öppna via sina adresser.
+
+Före publicering ska följande vara klart:
+
+- Annes skriftliga samtycke till bild, namn, meriter och texter.
+- Bildrättighet och fotograf för Annes porträtt dokumenterade.
+- Vårdjuristläsning genomförd och synpunkter åtgärdade.
+- Integritetspolicy och PUB-avtal klara.
+- Christians godkännande av publicering.
+
+Därefter sätts konstanten till `true`. Avpublicering görs genom att sätta samma rad till `false`. Ändringen slår igenom efter nytt bygge och publicering av webbplatsen.
 
 ## services.json
 
