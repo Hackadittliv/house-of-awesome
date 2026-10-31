@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Container } from "@/components/Container";
 import { PageHeader } from "@/components/PageHeader";
-import { Prose } from "@/components/Prose";
+import { Prose, ProseHeading } from "@/components/Prose";
 import { site } from "@/lib/content";
 import { trackers } from "@/lib/consent";
 import { mailtoUrl } from "@/lib/links";
@@ -22,7 +22,7 @@ export default function IntegritetspolicyPage() {
   const anyTracker = Boolean(trackers.gaMeasurementId || trackers.metaPixelId);
 
   return (
-    <Container className="py-16 md:py-24">
+    <Container className="py-14 md:py-20">
       <PageHeader
         eyebrow="Integritet"
         title="Integritetspolicy"
@@ -31,14 +31,14 @@ export default function IntegritetspolicyPage() {
 
       <div className="mt-12">
         <Prose>
-          <h2>Personuppgiftsansvarig</h2>
+          <ProseHeading>Personuppgiftsansvarig</ProseHeading>
           <p>
             <strong>{operator.legalName}</strong>, org.nr {operator.orgNr},{" "}
             {`${operator.registeredAddress}, driver House of Awesome och är personuppgiftsansvarig.`} Du når oss på{" "}
             <a href={mailtoUrl("Integritet")}>{contact.email}</a>.
           </p>
 
-          <h2>Bokning, betalning och medlemskap</h2>
+          <ProseHeading>Bokning, betalning och medlemskap</ProseHeading>
           <p>
             När du bokar en tid, köper ett presentkort eller medlemskap eller fyller i en hälsodeklaration
             behandlas uppgifterna av {operator.legalName} i samma bokningssystem som lifeisawesome.se.{" "}
@@ -46,7 +46,7 @@ export default function IntegritetspolicyPage() {
             <a href={operator.privacyPolicyUrl}>integritetspolicyn hos Life Is Awesome</a>.
           </p>
 
-          <h2>Vad vi behandlar på den här sajten</h2>
+          <ProseHeading>Vad vi behandlar på den här sajten</ProseHeading>
           <ul>
             <li>
               <strong>Tekniska uppgifter.</strong> När du besöker sajten sparar vår leverantör av
@@ -74,7 +74,7 @@ export default function IntegritetspolicyPage() {
           </ul>
           <p>Den här sajten har inga formulär och inga konton.</p>
 
-          <h2>Mottagare</h2>
+          <ProseHeading>Mottagare</ProseHeading>
           <p>
             Netlify driver sajten åt oss som personuppgiftsbiträde. Netlify är ett amerikanskt
             företag, och överföring sker med stöd av EU:s standardavtalsklausuler.
@@ -87,7 +87,7 @@ export default function IntegritetspolicyPage() {
             Vi säljer aldrig dina uppgifter.
           </p>
 
-          <h2>Dina rättigheter</h2>
+          <ProseHeading>Dina rättigheter</ProseHeading>
           <p>
             Du har rätt att få veta vilka uppgifter vi har om dig, att få dem rättade eller
             raderade, att begränsa eller invända mot behandlingen och att få ut dina uppgifter i ett

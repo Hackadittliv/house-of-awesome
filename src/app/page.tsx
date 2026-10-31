@@ -3,8 +3,9 @@ import Link from "next/link";
 
 import { CtaLink } from "@/components/CtaLink";
 import { FacadeImage } from "@/components/FacadeImage";
+import { FaqList } from "@/components/FaqList";
 import { Wordmark } from "@/components/Logo";
-import { Avatar, Card, Grid, Section, cardClass } from "@/components/v2/ui";
+import { Avatar, Card, Grid, Section, cardClass, gridGap } from "@/components/v2/ui";
 import { getFaqItems, getService, site } from "@/lib/content";
 import { SHORT_CALL_SLUG, bookingUrl } from "@/lib/links";
 import { PORTRAITS } from "@/lib/people";
@@ -81,11 +82,13 @@ export default function HomePage() {
     <>
       <section id="valkommen" aria-labelledby="valkommen-rubrik">
         <div className="px-4 pt-8 pb-10 text-center md:pt-12 md:pb-12">
-          <div className="mx-auto max-w-3xl">
+          <div className="@container mx-auto max-w-3xl">
             <Image src="/images/lia-uggla.webp" alt="" width={256} height={256} className="mx-auto h-14 w-14 md:h-20 md:w-20" />
             <h1 id="valkommen-rubrik" className="mt-4 text-hoa-ink">
-              <span className="block text-2xl md:text-4xl">Välkommen till</span>{" "}
-              <Wordmark className="mt-2 block text-4xl md:text-6xl" />{" "}
+              {/* VÄLKOMMEN är 6,45 em; storleken krymper bara om ordet annars inte ryms, till exempel vid förstorad text. */}
+              <span className="block text-[min(1.5rem,100cqi/6.6)] md:text-4xl">Välkommen till</span>{" "}
+              {/* Ordmärket ryms på en rad från 360 px (10,6 em i versaler). */}
+              <Wordmark className="mt-2 block text-[clamp(1.75rem,8.4vw,3.75rem)]" />{" "}
               <span className="subheading mt-1 block text-lg text-hoa-ink-muted md:text-2xl">i Stora Höga</span>
             </h1>
             <p className="mt-6 font-display text-2xl font-bold text-hoa-ink md:text-4xl">Ett helt hus av möjligheter</p>
@@ -99,16 +102,14 @@ export default function HomePage() {
           </div>
         </div>
         <FacadeImage />
-        <div className="px-4 pt-6">
-          <p className="mx-auto flex max-w-md items-start gap-3 rounded-2xl border border-hoa-gold/30 bg-hoa-secondary/20 px-4 py-3 text-left text-sm text-hoa-ink-muted">
-            <span aria-hidden>🐾</span>
-            <span>Vi har en hund i huset. Hunden håller till på en avgränsad plats, skild från behandlingsrummen.</span>
-          </p>
-        </div>
+        <p className="mx-auto max-w-md px-4 py-5 text-center text-sm leading-relaxed text-hoa-ink-muted">
+          <span aria-hidden className="mr-1.5">🐾</span>
+          Vi har en hund i huset. Hunden håller till på en avgränsad plats, skild från behandlingsrummen.
+        </p>
       </section>
 
       <Section id="mote-med-patrik" eyebrow="Möte med Patrik" title="Hälsa har blivit för krångligt. Vi gör det enkelt igen." band>
-        <div className="grid items-start gap-8 md:grid-cols-2 md:gap-12">
+        <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2 md:gap-12">
           <div className="space-y-4">
             <p className="font-display text-xl font-bold leading-snug text-hoa-ink md:text-2xl">
               Vi börjar med grunden: din livsstil och din vardag. Sedan bygger vi vidare därifrån.
@@ -117,7 +118,7 @@ export default function HomePage() {
             <p className="leading-relaxed text-hoa-ink-muted">Mätning och optimering använder vi när det faktiskt tillför värde.</p>
             <p className="leading-relaxed text-hoa-ink-muted">Vi bygger hälsa och en livsstil som håller över tid.</p>
           </div>
-          <div className="relative aspect-[4/5] w-full max-w-sm justify-self-center overflow-hidden rounded-2xl border border-hoa-gold/20 md:row-span-2 md:max-w-md">
+          <div className="relative aspect-[4/5] w-full max-w-sm justify-self-center overflow-hidden rounded-2xl md:row-span-2 md:max-w-md">
             <Image
               src={PORTRAITS.patrik.src}
               alt={PORTRAITS.patrik.alt}
@@ -133,7 +134,7 @@ export default function HomePage() {
       </Section>
 
       <Section id="om-huset" eyebrow="Huset i Stora Höga" title="Om House of Awesome" band>
-        <div className="grid gap-10 leading-relaxed text-hoa-ink/85 md:grid-cols-2 md:gap-14">
+        <div className="grid grid-cols-1 gap-10 leading-relaxed text-hoa-ink/85 md:grid-cols-2 md:gap-14">
           <div className="space-y-10">
             <article className="space-y-4">
               <h3 className="text-2xl text-hoa-ink">En plats utöver det vanliga</h3>
@@ -210,7 +211,7 @@ export default function HomePage() {
       </Section>
 
       <Section id="personerna" eyebrow="Personerna" title="Människorna i huset" band>
-        <ul className="grid gap-4 md:grid-cols-3">
+        <ul className={`grid grid-cols-1 ${gridGap} md:grid-cols-3`}>
           {people.map((p) => (
             <li key={p.name} className={`${cardClass} flex flex-col items-center gap-3 text-center`}>
               <Avatar {...PORTRAITS[p.portrait]} size="lg" />
@@ -238,17 +239,7 @@ export default function HomePage() {
       </Section>
 
       <Section id="vanliga-fragor" eyebrow="Vanliga frågor" title="Det du kanske undrar" band>
-        <div className="mx-auto max-w-2xl divide-y divide-hoa-line border-y border-hoa-line">
-          {faq.map((f) => (
-            <details key={f.id} className="group py-4">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg text-hoa-ink">
-                {f.question}
-                <span aria-hidden className="text-hoa-gold group-open:rotate-45">+</span>
-              </summary>
-              <p className="mt-3 text-hoa-ink-muted">{f.answer}</p>
-            </details>
-          ))}
-        </div>
+        <FaqList items={faq} className="mx-auto max-w-2xl" />
         <div className="mt-8 text-center">
           <CtaLink href="/faq" variant="ghost">Fler frågor och svar</CtaLink>
         </div>

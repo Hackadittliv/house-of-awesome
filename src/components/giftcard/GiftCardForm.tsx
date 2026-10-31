@@ -117,18 +117,18 @@ export function GiftCardForm() {
         </div>
       </fieldset>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label="Ditt namn" name="gc-bname" autoComplete="name" value={buyerName} onChange={setBuyerName} maxLength={120} />
         <Field label="Din e-post *" name="gc-bemail" type="email" autoComplete="email" required value={buyerEmail} onChange={setBuyerEmail} />
       </div>
 
-      <label className="flex items-center gap-3 text-sm text-hoa-ink">
-        <input type="checkbox" checked={gift} onChange={(e) => setGift(e.target.checked)} className="h-5 w-5 accent-hoa-gold" />
+      <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm text-hoa-ink">
+        <input type="checkbox" checked={gift} onChange={(e) => setGift(e.target.checked)} className="size-6 shrink-0 accent-hoa-gold" />
         Skicka direkt till mottagaren
       </label>
 
       {gift && (
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Mottagarens namn" name="gc-rname" value={recipientName} onChange={setRecipientName} maxLength={RECIPIENT_NAME_MAX} />
           <Field label="Mottagarens e-post" name="gc-remail" type="email" value={recipientEmail} onChange={setRecipientEmail} />
         </div>

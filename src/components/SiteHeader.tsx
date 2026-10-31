@@ -41,7 +41,7 @@ function MobileEntry({ entry, onNavigate }: { entry: MenuEntry; onNavigate: () =
         <ul className="mb-2 space-y-1 border-l border-hoa-gold/30 pl-4">
           {entry.sections.map((s) => (
             <li key={s.href}>
-              <Link href={s.href} onClick={onNavigate} className="inline-flex min-h-10 items-center text-base text-hoa-ink-muted hover:text-hoa-ink">
+              <Link href={s.href} onClick={onNavigate} className="inline-flex min-h-11 items-center text-base text-hoa-ink-muted hover:text-hoa-ink">
                 {s.label}
               </Link>
             </li>
@@ -90,7 +90,7 @@ export function SiteHeader({ bookingHref }: { bookingHref: string }) {
 
   return (
     <header className="hoa-site-header hoa-surface-light sticky top-0 z-50 border-b border-hoa-light-line bg-hoa-light text-hoa-light-ink">
-      <Container wide className="flex h-20 items-center justify-between gap-4 lg:h-24">
+      <Container wide className="@container flex h-20 items-center justify-between gap-2 sm:gap-4 lg:h-24">
         <Logo />
 
         <nav aria-label="Huvudmeny" className="hidden items-center gap-6 xl:flex">
@@ -130,15 +130,17 @@ export function SiteHeader({ bookingHref }: { bookingHref: string }) {
           </CtaLink>
         </div>
 
+        {/* Gränserna är i rem och följer därför även förstorad text: när raden blir för smal
+            visas bara ikonen (under 352 px vid normal text), och vid ännu smalare rad bara ugglan. */}
         <button
           type="button"
-          className="inline-flex h-11 items-center gap-2 rounded-lia-md px-2 text-sm text-hoa-ink xl:hidden"
+          className="inline-flex h-11 min-w-11 items-center justify-center gap-2 rounded-lia-md px-2 text-sm text-hoa-ink xl:hidden"
           aria-expanded={open}
           aria-controls="mobilmeny"
           onClick={() => setOpen(true)}
         >
           <span aria-hidden className="text-xl leading-none">☰</span>
-          Meny
+          <span className="@max-[20rem]:sr-only">Meny</span>
         </button>
       </Container>
 

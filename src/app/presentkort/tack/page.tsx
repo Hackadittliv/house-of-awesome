@@ -1,6 +1,5 @@
-import Link from "next/link";
-
 import { Container } from "@/components/Container";
+import { CtaLink } from "@/components/CtaLink";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -12,13 +11,13 @@ export const metadata = pageMetadata({
 
 export default function GiftCardThanksPage() {
   return (
-    <Container className="py-16 md:py-24">
+    <Container className="py-14 md:py-20">
       <div className="mx-auto max-w-2xl space-y-6 text-center">
-        <h1 className="font-display text-3xl text-hoa-ink">Tack för ditt köp</h1>
+        <h1 className="hoa-h1 text-hoa-ink">Tack för ditt köp</h1>
         <p className="text-hoa-ink-muted">Presentkortet kommer via e-post inom några minuter.</p>
-        <Link href="/butik" className="inline-block text-sm text-hoa-gold underline-offset-4 hover:underline">
+        <CtaLink href="/butik" variant="ghost">
           Tillbaka till butiken
-        </Link>
+        </CtaLink>
       </div>
     </Container>
   );

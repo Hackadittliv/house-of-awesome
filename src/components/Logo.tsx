@@ -15,7 +15,7 @@ export function Logo({ className = "" }: { className?: string }) {
         height={56}
         className="h-10 w-10 sm:h-12 sm:w-12"
       />
-      <Wordmark className="text-lg sm:text-xl" />
+      <Wordmark className="text-lg sm:text-xl @max-[17.5rem]:hidden" />
     </Link>
   );
 }

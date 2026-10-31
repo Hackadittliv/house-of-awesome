@@ -15,6 +15,10 @@
   --hoa-gradient-hero:
     radial-gradient(circle at 30% 20%, rgb(239 197 93 / 0.12), transparent 55%),
     radial-gradient(circle at 80% 70%, rgb(172 109 42 / 0.1), transparent 60%);
+  /* Rubrikskala för versalrubrikerna. Se hoa-h1 och hoa-h2 längre ned. */
+  --hoa-h1-size: clamp(1.875rem, 0.9rem + 4.4vw, 3.75rem);
+  --hoa-h2-size: clamp(1.5rem, 0.95rem + 2.6vw, 2.25rem);
+  --hoa-h2-prose-size: clamp(1.25rem, 0.95rem + 1.4vw, 1.875rem);
 }
 
 /* En hel palett återställs även för mörka öar inuti ett ljust band.
@@ -34,6 +38,17 @@ main:has(> :is(.hoa-surface-light, section.bg-hoa-secondary\/50):nth-last-child(
   --hoa-accent: var(--hoa-gold);
   --hoa-hover: #35291d;
   --hoa-wordmark-accent: var(--hoa-gold);
+  /* Kortregeln på svart: inget kort, bara en tunn linje som skiljer innehållet åt. */
+  --hoa-card-surface: transparent;
+  --hoa-card-edge: transparent;
+  --hoa-card-rule: var(--hoa-line);
+  --hoa-card-radius: 0px;
+  --hoa-card-inset: 0px;
+  --hoa-card-top: 1.5rem;
+  --hoa-card-media-top: 1rem;
+  --hoa-card-media-bottom: 1rem;
+  --hoa-grid-gap-x: 1.5rem;
+  --hoa-grid-gap-y: 2rem;
   color-scheme: dark;
 }
 
@@ -55,7 +70,28 @@ section.bg-hoa-secondary\/50,
   --hoa-accent: var(--hoa-light-accent);
   --hoa-hover: #e5d6b8;
   --hoa-wordmark-accent: var(--hoa-light-ink);
+  /* Kortregeln på kräm: ljust kort med diskret ram, bilden kant i kant överst. */
+  --hoa-card-surface: var(--hoa-light-card);
+  --hoa-card-edge: color-mix(in srgb, var(--hoa-light-line) 45%, transparent);
+  --hoa-card-rule: var(--hoa-card-edge);
+  --hoa-card-radius: 1rem;
+  --hoa-card-inset: 1.25rem;
+  --hoa-card-top: 1.25rem;
+  --hoa-card-media-top: calc(1rem - 1px);
+  --hoa-card-media-bottom: 0px;
+  --hoa-grid-gap-x: 1rem;
+  --hoa-grid-gap-y: 1rem;
   color-scheme: light;
+}
+
+@media (width >= 48rem) {
+  .hoa-surface-light,
+  section.bg-hoa-secondary\/50,
+  [data-shared-bottom],
+  .hoa-newsletter {
+    --hoa-card-inset: 1.5rem;
+    --hoa-card-top: 1.5rem;
+  }
 }
 
 .hoa-surface-light,
@@ -100,6 +136,8 @@ section.bg-hoa-secondary\/50,
   --font-display: var(--font-jakarta);
   --radius-lia: 1rem;
   --radius-lia-md: calc(1rem - 2px);
+  /* Bokningslistans kortlänkar använder rounded-lia-lg; utan token blev radien 0. */
+  --radius-lia-lg: 1.25rem;
   --shadow-gold: var(--hoa-shadow-gold);
 }
 
@@ -114,6 +152,8 @@ section.bg-hoa-secondary\/50,
     font-family: var(--font-inter), system-ui, sans-serif;
     background-image: var(--hoa-gradient-hero);
     background-attachment: fixed;
+    /* Brödtext bryter bara ett ord som inte ryms på en egen rad (till exempel en lång adress). */
+    overflow-wrap: break-word;
   }
 
   h1,
@@ -127,13 +167,43 @@ section.bg-hoa-secondary\/50,
     letter-spacing: -0.015em;
   }
 
+  /* Rubriker och rubrikliknande text bryts aldrig inne i ord: ingen avstavning och
+     ingen nödbrytning. Långa ord ryms i stället via rubrikskalan och --hoa-fit. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  [role="heading"],
+  summary,
+  legend,
+  button,
+  .font-display,
+  .subheading {
+    hyphens: manual;
+    overflow-wrap: normal;
+    word-break: normal;
+    text-wrap: balance;
+  }
+
   h1,
   h2 {
     text-transform: uppercase;
     letter-spacing: -0.02em;
     line-height: 1.15;
-    overflow-wrap: anywhere;
-    hyphens: auto;
+  }
+
+  /* Ingresser och brödtext undviker ett ensamt ord på sista raden. */
+  p,
+  li,
+  dd,
+  dt,
+  figcaption,
+  blockquote,
+  td,
+  th {
+    text-wrap: pretty;
   }
 
   .subheading {
@@ -167,6 +237,69 @@ section.bg-hoa-secondary\/50,
   :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
     outline: 2px solid var(--hoa-accent);
     outline-offset: 3px;
+  }
+}
+
+/* Versalrubrikernas storlek följer skärmen och krymper vid behov så att rubrikens
+   längsta ord ryms på en rad. Rubrikkomponenterna sätter --hoa-fit (ordets bredd i em,
+   se src/lib/heading.ts) och gör omslaget till container, så 100cqi är rubrikens bredd.
+   Utan stöd för containerenheter gäller skalan. */
+@utility hoa-h1 {
+  font-size: var(--hoa-h1-size);
+  @supports (width: 1cqi) {
+    font-size: min(var(--hoa-h1-size), 100cqi / var(--hoa-fit, 0.01));
+  }
+}
+
+@utility hoa-h2 {
+  font-size: var(--hoa-h2-size);
+  @supports (width: 1cqi) {
+    font-size: min(var(--hoa-h2-size), 100cqi / var(--hoa-fit, 0.01));
+  }
+}
+
+/* Mellanrubriker i löptext (ProseHeading). PERSONUPPGIFTSANSVARIG ryms med skalan
+   ned till 320 px och med --hoa-fit även vid förstorad text. */
+@utility hoa-h2-prose {
+  font-size: var(--hoa-h2-prose-size);
+  @supports (width: 1cqi) {
+    font-size: min(var(--hoa-h2-prose-size), 100cqi / var(--hoa-fit, 0.01));
+  }
+}
+
+/* Rubriker med egen grundstorlek (--hoa-size), till exempel FAQ-frågor. --hoa-fit-offset
+   räknar bort det som delar raden med rubriken, som plustecknet i en fråga. */
+@utility hoa-fit-text {
+  font-size: var(--hoa-size);
+  @supports (width: 1cqi) {
+    font-size: min(var(--hoa-size), (100cqi - var(--hoa-fit-offset, 0rem)) / var(--hoa-fit, 0.01));
+  }
+}
+
+@layer components {
+  /* Kortregeln: kort finns bara på kräm. Samma komponent blir öppen på svart,
+     utan box och med en tunn linje överst (tokens per yta längre upp). */
+  .hoa-card {
+    /* Container för korttitlarnas fit (hoa-fit-text). */
+    container-type: inline-size;
+    border: 1px solid var(--hoa-card-edge);
+    border-top-color: var(--hoa-card-rule);
+    border-radius: var(--hoa-card-radius);
+    background-color: var(--hoa-card-surface);
+    padding: var(--hoa-card-top) var(--hoa-card-inset) var(--hoa-card-inset);
+  }
+
+  /* Ett kort som börjar med bild får ingen linje överst; på kräm går bilden kant i kant. */
+  .hoa-card:has(> .hoa-card-media:first-child) {
+    border-top-color: var(--hoa-card-edge);
+  }
+
+  .hoa-card-media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    margin: calc(-1 * var(--hoa-card-top)) calc(-1 * var(--hoa-card-inset)) 0.25rem;
+    border-radius: var(--hoa-card-media-top) var(--hoa-card-media-top) var(--hoa-card-media-bottom) var(--hoa-card-media-bottom);
   }
 }
 

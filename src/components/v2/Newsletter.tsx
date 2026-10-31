@@ -2,14 +2,20 @@
 
 import { useState } from "react";
 
+import { fitStyle } from "@/lib/heading";
+
+const title = "Recept, poddavsnitt och longevity i din inkorg";
+
 /** Nyhetsbrevet saknar backend än. Formuläret skickar ingenting. */
 export function Newsletter() {
   const [done, setDone] = useState(false);
   return (
     <section className="hoa-newsletter border-t border-hoa-line py-14 md:py-16">
-      <div className="mx-auto max-w-xl px-4 text-center">
+      <div className="@container mx-auto max-w-xl px-4 text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-hoa-bronze">Månadsbrev</p>
-        <h2 className="mt-3 text-2xl text-hoa-ink md:text-3xl">Recept, poddavsnitt och longevity i din inkorg</h2>
+        <h2 className="mt-3 hoa-h2 text-hoa-ink" style={fitStyle(title)}>
+          {title}
+        </h2>
         <p className="mt-3 text-hoa-ink-muted">Konkreta tips, nyheter från huset och nya event. Avsluta när du vill.</p>
         {done ? (
           <p className="mt-6 text-hoa-gold" role="status">Tack! Månadsbrevet startar snart.</p>

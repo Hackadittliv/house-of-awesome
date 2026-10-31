@@ -1,4 +1,6 @@
 import { Eyebrow } from "@/components/Eyebrow";
+import { HeadingText } from "@/components/HeadingText";
+import { fitStyle } from "@/lib/heading";
 
 type SectionIntroProps = {
   id: string;
@@ -21,11 +23,11 @@ export function SectionIntro({
 }: SectionIntroProps) {
   return (
     <div
-      className={`max-w-3xl space-y-4 ${align === "center" ? "mx-auto text-center" : ""} ${className}`}
+      className={`@container max-w-3xl space-y-4 ${align === "center" ? "mx-auto text-center" : ""} ${className}`}
     >
       {eyebrow ? <Eyebrow tone={eyebrowTone}>{eyebrow}</Eyebrow> : null}
-      <h2 id={id} className="text-3xl leading-tight text-hoa-ink md:text-5xl">
-        {title}
+      <h2 id={id} className="hoa-h2 leading-tight text-hoa-ink" style={fitStyle(title)}>
+        <HeadingText text={title} />
       </h2>
       {lead ? (
         <p className="text-lg leading-relaxed text-hoa-ink/80 md:text-xl">{lead}</p>
