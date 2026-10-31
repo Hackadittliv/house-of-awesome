@@ -35,10 +35,12 @@ export function LongevityPage({ content, placement, portrait = false }: {
           band={(content.sections.length - index) % 2 === 1}
         >
           <div className="mx-auto max-w-3xl space-y-6">
-            <Prose>
-              {section.body?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-              {section.points ? <ul>{section.points.map((point) => <li key={point}>{point}</li>)}</ul> : null}
-            </Prose>
+            {section.body || section.points ? (
+              <Prose>
+                {section.body?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                {section.points ? <ul>{section.points.map((point) => <li key={point}>{point}</li>)}</ul> : null}
+              </Prose>
+            ) : null}
             {section.steps ? (
               <ol className="space-y-4">
                 {section.steps.map((step, stepIndex) => (
@@ -58,7 +60,7 @@ export function LongevityPage({ content, placement, portrait = false }: {
         </Section>
       ))}
 
-      <Section titleId="boka-samtal" title={content.cta.heading} lead={content.cta.text}>
+      <Section id="boka-samtal" titleId="boka-samtal-rubrik" title={content.cta.heading} lead={content.cta.text}>
         <div className="mt-8 text-center">
           <CtaLink href={bookingUrl(SHORT_CALL_SLUG, `${placement}_cta`)}>{content.cta.buttonLabel}</CtaLink>
         </div>

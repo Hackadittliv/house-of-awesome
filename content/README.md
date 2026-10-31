@@ -15,7 +15,7 @@ Allt innehåll ligger som JSON här. Typerna finns i `src/lib/types.ts`.
 
 `LONGEVITY_PUBLISHED` i `src/lib/longevity.ts` styr de tre sidornas länkar i huvudmeny och sidfot, sitemap samt robotsmetadata. Med `false` är länkarna dolda och sidorna har `noindex,nofollow,noimageindex`. Sidorna går fortsatt att öppna via sina adresser.
 
-Spärren döljer bara länkar och indexering. En merge till main publicerar sidorna på sina adresser, med Annes namn och porträtt. Grenen ska därför varken mergas eller deployas till produktion innan checklistan nedan är klar.
+Spärren döljer bara länkar och indexering. En merge till main publicerar sidorna på sina adresser, med Annes namn och porträtt. Grenen ska därför varken mergas eller deployas till produktion innan checklistan nedan är klar. Förhandsvisningen av PR:en är öppen för den som har adressen (noindex), vilket Christian har valt för granskning.
 
 Före publicering ska följande vara klart:
 
@@ -25,7 +25,7 @@ Före publicering ska följande vara klart:
 - Integritetspolicy och PUB-avtal klara.
 - Christians godkännande av publicering.
 
-Därefter sätts konstanten till `true`. Avpublicering görs genom att sätta samma rad till `false`. Ändringen slår igenom efter nytt bygge och publicering av webbplatsen.
+Därefter sätts konstanten till `true`, och `LONGEVITY_UPDATED` i `src/lib/sitemap.ts` sätts till publiceringsdagen. Avpublicering görs genom att sätta samma rad till `false`. Ändringen slår igenom efter nytt bygge och publicering av webbplatsen.
 
 ## services.json
 

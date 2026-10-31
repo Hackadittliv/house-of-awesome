@@ -5,6 +5,8 @@ import { LONGEVITY_PUBLISHED } from "@/lib/longevity";
 import { absoluteUrl } from "@/lib/seo";
 
 const CONTENT_UPDATED = new Date("2026-10-11");
+/** Uppdateras till publiceringsdagen när LONGEVITY_PUBLISHED sätts till true. */
+const LONGEVITY_UPDATED = new Date("2026-10-31");
 
 export function getSitemap(published: boolean = LONGEVITY_PUBLISHED): MetadataRoute.Sitemap {
   const pages: { path: string; priority: number }[] = [
@@ -33,7 +35,7 @@ export function getSitemap(published: boolean = LONGEVITY_PUBLISHED): MetadataRo
   return [
     ...(published ? Object.values(longevity) : []).map((page) => ({
       url: absoluteUrl(page.path),
-      lastModified: new Date("2026-10-31"),
+      lastModified: LONGEVITY_UPDATED,
       priority: 0.8,
     })),
     ...pages.map(({ path, priority }) => ({

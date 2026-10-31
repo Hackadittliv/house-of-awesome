@@ -53,6 +53,9 @@ describe.each(pages)("longevity: $content.path", ({ content, Page, metadata, pla
     expect(h2s).toHaveLength(content.sections.length + 1);
     for (const h2 of h2s) expect(h2[1].split(" ")).toEqual(expect.arrayContaining(["text-3xl", "md:text-4xl"]));
     for (const section of content.sections) expect(html).toContain(`id="${section.id}-rubrik"`);
+    expect(html).toMatch(/<section\b[^>]*id="boka-samtal"/);
+    expect(html).toContain('id="boka-samtal-rubrik"');
+    expect(html).not.toMatch(/<div class="max-w-3xl space-y-4 leading-7[^"]*"><\/div>/);
   });
 
   it("har obandat avslut före SharedBottom och inga två band i följd", () => {
