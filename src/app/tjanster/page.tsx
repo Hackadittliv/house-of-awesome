@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { ServiceCard } from "@/components/ServiceCard";
 import { Section, gridGap } from "@/components/v2/ui";
 import { getBookableServices, getInquiryServices } from "@/lib/content";
+import { fitStyle } from "@/lib/heading";
 import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -14,12 +15,16 @@ export const metadata = pageMetadata({
   path: "/tjanster",
 });
 
+const bookTitle = "Boka direkt";
+const inquiryTitle = "Efter förfrågan";
+
 export default function TjansterPage() {
   const bookable = getBookableServices();
   const inquiry = getInquiryServices();
 
   // Rubriken på svart, tjänstekorten på ett krämband. Bandet är mains sista innehåll,
-  // så den gemensamma avslutningen blir svart CTA före nyhetsbrevet.
+  // så den gemensamma avslutningen blir svart CTA före nyhetsbrevet. Delsektionerna är
+  // containrar för rubrikernas fit, som i Section.
   return (
     <>
       <Container className="pt-14 pb-12 md:pt-20 md:pb-16">
@@ -31,9 +36,9 @@ export default function TjansterPage() {
       </Container>
 
       <Section band>
-        <section aria-labelledby="boka-direkt">
-          <h2 id="boka-direkt" className="hoa-h2 text-hoa-ink">
-            Boka direkt
+        <section aria-labelledby="boka-direkt" className="@container">
+          <h2 id="boka-direkt" className="hoa-h2 text-hoa-ink" style={fitStyle(bookTitle)}>
+            {bookTitle}
           </h2>
           <p className="mt-2 max-w-2xl text-sm text-hoa-ink-muted">
             Du kommer till rätt tjänst i bokningen hos Life Is Awesome, där vi har en gemensam
@@ -46,9 +51,9 @@ export default function TjansterPage() {
           </div>
         </section>
 
-        <section aria-labelledby="efter-forfragan" className="mt-14 md:mt-16">
-          <h2 id="efter-forfragan" className="hoa-h2 text-hoa-ink">
-            Efter förfrågan
+        <section aria-labelledby="efter-forfragan" className="@container mt-14 md:mt-16">
+          <h2 id="efter-forfragan" className="hoa-h2 text-hoa-ink" style={fitStyle(inquiryTitle)}>
+            {inquiryTitle}
           </h2>
           <p className="mt-2 max-w-2xl text-sm text-hoa-ink-muted">
             Boka ett kostnadsfritt kort samtal eller mejla oss, så hittar vi en tid som passar.

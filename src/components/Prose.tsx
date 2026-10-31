@@ -9,7 +9,10 @@ export function Prose({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Mellanrubrik i Prose. Långa ord som PERSONUPPGIFTSANSVARIG krymper så att de ryms på en rad. */
+/**
+ * Mellanrubrik i Prose. Långa ord som PERSONUPPGIFTSANSVARIG krymper så att de ryms på en rad vid
+ * normal textstorlek; vid kraftigt förstorad text växer rubriken och ordet bryts i stället.
+ */
 export function ProseHeading({ children }: { children: string }) {
   return (
     <h2 style={fitStyle(children)}>

@@ -87,7 +87,7 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
               {service.points.map((point) => (
                 <li key={point} className="flex gap-3 text-hoa-ink">
                   <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-hoa-gold" />
-                  {point}
+                  <span className="min-w-0">{point}</span>
                 </li>
               ))}
             </ul>
@@ -157,12 +157,16 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
             <h2 id="fler-tjanster" className="hoa-h2 text-hoa-ink" style={fitStyle(moreTitle)}>
               {moreTitle}
             </h2>
+            {/* Pillren är inline-flex och kan inte bryta ett ord. Med hoa-fit-text (14 px, utfyllnad och
+                ram räknas bort) stannar texten vid förstorad text på smala skärmar där namnets längsta
+                ord ryms, till exempel Funktionsmedicin vid 320 px och 200 % text. */}
             <ul className="mt-6 flex flex-wrap gap-3">
               {related.map((other) => (
                 <li key={other.slug}>
                   <Link
                     href={`/tjanster/${other.slug}`}
-                    className="inline-flex min-h-11 items-center rounded-full border border-hoa-gold/40 px-5 py-2 font-display text-sm font-medium text-hoa-ink no-underline transition-colors hover:bg-hoa-gold/10"
+                    className="hoa-fit-text inline-flex min-h-11 items-center rounded-full border border-hoa-gold/40 px-5 py-2 font-display leading-[calc(1.25/0.875)] font-medium text-hoa-ink no-underline transition-colors hover:bg-hoa-gold/10 [--hoa-fit-offset:calc(2.5rem+2px)] [--hoa-size:0.875rem]"
+                    style={fitStyle(other.name, false)}
                   >
                     {other.name}
                   </Link>

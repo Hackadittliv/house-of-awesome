@@ -10,6 +10,9 @@ import { sellerLine, sellerTermsUrl, termsLabel } from "@/lib/seller";
 
 // Fristående länkar har minst 44 x 44 px klickyta, även med text i 12 och 14 px.
 const target = "inline-flex min-h-11 min-w-11 items-center";
+// E-postadressen saknar mellanslag och kan inte brytas i en inline-flex-länk. Som block med
+// w-fit bryts den vid 320 px och 200 % text och är 44 px hög (20 px rad och py-3), som på /besok.
+const emailLink = "block w-fit max-w-full py-3 hover:text-hoa-gold";
 const linkClass = `${target} text-sm text-hoa-ink-muted transition-colors hover:text-hoa-gold`;
 const head = "text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold";
 
@@ -45,7 +48,7 @@ export function SiteFooter() {
         <div>
           <p className={head}>Kontakt</p>
           <address className="mt-2 text-sm not-italic text-hoa-ink">
-            <p><a href={mailtoUrl()} className={`${target} hover:text-hoa-gold`}>{site.contact.email}</a></p>
+            <p><a href={mailtoUrl()} className={emailLink}>{site.contact.email}</a></p>
             <p><a href={telUrl()} className={`${target} hover:text-hoa-gold`}>073-349 08 36</a></p>
             <p className="mt-2">{formatAddress()}</p>
           </address>

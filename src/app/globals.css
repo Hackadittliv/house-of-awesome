@@ -19,6 +19,22 @@
   --hoa-h1-size: clamp(1.875rem, 0.9rem + 4.4vw, 3.75rem);
   --hoa-h2-size: clamp(1.5rem, 0.95rem + 2.6vw, 2.25rem);
   --hoa-h2-prose-size: clamp(1.25rem, 0.95rem + 1.4vw, 1.875rem);
+  /* Samma skalor vid normal textstorlek (1rem = 16 px), i px. Fit-reglerna låter aldrig en rubrik
+     bli mindre än så när användaren förstorar texten. */
+  --hoa-h1-size-100: clamp(30px, 14.4px + 4.4vw, 60px);
+  --hoa-h2-size-100: clamp(24px, 15.2px + 2.6vw, 36px);
+  --hoa-h2-prose-size-100: clamp(20px, 15.2px + 1.4vw, 30px);
+  /* Golv i rem: rubrikerna växer med textstorleken även när raden inte räcker till, och blir vid
+     200 % text minst lika stora som brödtexten (h1 lite större). Ett ord som inte ryms vid golvet
+     bryts, så golven är inte högre än så. Vid 320 px och normal textstorlek ligger de under
+     storleken där längsta ordet ryms (LONGEVITY-BEHANDLINGAR i h1 och PERSONUPPGIFTSANSVARIG i
+     löptext får plats vid cirka 20,4 px). */
+  --hoa-h1-floor: 1.125rem;
+  --hoa-h2-floor: 1rem;
+  --hoa-h2-prose-floor: 1rem;
+  /* Längsta ordet i tjänsternas namn, i em (BLODPROVTAGNING, headingFit i src/lib/heading.ts).
+     Bokningssidans h1 saknar --hoa-fit och använder det här värdet. */
+  --hoa-service-fit: 10.3;
 }
 
 /* En hel palett återställs även för mörka öar inuti ett ljust band.
@@ -167,8 +183,8 @@ section.bg-hoa-secondary\/50,
     letter-spacing: -0.015em;
   }
 
-  /* Rubriker och rubrikliknande text bryts aldrig inne i ord: ingen avstavning och
-     ingen nödbrytning. Långa ord ryms i stället via rubrikskalan och --hoa-fit. */
+  /* Rubriker och rubrikliknande text avstavas aldrig och bryts inte inne i ord som ryms på en
+     rad. Långa ord ryms i stället via rubrikskalan och --hoa-fit. */
   h1,
   h2,
   h3,
@@ -192,6 +208,10 @@ section.bg-hoa-secondary\/50,
     text-transform: uppercase;
     letter-spacing: -0.02em;
     line-height: 1.15;
+    /* Reserv (WCAG 1.4.4 och 1.4.10): ett ord som inte ryms ens på en egen rad bryts utan
+       bindestreck i stället för att svämma över. Gäller rubriker utan --hoa-fit, till exempel i
+       bokningen, och fit-rubriker vid kraftigt förstorad text. Ord som ryms bryts aldrig. */
+    overflow-wrap: break-word;
   }
 
   /* Ingresser och brödtext undviker ett ensamt ord på sista raden. */
@@ -240,39 +260,83 @@ section.bg-hoa-secondary\/50,
   }
 }
 
-/* Versalrubrikernas storlek följer skärmen och krymper vid behov så att rubrikens
-   längsta ord ryms på en rad. Rubrikkomponenterna sätter --hoa-fit (ordets bredd i em,
-   se src/lib/heading.ts) och gör omslaget till container, så 100cqi är rubrikens bredd.
-   Utan stöd för containerenheter gäller skalan. */
+/* Versalrubrikernas storlek följer skärmen. Rubrikkomponenterna sätter --hoa-fit (längsta ordets
+   bredd i em, se src/lib/heading.ts) och gör omslaget till container, så 100cqi är rubrikens bredd.
+   Storleken är den största av tre värden:
+   1. golvet i rem, så att rubriken växer med användarens textstorlek;
+   2. storleken vid normal textstorlek: skalan i px och containerns bredd vid 1rem = 16 px
+      (100cqi + 2rem - 32px; sidmarginalen på mobil är 1rem per sida och växer med texten),
+      så att rubriken aldrig blir mindre när texten förstoras;
+   3. skalan, krympt så att längsta ordet ryms på raden.
+   Vid normal textstorlek är det andra och tredje värdet lika och golvet lägre (från 320 px), så
+   storleken är densamma som utan golv och inget ord bryts. Vid förstorad text kan ett ord bli
+   bredare än raden; då bryts det utan bindestreck (overflow-wrap: break-word) i stället för att
+   krympa eller svämma över. Utan stöd för containerenheter gäller skalan. */
 @utility hoa-h1 {
   font-size: var(--hoa-h1-size);
+  overflow-wrap: break-word;
   @supports (width: 1cqi) {
-    font-size: min(var(--hoa-h1-size), 100cqi / var(--hoa-fit, 0.01));
+    font-size: max(
+      var(--hoa-h1-floor),
+      min(var(--hoa-h1-size-100), (100cqi + 2rem - 32px) / var(--hoa-fit, 0.01)),
+      min(var(--hoa-h1-size), 100cqi / var(--hoa-fit, 0.01))
+    );
   }
 }
 
 @utility hoa-h2 {
   font-size: var(--hoa-h2-size);
+  overflow-wrap: break-word;
   @supports (width: 1cqi) {
-    font-size: min(var(--hoa-h2-size), 100cqi / var(--hoa-fit, 0.01));
+    font-size: max(
+      var(--hoa-h2-floor),
+      min(var(--hoa-h2-size-100), (100cqi + 2rem - 32px) / var(--hoa-fit, 0.01)),
+      min(var(--hoa-h2-size), 100cqi / var(--hoa-fit, 0.01))
+    );
   }
 }
 
 /* Mellanrubriker i löptext (ProseHeading). PERSONUPPGIFTSANSVARIG ryms med skalan
-   ned till 320 px och med --hoa-fit även vid förstorad text. */
+   ned till 320 px vid normal textstorlek. */
 @utility hoa-h2-prose {
   font-size: var(--hoa-h2-prose-size);
+  overflow-wrap: break-word;
   @supports (width: 1cqi) {
-    font-size: min(var(--hoa-h2-prose-size), 100cqi / var(--hoa-fit, 0.01));
+    font-size: max(
+      var(--hoa-h2-prose-floor),
+      min(var(--hoa-h2-prose-size-100), (100cqi + 2rem - 32px) / var(--hoa-fit, 0.01)),
+      min(var(--hoa-h2-prose-size), 100cqi / var(--hoa-fit, 0.01))
+    );
   }
 }
 
-/* Rubriker med egen grundstorlek (--hoa-size), till exempel FAQ-frågor. --hoa-fit-offset
-   räknar bort det som delar raden med rubriken, som plustecknet i en fråga. */
+/* Rubriker med egen grundstorlek (--hoa-size), till exempel FAQ-frågor och korttitlar.
+   --hoa-fit-offset räknar bort det som delar raden med rubriken, som plustecknet i en fråga.
+   Golvet är halva grundstorleken, alltså grundstorleken vid normal text när texten är 200 %.
+   Ett högre golv skulle tvinga fram ord som inte ryms, och tjänstekortets titellänk
+   (inline-flex) kan inte brytas. */
 @utility hoa-fit-text {
   font-size: var(--hoa-size);
+  overflow-wrap: break-word;
   @supports (width: 1cqi) {
-    font-size: min(var(--hoa-size), (100cqi - var(--hoa-fit-offset, 0rem)) / var(--hoa-fit, 0.01));
+    font-size: max(
+      var(--hoa-size) / 2,
+      min(var(--hoa-size), (100cqi - var(--hoa-fit-offset, 0rem)) / var(--hoa-fit, 0.01))
+    );
+  }
+}
+
+/* Bokningssidans h1 (src/app/boka/[slug]) saknar --hoa-fit, och bokningsfilerna ändras inte.
+   Under md får den fit-reglernas tre värden med text-3xl (1,875rem) som skala och tjänstenamnens
+   längsta ord som fit, så att BLODPROVTAGNING ryms vid 320 px och normal textstorlek. Sidan har
+   ingen container, så raden räknas som fönstret minus sidmarginalen (1rem per sida). */
+@media (width < 48rem) {
+  h1.text-3xl {
+    font-size: max(
+      var(--hoa-h1-floor),
+      min(30px, (100vw - 32px) / var(--hoa-service-fit)),
+      min(1.875rem, (100vw - 2rem) / var(--hoa-service-fit))
+    );
   }
 }
 

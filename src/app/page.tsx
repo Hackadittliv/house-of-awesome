@@ -87,11 +87,14 @@ export default function HomePage() {
             <h1 id="valkommen-rubrik" className="mt-4 text-hoa-ink">
               {/* VÄLKOMMEN är 6,45 em; storleken krymper bara om ordet annars inte ryms, till exempel vid förstorad text. */}
               <span className="block text-[min(1.5rem,100cqi/6.6)] md:text-4xl">Välkommen till</span>{" "}
-              {/* Ordmärket ryms på en rad från 360 px (10,6 em i versaler). */}
-              <Wordmark className="mt-2 block text-[clamp(1.75rem,8.4vw,3.75rem)]" />{" "}
+              {/* Ordmärket ryms på en rad från 360 px (10,6 em i versaler). Vid förstorad text på smala
+                  skärmar stannar det vid storleken där AWESOME (5,31 em) ryms; det är ändå större än vid normal text. */}
+              <Wordmark className="mt-2 block text-[min(clamp(1.75rem,8.4vw,3.75rem),100cqi/5.31)]" />{" "}
               <span className="subheading mt-1 block text-lg text-hoa-ink-muted md:text-2xl">i Stora Höga</span>
             </h1>
-            <p className="mt-6 font-display text-2xl font-bold text-hoa-ink md:text-4xl">Ett helt hus av möjligheter</p>
+            {/* "möjligheter" är 5,6 em (uppmätt i Chrome); vid förstorad text på smala skärmar stannar
+                storleken där ordet ryms, ändå större än vid normal text. Radavståndet är text-2xl:s. */}
+            <p className="mt-6 font-display text-[min(1.5rem,100cqi/5.7)]/[calc(2/1.5)] font-bold text-hoa-ink md:text-4xl">Ett helt hus av möjligheter</p>
             <p className="mx-auto mt-3 max-w-xl text-lg text-hoa-ink-muted md:max-w-none">
               För hälsa, inspiration, utveckling och gemenskap, 30 minuter norr om Göteborg.
             </p>
