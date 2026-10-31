@@ -1,17 +1,15 @@
 @import "tailwindcss";
 
-/* Samma värden som lifeisawesome.se (awesome-life-hub, src/index.css). */
 :root {
-  --hoa-bg: #000000;
-  --hoa-card: #050505;
-  --hoa-espresso: #251709;
-  --hoa-secondary: #321f0c;
-  --hoa-bronze: #ac6d2a;
-  --hoa-gold: #efc55d;
-  --hoa-ink: #fdf5e2;
+  /* Fasta palettvärden. Kräm är LIA:s --cream, även på ljusa ytor. */
+  --hoa-cream: #fdf5e2;
+  --hoa-light: var(--hoa-cream);
+  --hoa-light-ink: #000000;
+  --hoa-light-muted: #514637;
+  --hoa-light-line: #82725d;
+  --hoa-light-card: #fffaf0;
+  --hoa-light-accent: #70501f;
   --hoa-bone: #fdfdfc;
-  --hoa-ink-muted: #cdbfa2;
-  --hoa-line: #35291d;
   --hoa-danger: #a82828;
   --hoa-shadow-gold: 0 8px 32px -8px rgb(239 197 93 / 0.45);
   --hoa-gradient-hero:
@@ -19,13 +17,79 @@
     radial-gradient(circle at 80% 70%, rgb(172 109 42 / 0.1), transparent 60%);
 }
 
+/* En hel palett återställs även för mörka öar inuti ett ljust band. */
+:root,
+.hoa-surface-dark,
+main:has(> :is(.hoa-surface-light, section.bg-hoa-secondary\/50):last-child) + [data-shared-bottom] > .hoa-bottom-cta {
+  --hoa-bg: #000000;
+  --hoa-card: #050505;
+  --hoa-espresso: #251709;
+  --hoa-secondary: #321f0c;
+  --hoa-bronze: #c99a58;
+  --hoa-gold: #efc55d;
+  --hoa-ink: var(--hoa-cream);
+  --hoa-ink-muted: #cdbfa2;
+  --hoa-line: #8a795f;
+  --hoa-accent: var(--hoa-gold);
+  --hoa-hover: #35291d;
+  --hoa-wordmark-accent: var(--hoa-gold);
+  color-scheme: dark;
+}
+
+/* Äldre fristående band får samma yta som Section band, aldrig kort/avatars. */
+.hoa-surface-light,
+section.bg-hoa-secondary\/50,
+[data-shared-bottom],
+.hoa-newsletter {
+  --hoa-bg: var(--hoa-light);
+  --hoa-card: var(--hoa-light-card);
+  --hoa-espresso: var(--hoa-cream);
+  --hoa-secondary: #cdbfa2;
+  --hoa-bronze: var(--hoa-light-accent);
+  /* Befintliga knappar i bland annat formulär ärver både fyllning och text. */
+  --hoa-gold: #000000;
+  --hoa-ink: var(--hoa-light-ink);
+  --hoa-ink-muted: var(--hoa-light-muted);
+  --hoa-line: var(--hoa-light-line);
+  --hoa-accent: var(--hoa-light-accent);
+  --hoa-hover: #e5d6b8;
+  --hoa-wordmark-accent: var(--hoa-light-ink);
+  color-scheme: light;
+}
+
+.hoa-surface-light,
+.hoa-surface-dark,
+section.bg-hoa-secondary\/50,
+[data-shared-bottom],
+.hoa-newsletter {
+  background-color: var(--hoa-bg);
+  color: var(--hoa-ink);
+}
+
+/* Sajtvid avslutning: efter ljust innehåll blir CTA mörk, sedan ljust
+   nyhetsbrev och svart sidfot. Efter mörkt innehåll bildar CTA + brev en ljus yta. */
+
+.hoa-bottom-cta {
+  background-color: var(--hoa-bg);
+  color: var(--hoa-ink);
+}
+
 @theme inline {
+  --color-hoa-light: var(--hoa-light);
+  --color-hoa-light-ink: var(--hoa-light-ink);
+  --color-hoa-light-muted: var(--hoa-light-muted);
+  --color-hoa-light-line: var(--hoa-light-line);
+  --color-hoa-light-card: var(--hoa-light-card);
+  --color-hoa-light-accent: var(--hoa-light-accent);
   --color-hoa-bg: var(--hoa-bg);
   --color-hoa-card: var(--hoa-card);
   --color-hoa-espresso: var(--hoa-espresso);
   --color-hoa-secondary: var(--hoa-secondary);
   --color-hoa-bronze: var(--hoa-bronze);
   --color-hoa-gold: var(--hoa-gold);
+  --color-hoa-accent: var(--hoa-accent);
+  --color-hoa-hover: var(--hoa-hover);
+  --color-hoa-wordmark-accent: var(--hoa-wordmark-accent);
   --color-hoa-ink: var(--hoa-ink);
   --color-hoa-bone: var(--hoa-bone);
   --color-hoa-ink-muted: var(--hoa-ink-muted);
@@ -62,6 +126,15 @@
     letter-spacing: -0.015em;
   }
 
+  h1,
+  h2 {
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
   .subheading {
     font-family: var(--font-jakarta), system-ui, sans-serif;
     font-weight: 600;
@@ -69,14 +142,40 @@
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--hoa-gold) 35%, transparent);
+    background: color-mix(in srgb, var(--hoa-accent) 25%, var(--hoa-bg));
     color: var(--hoa-ink);
   }
 
   :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-    outline: 2px solid var(--hoa-gold);
+    outline: 2px solid var(--hoa-accent);
     outline-offset: 3px;
   }
+}
+
+/* Äldre små sektionsrubriker har font-semibold; h1/h2 följer ändå rubriksystemet. */
+h1,
+h2 {
+  font-weight: 700;
+}
+
+/* Äldre formulärklasser behåller sitt API men använder ytans säkra hover/fokus.
+   Bokningskomponenterna behöver därför inga ändringar. */
+.hover\:bg-hoa-bronze:hover {
+  background-color: var(--hoa-hover);
+}
+
+:where(input, textarea)::placeholder {
+  color: var(--hoa-ink-muted);
+  opacity: 1;
+}
+
+:where(input, select, textarea):focus-visible {
+  outline: 2px solid var(--hoa-accent);
+  outline-offset: 3px;
+}
+
+:where(a, button, input, select, textarea)[class*="border-hoa-gold/"] {
+  border-color: var(--hoa-line);
 }
 
 @media (prefers-reduced-motion: reduce) {

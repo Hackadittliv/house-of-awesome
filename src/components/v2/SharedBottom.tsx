@@ -10,8 +10,8 @@ export function SharedBottom({ bookHref, adviceHref }: { bookHref: string; advic
   const pathname = usePathname();
   if (pathname.startsWith("/boka") || pathname.startsWith("/avbok")) return null;
   return (
-    <>
-      <section className="bg-hoa-secondary/50 py-14 text-center md:py-16">
+    <div data-shared-bottom>
+      <section className="hoa-bottom-cta py-14 text-center md:py-16">
         <div className="mx-auto max-w-xl space-y-4 px-4">
           <h2 className="text-3xl text-hoa-ink">Osäker på vad som passar dig?</h2>
           <p className="text-hoa-ink-muted">Boka en kostnadsfri rådgivning. Vi lyssnar och hjälper dig välja rätt.</p>
@@ -23,6 +23,6 @@ export function SharedBottom({ bookHref, adviceHref }: { bookHref: string; advic
         </div>
       </section>
       <Newsletter />
-    </>
+    </div>
   );
 }

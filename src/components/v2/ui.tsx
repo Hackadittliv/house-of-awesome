@@ -5,7 +5,7 @@ import { Container } from "@/components/Container";
 import { CtaLink } from "@/components/CtaLink";
 import { Eyebrow } from "@/components/Eyebrow";
 
-export const cardClass = "rounded-2xl border border-hoa-gold/20 bg-hoa-secondary/20 p-6";
+export const cardClass = "rounded-2xl border border-hoa-line/40 bg-hoa-card p-6";
 
 export function Hero({
   eyebrow,
@@ -46,7 +46,7 @@ export function Section({
   band?: boolean;
 }) {
   return (
-    <section id={id} className={`scroll-mt-28 py-14 md:py-20 ${band ? "bg-hoa-secondary/40" : ""}`}>
+    <section id={id} className={`scroll-mt-28 py-14 md:py-20 ${band ? "hoa-surface-light" : "hoa-surface-dark"}`}>
       <Container>
         {title ? (
           <div className="mx-auto mb-10 max-w-2xl space-y-4 text-center">
@@ -91,7 +91,7 @@ export function Card({
     <article
       id={id}
       className={`flex scroll-mt-28 flex-col gap-3 rounded-2xl p-6 ${
-        featured ? "border-2 border-hoa-gold bg-hoa-secondary/30 shadow-gold" : "border border-hoa-gold/20 bg-hoa-secondary/20"
+        featured ? "hoa-surface-dark border-2 border-hoa-gold shadow-gold" : "border border-hoa-line/40 bg-hoa-card"
       }`}
     >
       {image ? (

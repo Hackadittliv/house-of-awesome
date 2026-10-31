@@ -18,7 +18,7 @@ const sizes = {
 
 const variants = {
   primary: "bg-hoa-gold text-hoa-espresso hover:bg-hoa-gold/90",
-  secondary: "border border-hoa-line bg-hoa-bg text-hoa-ink hover:bg-hoa-bronze",
+  secondary: "border border-hoa-line bg-hoa-bg text-hoa-ink hover:bg-hoa-hover",
   ghost: "text-hoa-gold underline-offset-4 hover:underline",
 };
 

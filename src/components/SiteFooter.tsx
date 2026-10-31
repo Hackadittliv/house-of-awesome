@@ -13,7 +13,7 @@ const head = "text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-auto border-t border-hoa-line bg-hoa-bg">
+    <footer className="hoa-surface-dark mt-auto border-t border-hoa-line bg-hoa-bg">
       <Container className="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
           <Wordmark className="text-xl" />

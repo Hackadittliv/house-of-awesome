@@ -11,7 +11,7 @@ import { type MenuEntry, isGroup, mainMenu } from "@/lib/nav";
 
 function Plus({ open }: { open: boolean }) {
   return (
-    <span aria-hidden className="text-2xl leading-none text-hoa-gold">
+    <span aria-hidden className="text-2xl leading-none text-hoa-ink">
       {open ? "−" : "+"}
     </span>
   );
@@ -41,7 +41,7 @@ function MobileEntry({ entry, onNavigate }: { entry: MenuEntry; onNavigate: () =
         <ul className="mb-2 space-y-1 border-l border-hoa-gold/30 pl-4">
           {entry.sections.map((s) => (
             <li key={s.href}>
-              <Link href={s.href} onClick={onNavigate} className="inline-flex min-h-10 items-center text-base text-hoa-ink-muted hover:text-hoa-gold">
+              <Link href={s.href} onClick={onNavigate} className="inline-flex min-h-10 items-center text-base text-hoa-ink-muted hover:text-hoa-ink">
                 {s.label}
               </Link>
             </li>
@@ -89,7 +89,7 @@ export function SiteHeader({ bookingHref }: { bookingHref: string }) {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-hoa-line bg-hoa-bg">
+    <header className="hoa-surface-light sticky top-0 z-50 border-b border-hoa-light-line bg-hoa-light text-hoa-light-ink">
       <Container wide className="flex h-20 items-center justify-between gap-4 lg:h-24">
         <Logo />
 
@@ -97,12 +97,12 @@ export function SiteHeader({ bookingHref }: { bookingHref: string }) {
           {mainMenu.map((entry) =>
             isGroup(entry) ? (
               <div key={entry.label} className="group relative">
-                <button type="button" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-hoa-ink hover:text-hoa-gold">
+                <button type="button" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-hoa-ink hover:underline underline-offset-4">
                   {entry.label} <span aria-hidden>▾</span>
                 </button>
                 <div className="invisible absolute left-0 top-full w-72 rounded-2xl border border-hoa-gold/20 bg-hoa-bg p-3 opacity-0 shadow-gold transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
                   {entry.items.map((item) => (
-                    <Link key={item.href} href={item.href} className="block rounded-lia-md px-3 py-2 text-sm text-hoa-ink hover:bg-hoa-secondary/50 hover:text-hoa-gold">
+                    <Link key={item.href} href={item.href} className="block rounded-lia-md px-3 py-2 text-sm text-hoa-ink hover:bg-hoa-hover hover:text-hoa-ink">
                       {item.label}
                     </Link>
                   ))}
@@ -113,13 +113,13 @@ export function SiteHeader({ bookingHref }: { bookingHref: string }) {
                 key={entry.href}
                 href={entry.href}
                 aria-current={pathname === entry.href.split("#")[0] ? "page" : undefined}
-                className="inline-flex min-h-11 items-center text-sm font-medium text-hoa-ink hover:text-hoa-gold aria-[current=page]:text-hoa-gold"
+                className="inline-flex min-h-11 items-center text-sm font-medium text-hoa-ink hover:underline underline-offset-4 aria-[current=page]:underline"
               >
                 {entry.label}
               </Link>
             ),
           )}
-          <Link href="/om" className="inline-flex min-h-11 items-center text-sm font-medium text-hoa-ink hover:text-hoa-gold">
+          <Link href="/om" className="inline-flex min-h-11 items-center text-sm font-medium text-hoa-ink hover:underline underline-offset-4">
             Om oss
           </Link>
         </nav>
@@ -145,7 +145,7 @@ export function SiteHeader({ bookingHref }: { bookingHref: string }) {
       {open ? (
         <div id="mobilmeny" role="dialog" aria-modal="true" aria-label="Meny" className="fixed inset-0 z-[60] flex flex-col bg-hoa-bg xl:hidden">
           <div className="flex h-20 shrink-0 items-center justify-between border-b border-hoa-line px-4 sm:px-6">
-            <p className="font-display text-sm font-bold tracking-[0.25em] text-hoa-gold">HOUSE OF AWESOME</p>
+            <p className="font-display text-sm font-bold tracking-[0.25em] text-hoa-ink">HOUSE OF AWESOME</p>
             <button type="button" onClick={close} className="inline-flex h-12 w-12 items-center justify-center text-3xl text-hoa-ink">
               <span aria-hidden>×</span>
               <span className="sr-only">Stäng meny</span>

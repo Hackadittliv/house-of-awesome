@@ -107,7 +107,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <Section id="mote-med-patrik" eyebrow="Möte med Patrik" title="Hälsa har blivit för krångligt. Vi gör det enkelt igen.">
+      <Section id="mote-med-patrik" eyebrow="Möte med Patrik" title="Hälsa har blivit för krångligt. Vi gör det enkelt igen." band>
         <div className="grid items-start gap-8 md:grid-cols-2 md:gap-12">
           <div className="space-y-4">
             <p className="font-display text-xl font-bold leading-snug text-hoa-ink md:text-2xl">
@@ -237,7 +237,7 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <Section id="vanliga-fragor" eyebrow="Vanliga frågor" title="Det du kanske undrar">
+      <Section id="vanliga-fragor" eyebrow="Vanliga frågor" title="Det du kanske undrar" band>
         <div className="mx-auto max-w-2xl divide-y divide-hoa-line border-y border-hoa-line">
           {faq.map((f) => (
             <details key={f.id} className="group py-4">

@@ -60,6 +60,16 @@ describe("startsidan", () => {
     expect(ids).toEqual(["valkommen", "mote-med-patrik", "om-huset", "utbud", "personerna", "event", "vanliga-fragor"]);
   });
 
+  it("samlar Patrik och huset på ljust med ett mörkt samtalskort", () => {
+    for (const id of ["mote-med-patrik", "om-huset", "personerna", "vanliga-fragor"]) {
+      expect(section(id).match(/^<section\b[^>]*>/)?.[0]).toContain("hoa-surface-light");
+    }
+    for (const id of ["utbud", "event"]) {
+      expect(section(id).match(/^<section\b[^>]*>/)?.[0]).toContain("hoa-surface-dark");
+    }
+    expect(section("mote-med-patrik").match(/<article\b[^>]*>/)?.[0]).toContain("hoa-surface-dark");
+  });
+
   it("har den primära knappen i hero till det korta samtalet med Patrik", () => {
     const [primary, secondary] = anchors(section("valkommen"));
     expect(primary.href).toBe(bookingUrl(SHORT_CALL_SLUG, "home_hero"));
