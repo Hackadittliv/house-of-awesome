@@ -178,10 +178,8 @@ h2 {
 
 /* Äldre formulärklasser behåller sitt API men använder ytans säkra hover/fokus.
    Bokningskomponenterna behöver därför inga ändringar. */
-@media (hover: hover) {
-  .hover\:bg-hoa-bronze:hover {
-    background-color: var(--hoa-hover);
-  }
+.hover\:bg-hoa-bronze:hover {
+  background-color: var(--hoa-hover);
 }
 
 :where(input, textarea)::placeholder {
