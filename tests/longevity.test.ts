@@ -1,25 +1,32 @@
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import AnnePage, { metadata as anneMetadata } from "@/app/anne-wevers/page";
 import BlodanalysPage, { metadata as blodanalysMetadata } from "@/app/longevity-blodanalys/page";
 import ForetagPage, { metadata as foretagMetadata } from "@/app/halsostrategi-for-foretag/page";
 import sitemap from "@/app/sitemap";
 import { Disclaimer } from "@/components/Disclaimer";
-import { HEALTH_DISCLAIMER, longevity } from "@/lib/content";
+import { getService, HEALTH_DISCLAIMER, longevity, servicesSnapshot } from "@/lib/content";
+import { bookingUrl, SHORT_CALL_SLUG } from "@/lib/links";
 import { isGroup, mainMenu } from "@/lib/nav";
 import { PORTRAITS } from "@/lib/people";
 import { findCopyViolations } from "../scripts/copy-rules.mjs";
 
+const bookingConfig = vi.hoisted(() => ({ enabled: false }));
+vi.mock("@/lib/booking/config", () => ({ get bookingEnabled() { return bookingConfig.enabled; } }));
+afterEach(() => { bookingConfig.enabled = false; });
+
 const pages = [
-  { content: longevity.anne, Page: AnnePage, metadata: anneMetadata },
-  { content: longevity.blodanalys, Page: BlodanalysPage, metadata: blodanalysMetadata },
-  { content: longevity.foretag, Page: ForetagPage, metadata: foretagMetadata },
+  { content: longevity.anne, Page: AnnePage, metadata: anneMetadata, placement: "anne" },
+  { content: longevity.blodanalys, Page: BlodanalysPage, metadata: blodanalysMetadata, placement: "blodanalys" },
+  { content: longevity.foretag, Page: ForetagPage, metadata: foretagMetadata, placement: "foretag" },
 ];
 const escaped = (text: string) => renderToStaticMarkup(createElement("span", null, text)).slice(6, -7);
 
-describe.each(pages)("longevity: $content.path", ({ content, Page, metadata }) => {
+describe.each(pages)("longevity: $content.path", ({ content, Page, metadata, placement }) => {
   const html = renderToStaticMarkup(createElement(Page));
 
   it("renderar alla granskade innehållsblock utan omskrivning", () => {
@@ -37,9 +44,21 @@ describe.each(pages)("longevity: $content.path", ({ content, Page, metadata }) =
     expect(findCopyViolations(html.replace(/<script[\s\S]*?<\/script>/g, "").replace(/<[^>]+>/g, " "))).toEqual([]);
   });
 
-  it("har två bokningsknappar som alltid leder till HOA:s introduktion", () => {
-    expect(html.match(/href="\/boka\/kostnadsfri-introduktion"/g)).toHaveLength(2);
-    expect(html.match(new RegExp(`>${content.cta.buttonLabel}<`, "g"))).toHaveLength(2);
+  it.each([false, true])("bokar kort samtal med bokning aktiverad = %s", (enabled) => {
+    bookingConfig.enabled = enabled;
+    const rendered = renderToStaticMarkup(createElement(Page));
+    const ctas = [...rendered.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>Boka kort samtal med Patrik<\/a>/g)];
+    expect(ctas).toHaveLength(2);
+    for (const [index, position] of ["hero", "cta"].entries()) {
+      const href = ctas[index][1].replaceAll("&amp;", "&");
+      expect(href).toBe(bookingUrl(SHORT_CALL_SLUG, `${placement}_${position}`, enabled));
+      const url = new URL(href, "https://houseofawesome.se");
+      expect(url.pathname).toBe("/boka/forsta-halsosamtal");
+      if (!enabled) {
+        expect(url.origin).toBe("https://lifeisawesome.se");
+        expect(url.searchParams.get("utm_content")).toBe(`${placement}_${position}`);
+      }
+    }
   });
 
   it("länkar till båda andra sidorna och finns i huvudmenyn och sitemap", () => {
@@ -71,4 +90,28 @@ it("visar Anne med svensk alt-text i befintlig Avatar", () => {
 
 it("bevarar standardfriskrivningen på befintliga sidor", () => {
   expect(renderToStaticMarkup(createElement(Disclaimer))).toContain(escaped(HEALTH_DISCLAIMER));
+});
+
+it("använder befintliga kostnadsfria Meet-samtalet på tio minuter", () => {
+  expect(getService(SHORT_CALL_SLUG)).toMatchObject({ bookable: true, durationMinutes: 10, priceLabel: "Gratis" });
+  expect(servicesSnapshot.services.find((service) => service.slug === SHORT_CALL_SLUG)).toMatchObject({
+    title_sv: "Kort samtal med Patrik", location_type: "meet", requires_payment: false,
+  });
+});
+
+function filesIn(directory: string): string[] {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const path = join(directory, entry.name);
+    return entry.isDirectory() ? filesIn(path) : [path];
+  });
+}
+
+it("saknar den borttagna tjänsten i källkod, innehåll, tester och bokningssidor", async () => {
+  const removedSlug = ["kostnadsfri", "introduktion"].join("-");
+  for (const path of ["src", "content", "tests"].flatMap(filesIn)) {
+    expect(readFileSync(path, "utf8"), path).not.toContain(removedSlug);
+  }
+  expect(getService(removedSlug)).toBeUndefined();
+  const { generateStaticParams } = await import("@/app/boka/[slug]/page");
+  expect(generateStaticParams()).not.toContainEqual({ slug: removedSlug });
 });

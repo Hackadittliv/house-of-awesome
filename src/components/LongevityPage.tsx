@@ -8,19 +8,23 @@ import { PageHeader } from "@/components/PageHeader";
 import { Prose } from "@/components/Prose";
 import { SectionIntro } from "@/components/SectionIntro";
 import { Avatar, Card, Grid, Section } from "@/components/v2/ui";
-import { INTRODUCTION_HREF } from "@/lib/booking/introduction";
+import { bookingUrl, SHORT_CALL_SLUG } from "@/lib/links";
 import { PORTRAITS } from "@/lib/people";
 import { breadcrumbJsonLd } from "@/lib/seo";
 import type { LongevityPageContent } from "@/lib/types";
 
-export function LongevityPage({ content, portrait = false }: { content: LongevityPageContent; portrait?: boolean }) {
+export function LongevityPage({ content, placement, portrait = false }: {
+  content: LongevityPageContent;
+  placement: "anne" | "blodanalys" | "foretag";
+  portrait?: boolean;
+}) {
   return (
     <>
       <Container className="pt-14 pb-12 md:pt-20 md:pb-16">
         {portrait ? <div className="mb-8 flex justify-center"><Avatar {...PORTRAITS.anne} size="lg" /></div> : null}
         <PageHeader eyebrow={content.eyebrow} title={content.h1} lead={content.lead} />
         <div className="mt-8 text-center">
-          <CtaLink href={INTRODUCTION_HREF}>{content.cta.buttonLabel}</CtaLink>
+          <CtaLink href={bookingUrl(SHORT_CALL_SLUG, `${placement}_hero`)}>{content.cta.buttonLabel}</CtaLink>
         </div>
       </Container>
 
@@ -54,7 +58,7 @@ export function LongevityPage({ content, portrait = false }: { content: Longevit
       <Section band>
         <SectionIntro id="introduktion" title={content.cta.heading} lead={content.cta.text} />
         <div className="mt-8 text-center">
-          <CtaLink href={INTRODUCTION_HREF}>{content.cta.buttonLabel}</CtaLink>
+          <CtaLink href={bookingUrl(SHORT_CALL_SLUG, `${placement}_cta`)}>{content.cta.buttonLabel}</CtaLink>
         </div>
         <Disclaimer text={content.disclaimer} className="mx-auto mt-10" />
         <nav aria-label="Läs vidare" className="mt-8">

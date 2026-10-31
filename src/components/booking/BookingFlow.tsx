@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { EmbeddedCheckout } from "@/components/booking/EmbeddedCheckout";
-import { BookingUnavailable } from "@/components/booking/BookingUnavailable";
 import { RequestForm } from "@/components/booking/RequestForm";
 import { SellerNote } from "@/components/SellerNote";
 import { Field, Notice, PrivacyText, primaryButtonClass, secondaryButtonClass } from "@/components/booking/fields";
@@ -20,7 +19,6 @@ import { bookingCopy as t } from "@/lib/booking/copy";
 import { addDays, formatDateTime, formatDayLabel, formatTime, groupSlotsByDay, stockholmDate, utmFrom } from "@/lib/booking/format";
 import { saveConfirmation } from "@/lib/booking/confirmation";
 import { stripePublishableKey } from "@/lib/booking/config";
-import { INTRODUCTION_SLUG } from "@/lib/booking/introduction";
 import { formatPriceLabel } from "@/lib/content";
 
 const DAYS_PER_PAGE = 7;
@@ -78,9 +76,6 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
   }, [slug, fromDate, toDate, requestKey]);
 
   const availability = loaded?.key === requestKey ? loaded.result : null;
-  if (slug === INTRODUCTION_SLUG && (availability === "error" || availability?.kind === "request_only")) {
-    return <BookingUnavailable slug={slug} />;
-  }
   if (availability === "error") return <Notice tone="error">{t.availabilityError}</Notice>;
   if (!availability) return <Notice>{t.loadingTimes}</Notice>;
 

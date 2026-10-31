@@ -4,7 +4,6 @@ import membershipsData from "../../content/memberships.json";
 import servicesCopyData from "../../content/services.json";
 import snapshotData from "../../content/services.snapshot.json";
 import siteData from "../../content/site.json";
-import { isPendingIntroduction } from "@/lib/booking/introduction";
 
 import type {
   FaqItem,
@@ -53,7 +52,7 @@ function toService(copy: ServiceCopy, event: LiaEventType | undefined): Service 
   };
 }
 
-export function getServices({ includePending = false }: { includePending?: boolean } = {}): Service[] {
+export function getServices(): Service[] {
   const events = new Map(servicesSnapshot.services.map((event) => [event.slug, event]));
   const order = new Map(servicesSnapshot.services.map((event) => [event.slug, event.sort_order]));
 
@@ -66,9 +65,7 @@ export function getServices({ includePending = false }: { includePending?: boole
     .filter((copy) => copy.kind === "inquiry" || !events.has(copy.slug))
     .map((copy) => toService({ ...copy, kind: "inquiry" }, undefined));
 
-  // Introduktionen har en egen bokningsadress innan LIA aktiveras, men inget
-  // förfrågningskort, tjänstesida eller erbjudande i sitemap/JsonLd ännu.
-  return [...bookable, ...inquiry].filter((service) => includePending || !isPendingIntroduction(service));
+  return [...bookable, ...inquiry];
 }
 
 export function getBookableServices(): Service[] {
@@ -80,7 +77,7 @@ export function getInquiryServices(): Service[] {
 }
 
 export function getService(slug: string): Service | undefined {
-  return getServices({ includePending: true }).find((service) => service.slug === slug);
+  return getServices().find((service) => service.slug === slug);
 }
 
 export function getMemberships(): Membership[] {
