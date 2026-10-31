@@ -1,6 +1,8 @@
+import { notFound } from "next/navigation";
+
 import { LongevityPage } from "@/components/LongevityPage";
-import { longevity } from "@/lib/content";
-import { longevityRobots } from "@/lib/longevity";
+import { isLongevityBlocked, LONGEVITY_PUBLISHED, longevityRobots } from "@/lib/longevity";
+import { longevity } from "@/lib/longevity-content";
 import { pageMetadata } from "@/lib/seo";
 
 const content = longevity.blodanalys;
@@ -10,5 +12,6 @@ export const metadata = {
 };
 
 export default function Page() {
+  if (isLongevityBlocked(LONGEVITY_PUBLISHED, process.env.CONTEXT)) notFound();
   return <LongevityPage content={content} placement="blodanalys" />;
 }

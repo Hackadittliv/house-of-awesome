@@ -1,5 +1,4 @@
 import faqData from "../../content/faq.json";
-import longevityData from "../../content/longevity.json";
 import membershipsData from "../../content/memberships.json";
 import servicesCopyData from "../../content/services.json";
 import snapshotData from "../../content/services.snapshot.json";
@@ -8,7 +7,6 @@ import siteData from "../../content/site.json";
 import type {
   FaqItem,
   LiaEventType,
-  LongevityPageContent,
   Membership,
   Service,
   ServiceCopy,
@@ -17,7 +15,6 @@ import type {
 } from "@/lib/types";
 
 export const site = siteData as SiteConfig;
-export const longevity: Record<keyof typeof longevityData, LongevityPageContent> = longevityData;
 export const servicesSnapshot = snapshotData as ServicesSnapshot;
 
 const serviceCopy = servicesCopyData as ServiceCopy[];

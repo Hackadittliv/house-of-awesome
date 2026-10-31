@@ -2,16 +2,17 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import AnnePage, { metadata as anneMetadata } from "@/app/anne-wevers/page";
 import BlodanalysPage, { metadata as blodanalysMetadata } from "@/app/longevity-blodanalys/page";
 import ForetagPage, { metadata as foretagMetadata } from "@/app/halsostrategi-for-foretag/page";
 import sitemap from "@/app/sitemap";
 import { Disclaimer } from "@/components/Disclaimer";
-import { getService, HEALTH_DISCLAIMER, longevity, servicesSnapshot } from "@/lib/content";
+import { getService, HEALTH_DISCLAIMER, servicesSnapshot } from "@/lib/content";
 import { bookingUrl, SHORT_CALL_SLUG } from "@/lib/links";
-import { LONGEVITY_PUBLISHED, longevityRobots } from "@/lib/longevity";
+import { isLongevityBlocked, LONGEVITY_PUBLISHED, longevityRobots } from "@/lib/longevity";
+import { longevity } from "@/lib/longevity-content";
 import { aboutNav, getAboutNav, getMainMenu, getOfferGroup, isGroup, mainMenu, offerGroup } from "@/lib/nav";
 import { PORTRAITS } from "@/lib/people";
 import { getSitemap } from "@/lib/sitemap";
@@ -19,7 +20,11 @@ import { findCopyViolations } from "../scripts/copy-rules.mjs";
 
 const bookingConfig = vi.hoisted(() => ({ enabled: false }));
 vi.mock("@/lib/booking/config", () => ({ get bookingEnabled() { return bookingConfig.enabled; } }));
-afterEach(() => { bookingConfig.enabled = false; });
+beforeEach(() => { vi.stubEnv("CONTEXT", undefined); });
+afterEach(() => {
+  bookingConfig.enabled = false;
+  vi.unstubAllEnvs();
+});
 
 const pages = [
   { content: longevity.anne, Page: AnnePage, metadata: anneMetadata, placement: "anne" },
@@ -29,7 +34,19 @@ const pages = [
 const escaped = (text: string) => renderToStaticMarkup(createElement("span", null, text)).slice(6, -7);
 
 describe.each(pages)("longevity: $content.path", ({ content, Page, metadata, placement }) => {
-  const html = renderToStaticMarkup(createElement(Page));
+  let html: string;
+  beforeEach(() => { html = renderToStaticMarkup(createElement(Page)); });
+
+  it("ger notFound i produktion när publiceringsspärren är aktiv", () => {
+    vi.stubEnv("CONTEXT", "production");
+    expect(() => renderToStaticMarkup(createElement(Page))).toThrow("NEXT_HTTP_ERROR_FALLBACK;404");
+  });
+
+  it.each(["deploy-preview", "branch-deploy", undefined])("renderar för granskning med CONTEXT=%s även vid produktionsbygge", (context) => {
+    vi.stubEnv("CONTEXT", context);
+    vi.stubEnv("NODE_ENV", "production");
+    expect(renderToStaticMarkup(createElement(Page))).toContain(escaped(content.h1));
+  });
 
   it("renderar alla granskade innehållsblock utan omskrivning", () => {
     expect(html.match(/<h1\b/g)).toHaveLength(1);
@@ -124,6 +141,19 @@ describe.each(pages)("longevity: $content.path", ({ content, Page, metadata, pla
   });
 });
 
+it.each([
+  { published: false, context: "production", blocked: true },
+  { published: true, context: "production", blocked: false },
+  { published: false, context: "deploy-preview", blocked: false },
+  { published: true, context: "deploy-preview", blocked: false },
+  { published: false, context: "branch-deploy", blocked: false },
+  { published: true, context: "branch-deploy", blocked: false },
+  { published: false, context: undefined, blocked: false },
+  { published: true, context: undefined, blocked: false },
+])("produktionsspärr: publicering=$published, CONTEXT=$context ger spärr=$blocked", ({ published, context, blocked }) => {
+  expect(isLongevityBlocked(published, context)).toBe(blocked);
+});
+
 describe.each([false, true])("publicering = %s", (published) => {
   it("styr alla tre utbudslänkarna och huvudmenyn utan att röra övriga länkar", () => {
     const menu = getMainMenu(published);
@@ -198,6 +228,8 @@ function filesIn(directory: string): string[] {
 it("saknar den borttagna tjänsten i källkod, innehåll, tester och bokningssidor", async () => {
   const removedSlug = ["kostnadsfri", "introduktion"].join("-");
   for (const path of ["src", "content", "tests"].flatMap(filesIn)) {
+    // Beslutsdokumentationen namnger tjänsten som togs bort.
+    if (path === join("content", "README.md")) continue;
     expect(readFileSync(path, "utf8"), path).not.toContain(removedSlug);
   }
   expect(getService(removedSlug)).toBeUndefined();

@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
 
-import { getServices, longevity, servicesSnapshot } from "@/lib/content";
+import { getServices, servicesSnapshot } from "@/lib/content";
 import { LONGEVITY_PUBLISHED } from "@/lib/longevity";
+import { longevity } from "@/lib/longevity-content";
 import { absoluteUrl } from "@/lib/seo";
 
 const CONTENT_UPDATED = new Date("2026-10-11");

@@ -11,6 +11,7 @@ import { SharedBottom } from "@/components/v2/SharedBottom";
 import { scrubSensitiveParamsScript } from "@/lib/booking/sensitive-url";
 import { site } from "@/lib/content";
 import { SHORT_CALL_SLUG, bookingUrl } from "@/lib/links";
+import { mainMenu } from "@/lib/nav";
 import { businessJsonLd, siteUrl } from "@/lib/seo";
 
 import "./globals.css";
@@ -67,7 +68,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           >
             Hoppa till innehåll
           </a>
-          <SiteHeader bookingHref={bookingUrl(null, "header")} />
+          <SiteHeader bookingHref={bookingUrl(null, "header")} menu={mainMenu} />
           <main id="innehall" className="flex-1 bg-hoa-bg">
             {children}
           </main>

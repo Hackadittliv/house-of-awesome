@@ -5,10 +5,11 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("next/navigation", () => ({ usePathname: () => "/" }));
 
 import { SiteHeader } from "@/components/SiteHeader";
+import { mainMenu } from "@/lib/nav";
 
 describe("sidhuvudets ljusa yta", () => {
   it("renderar ljusa tokens och låter huvudknappen ärva ytans färger", () => {
-    const html = renderToStaticMarkup(createElement(SiteHeader, { bookingHref: "/boka" }));
+    const html = renderToStaticMarkup(createElement(SiteHeader, { bookingHref: "/boka", menu: mainMenu }));
     const header = html.match(/<header\b[^>]*>/)?.[0];
     expect(header).toContain("hoa-surface-light");
     expect(header).toContain("bg-hoa-light");

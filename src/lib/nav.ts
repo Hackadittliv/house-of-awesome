@@ -1,3 +1,5 @@
+import "server-only";
+
 import { LONGEVITY_PUBLISHED } from "@/lib/longevity";
 
 export type NavItem = {

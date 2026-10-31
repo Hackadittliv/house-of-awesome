@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { Container } from "@/components/Container";
 import { CtaLink } from "@/components/CtaLink";
 import { Logo } from "@/components/Logo";
-import { type MenuEntry, isGroup, mainMenu } from "@/lib/nav";
+import type { MenuEntry, MenuGroup } from "@/lib/nav";
 
 function Plus({ open }: { open: boolean }) {
   return (
@@ -76,7 +76,7 @@ function MobileGroup({ label, items, onNavigate }: { label: string; items: MenuE
   );
 }
 
-export function SiteHeader({ bookingHref }: { bookingHref: string }) {
+export function SiteHeader({ bookingHref, menu }: { bookingHref: string; menu: (MenuEntry | MenuGroup)[] }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
@@ -94,8 +94,8 @@ export function SiteHeader({ bookingHref }: { bookingHref: string }) {
         <Logo />
 
         <nav aria-label="Huvudmeny" className="hidden items-center gap-6 xl:flex">
-          {mainMenu.map((entry) =>
-            isGroup(entry) ? (
+          {menu.map((entry) =>
+            "items" in entry ? (
               <div key={entry.label} className="group relative">
                 <button type="button" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-hoa-ink hover:underline underline-offset-4">
                   {entry.label} <span aria-hidden>▾</span>
@@ -155,8 +155,8 @@ export function SiteHeader({ bookingHref }: { bookingHref: string }) {
           </div>
           <nav aria-label="Mobilmeny" className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
             <ul className="space-y-1">
-              {mainMenu.map((entry) =>
-                isGroup(entry) ? (
+              {menu.map((entry) =>
+                "items" in entry ? (
                   <MobileGroup key={entry.label} label={entry.label} items={entry.items} onNavigate={close} />
                 ) : (
                   <MobileEntry key={entry.href} entry={{ ...entry, label: entry.label }} onNavigate={close} />

@@ -13,9 +13,27 @@ Allt innehåll ligger som JSON här. Typerna finns i `src/lib/types.ts`.
 
 ## Publicering av longevitysidorna
 
-`LONGEVITY_PUBLISHED` i `src/lib/longevity.ts` styr de tre sidornas länkar i huvudmeny och sidfot, sitemap samt robotsmetadata. Med `false` är länkarna dolda och sidorna har `noindex,nofollow,noimageindex`. Sidorna går fortsatt att öppna via sina adresser.
+`LONGEVITY_PUBLISHED` i `src/lib/longevity.ts` ska vara `false` tills Christian godkänner publicering. Flaggan styr `/anne-wevers`, `/longevity-blodanalys` och `/halsostrategi-for-foretag`:
 
-Spärren döljer bara länkar och indexering. En merge till main publicerar sidorna på sina adresser, med Annes namn och porträtt. Grenen ska därför varken mergas eller deployas till produktion innan checklistan nedan är klar. Förhandsvisningen av PR:en är öppen för den som har adressen (noindex), vilket Christian har valt för granskning.
+- Med `false` saknas länkarna i huvudmeny, sidfot och sitemap. Sidornas robotsmetadata är `noindex,nofollow,noimageindex`.
+- Vid Netlifys produktionsbygge, `process.env.CONTEXT === "production"`, anropar sidorna dessutom `notFound()` och ger HTTP 404.
+- I `deploy-preview`, `branch-deploy` och lokalt utan produktionskontext renderas sidorna fortsatt för granskning. `NODE_ENV=production` ensamt aktiverar inte spärren.
+
+Longevitytexterna läses från `src/lib/longevity-content.ts`, och menyn skapas på servern. Texterna och de dolda menyposterna ska inte följa med i publika klientpaket.
+
+### Förhandsvisning med lösenord
+
+Christian har beställt lösenordsskydd för förhandsvisningen. Basic Auth via `netlify/edge-functions/preview-password.ts` skyddar både `deploy-preview` och `branch-deploy`. Lösenordet sätts i miljövariabeln `PREVIEW_PASSWORD` för respektive Netlify-kontext. Saknas variabeln nekas alla. Lösenordets värde får aldrig skrivas i repot eller dokumentationen; `.env.example` innehåller bara en tom variabel.
+
+Lokalt körs inte Netlifys edge-funktion. I produktion passerar funktionen trafiken, medan sidornas publiceringsspärr ger 404 så länge flaggan är `false`.
+
+### Beslut om bokningsknappar den 31 oktober 2026
+
+Christian beslutade den 31 oktober kl. 11:28 att alla CTA:er på longevitysidorna ska gå till befintliga `/boka/forsta-halsosamtal`. Knapptexten **Boka kort samtal med Patrik** följer det beslutet. Befintlig bokningshantering och vidarekoppling till Life Is Awesome används.
+
+Efter beslutet togs `kostnadsfri-introduktion` bort den 31 oktober: tjänsten, tillhörande SQL, tidigare README-material och PGlite-skript. Materialet är arkiverat utanför repot och ska inte återinföras.
+
+### Checklista inför publicering
 
 Före publicering ska följande vara klart:
 
@@ -24,8 +42,16 @@ Före publicering ska följande vara klart:
 - Vårdjuristläsning genomförd och synpunkter åtgärdade.
 - Integritetspolicy och PUB-avtal klara.
 - Christians godkännande av publicering.
+- Vid godkänd publicering ändras `LONGEVITY_PUBLISHED` till `true` och det låsande testet i `tests/longevity.test.ts` ändras samtidigt. Testet heter "använder samma publiceringsflagga i faktisk meny, sidfot och sitemap" och kräver avsiktligt `false` fram till godkännandet.
+- `LONGEVITY_UPDATED` i `src/lib/sitemap.ts` sätts till publiceringsdagen.
 
-Därefter sätts konstanten till `true`, och `LONGEVITY_UPDATED` i `src/lib/sitemap.ts` sätts till publiceringsdagen. Avpublicering görs genom att sätta samma rad till `false`. Ändringen slår igenom efter nytt bygge och publicering av webbplatsen.
+Ändringarna slår igenom efter nytt bygge i rätt Netlify-kontext och publicering av webbplatsen.
+
+### Avindexering och faktisk borttagning
+
+Att sätta flaggan till `false` innebär avindexering, dolda menylänkar, frånvaro i sitemap och 404 för de tre sidorna i produktion efter nytt bygge. Det raderar inte innehåll eller bildfiler. Porträttet finns fortfarande på `/images/team/anne-wevers.webp` och kan nås direkt i produktion så länge filen ligger kvar.
+
+Om Anne drar tillbaka sitt samtycke ska sidorna, tillhörande innehåll och porträttet `public/images/team/anne-wevers.webp` raderas, och referenser tas bort. Därefter krävs nytt bygge och publicering av webbplatsen. Enbart `false` är inte faktisk borttagning.
 
 ## services.json
 
