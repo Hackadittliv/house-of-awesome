@@ -46,6 +46,23 @@ describe.each(pages)("longevity: $content.path", ({ content, Page, metadata, pla
     expect(findCopyViolations(html.replace(/<script[\s\S]*?<\/script>/g, "").replace(/<[^>]+>/g, " "))).toEqual([]);
   });
 
+  it("har v2-rubriker och en h2 per innehållsblock inklusive avslutet", () => {
+    const h1 = html.match(/<h1\b[^>]*class="([^"]+)"/);
+    expect(h1?.[1].split(" ")).toEqual(expect.arrayContaining(["text-4xl", "md:text-6xl"]));
+    const h2s = [...html.matchAll(/<h2\b[^>]*class="([^"]+)"/g)];
+    expect(h2s).toHaveLength(content.sections.length + 1);
+    for (const h2 of h2s) expect(h2[1].split(" ")).toEqual(expect.arrayContaining(["text-3xl", "md:text-4xl"]));
+    for (const section of content.sections) expect(html).toContain(`id="${section.id}-rubrik"`);
+  });
+
+  it("har ett bandat avslut utan två band i följd inom LongevityPage", () => {
+    const sections = [...html.matchAll(/<section\b[^>]*class="([^"]+)"/g)];
+    expect(sections).toHaveLength(content.sections.length + 2);
+    const bands = sections.map((section) => section[1].includes("bg-hoa-secondary/"));
+    expect(bands.at(-1)).toBe(true);
+    for (let index = 1; index < bands.length; index++) expect(bands[index] && bands[index - 1]).toBe(false);
+  });
+
   it.each([false, true])("bokar kort samtal med bokning aktiverad = %s", (enabled) => {
     bookingConfig.enabled = enabled;
     const rendered = renderToStaticMarkup(createElement(Page));
@@ -93,9 +110,9 @@ describe.each([false, true])("publicering = %s", (published) => {
     expect(paths).toContain("/longevity-behandlingar");
     expect(paths).toContain("/funktionsmedicin");
     const pagePaths = pages.map(({ content }) => content.path);
-    const otherLinks = (enabled: boolean) => getMainMenu(enabled).flatMap((entry) => isGroup(entry)
-      ? [{ ...entry, items: entry.items.filter((item) => !pagePaths.includes(item.href)) }]
-      : [entry]);
+    const otherLinks = (enabled: boolean) => getMainMenu(enabled).map((entry) => isGroup(entry)
+      ? { ...entry, items: entry.items.filter((item) => !pagePaths.includes(item.href)) }
+      : entry);
     expect(otherLinks(published)).toEqual(otherLinks(!published));
   });
 

@@ -1,13 +1,10 @@
 import Link from "next/link";
 
-import { Container } from "@/components/Container";
 import { CtaLink } from "@/components/CtaLink";
 import { Disclaimer } from "@/components/Disclaimer";
 import { JsonLd } from "@/components/JsonLd";
-import { PageHeader } from "@/components/PageHeader";
 import { Prose } from "@/components/Prose";
-import { SectionIntro } from "@/components/SectionIntro";
-import { Avatar, Card, Grid, Section } from "@/components/v2/ui";
+import { Avatar, Card, Grid, Hero, Section } from "@/components/v2/ui";
 import { bookingUrl, SHORT_CALL_SLUG } from "@/lib/links";
 import { PORTRAITS } from "@/lib/people";
 import { breadcrumbJsonLd } from "@/lib/seo";
@@ -20,17 +17,23 @@ export function LongevityPage({ content, placement, portrait = false }: {
 }) {
   return (
     <>
-      <Container className="pt-14 pb-12 md:pt-20 md:pb-16">
-        {portrait ? <div className="mb-8 flex justify-center"><Avatar {...PORTRAITS.anne} size="lg" /></div> : null}
-        <PageHeader eyebrow={content.eyebrow} title={content.h1} lead={content.lead} />
-        <div className="mt-8 text-center">
-          <CtaLink href={bookingUrl(SHORT_CALL_SLUG, `${placement}_hero`)}>{content.cta.buttonLabel}</CtaLink>
-        </div>
-      </Container>
+      <Hero
+        eyebrow={content.eyebrow}
+        title={content.h1}
+        lead={content.lead}
+        portrait={portrait ? <Avatar {...PORTRAITS.anne} size="lg" /> : undefined}
+      >
+        <CtaLink href={bookingUrl(SHORT_CALL_SLUG, `${placement}_hero`)}>{content.cta.buttonLabel}</CtaLink>
+      </Hero>
 
       {content.sections.map((section, index) => (
-        <Section key={section.id} id={section.id} band={index % 2 === 0}>
-          <SectionIntro id={`${section.id}-rubrik`} title={section.heading} className="mb-8" />
+        <Section
+          key={section.id}
+          id={section.id}
+          titleId={`${section.id}-rubrik`}
+          title={section.heading}
+          band={(content.sections.length - index) % 2 === 0}
+        >
           <div className="mx-auto max-w-3xl space-y-6">
             <Prose>
               {section.body?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
@@ -55,8 +58,7 @@ export function LongevityPage({ content, placement, portrait = false }: {
         </Section>
       ))}
 
-      <Section band>
-        <SectionIntro id="introduktion" title={content.cta.heading} lead={content.cta.text} />
+      <Section band titleId="introduktion" title={content.cta.heading} lead={content.cta.text}>
         <div className="mt-8 text-center">
           <CtaLink href={bookingUrl(SHORT_CALL_SLUG, `${placement}_cta`)}>{content.cta.buttonLabel}</CtaLink>
         </div>
