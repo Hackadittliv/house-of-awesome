@@ -247,6 +247,30 @@ it("använder samma publiceringsflagga i faktisk meny, sidfot och sitemap", () =
   expect(sitemap()).toEqual(getSitemap(LONGEVITY_PUBLISHED));
 });
 
+it("visar legitimationsmeningen ordagrant som sista utbildningspunkt och inte i Annes ingress", () => {
+  const sentence = "Anne saknar legitimation som hälso- och sjukvårdspersonal, och hennes stöd är ett komplement till vården.";
+  const lead = "Hälsovetare och PNI-terapeut som hjälper dig att se helheten i livsstil, stress och återhämtning.";
+  const education = longevity.anne.sections.find((section) => section.id === "utbildning");
+  expect(longevity.anne.lead).toBe(lead);
+  expect(longevity.anne.lead).not.toContain(sentence);
+  expect(education?.heading).toBe("Utbildning och bakgrund");
+  expect(education?.points?.at(-1)).toBe(sentence);
+
+  const html = renderToStaticMarkup(createElement(AnnePage));
+  const blocks = [...html.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/g)];
+  const hero = blocks.find((block) => /<h1\b/.test(block[2]))?.[2] ?? "";
+  const paragraphs = [...hero.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/g)].map((paragraph) => paragraph[1]);
+  expect(paragraphs).toContain(escaped(lead));
+  expect(hero).not.toContain(escaped(sentence));
+
+  const educationHtml = blocks.find((block) => block[1].includes('id="utbildning"'))?.[2] ?? "";
+  const heading = educationHtml.match(/<h2\b[^>]*>([\s\S]*?)<\/h2>/)?.[1].replace(/<[^>]+>/g, "");
+  expect(heading).toBe("Utbildning och bakgrund");
+  const list = educationHtml.match(/<ul\b[^>]*>([\s\S]*?)<\/ul>/)?.[1] ?? "";
+  const points = [...list.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/g)].map((point) => point[1]);
+  expect(points.at(-1)).toBe(escaped(sentence));
+});
+
 it("visar Anne med svensk alt-text i befintlig Avatar", () => {
   const html = renderToStaticMarkup(createElement(AnnePage));
   expect(html).toContain(escaped(PORTRAITS.anne.alt));
