@@ -129,6 +129,23 @@
     ]
   },
   {
+    "slug": "healing-emht",
+    "kind": "bookable",
+    "category": "kropp",
+    "name": "Energimedicinsk healingterapi (EMHT) hos Rebecca",
+    "shortName": "healing hos Rebecca",
+    "lead": "Healing med Rebecca Gustafsson, på plats i huset eller på distans.",
+    "body": [
+      "Hos Rebecca får du en stund för vila och avkoppling med energimedicinsk healingterapi (EMHT).",
+      "Rebecca erbjuder healing på plats i huset och på distans. I bokningen visas det upplägg, den längd och det pris som gäller för den bokningsbara tjänsten."
+    ],
+    "points": [
+      "Healing med Rebecca Gustafsson",
+      "En stund för vila och avkoppling",
+      "Se tillgängliga tider och upplägg i bokningen"
+    ]
+  },
+  {
     "slug": "awesome-protocol",
     "kind": "inquiry",
     "category": "traning",

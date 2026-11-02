@@ -1,6 +1,6 @@
 // Rebecca Gustafsson, energimedicinsk healingterapi (EMHT).
-// Förfrågningar skickas med route "rebecca". Servern (request-consultation i LIA) slår upp
-// mottagaren i sin vitlista: rebecca -> annieorebecca@gmail.com.
+// Direktbokning använder LIA:s healing-emht. Reservsidan /boka/forfragan/rebecca
+// behåller route "rebecca", vars mottagare slås upp i LIA:s vitlista.
 
 export const REBECCA = {
   name: "Rebecca Gustafsson",
@@ -14,5 +14,6 @@ export const REBECCA = {
   ],
   /** Används bara om bokningsbackend saknas vid bygget. */
   fallbackEmail: "annieorebecca@gmail.com",
-  requestPath: "/boka/forfragan/rebecca",
+  requestPath: "/boka/healing-emht",
+  cta: "Boka tid hos Rebecca",
 } as const;

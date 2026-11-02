@@ -67,7 +67,7 @@ export default function Page() {
                 </li>
               ))}
             </ul>
-            <CtaLink href={REBECCA.requestPath} className="w-fit">Skicka förfrågan till Rebecca</CtaLink>
+            <CtaLink href={REBECCA.requestPath} className="w-fit">{REBECCA.cta}</CtaLink>
           </div>
         </div>
       </Section>

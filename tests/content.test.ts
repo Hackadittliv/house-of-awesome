@@ -17,10 +17,11 @@ describe("tjänster", () => {
     }
   });
 
-  it("har bara bokningsbara texter för tjänster som finns i LIA", () => {
+  it("kräver LIA-snapshot för bokningsbara texter utom healing-emht", () => {
     const live = new Set(servicesSnapshot.services.map((event) => event.slug));
     const bookableCopy = servicesCopy.filter((copy) => copy.kind === "bookable");
     for (const copy of bookableCopy) {
+      if (copy.slug === "healing-emht") continue;
       expect(live, `${copy.slug} finns inte i LIA:s bokning`).toContain(copy.slug);
     }
   });
@@ -32,6 +33,11 @@ describe("tjänster", () => {
 
   it("har längd och pris från LIA för varje bokningsbar tjänst", () => {
     for (const service of getBookableServices()) {
+      if (service.slug === "healing-emht" && !servicesSnapshot.services.some((event) => event.slug === service.slug)) {
+        expect(service.durationMinutes).toBeNull();
+        expect(service.priceLabel).toBeNull();
+        continue;
+      }
       expect(service.durationMinutes).toBeGreaterThan(0);
       expect(service.priceLabel).toBeTruthy();
     }

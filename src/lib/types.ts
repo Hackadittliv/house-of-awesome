@@ -80,7 +80,7 @@ export type ServiceCopy = {
 export type Service = ServiceCopy & {
   durationMinutes: number | null;
   priceLabel: string | null;
-  location: "in_person" | "digital";
+  location: "in_person" | "digital" | null;
   bookable: boolean;
 };
 

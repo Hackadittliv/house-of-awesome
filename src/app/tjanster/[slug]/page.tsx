@@ -113,14 +113,16 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
                   <dt className="text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold">Pris</dt>
                   <dd className="mt-1 text-hoa-ink">{service.priceLabel ?? "Enligt förfrågan"}</dd>
                 </div>
-                <div>
-                  <dt className="text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold">Plats</dt>
-                  <dd className="mt-1 text-hoa-ink">
-                    {service.location === "digital"
-                      ? "Digitalt via videosamtal"
-                      : `I huset på ${site.address.street}, ${site.address.city}`}
-                  </dd>
-                </div>
+                {service.location ? (
+                  <div>
+                    <dt className="text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold">Plats</dt>
+                    <dd className="mt-1 text-hoa-ink">
+                      {service.location === "digital"
+                        ? "Digitalt via videosamtal"
+                        : `I huset på ${site.address.street}, ${site.address.city}`}
+                    </dd>
+                  </div>
+                ) : null}
               </dl>
               <div className="mt-6 flex flex-col gap-3">
                 {service.bookable ? (

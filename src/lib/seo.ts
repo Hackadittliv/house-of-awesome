@@ -132,7 +132,7 @@ export function serviceJsonLd(service: Service) {
     description: [service.lead, duration, service.priceLabel].filter(Boolean).join(" "),
     url: `${site.url}/tjanster/${service.slug}`,
     provider: { "@id": BUSINESS_ID },
-    areaServed: service.location === "digital" ? "Sverige" : site.address.city,
+    ...(service.location ? { areaServed: service.location === "digital" ? "Sverige" : site.address.city } : {}),
     ...(service.bookable
       ? {
           potentialAction: {

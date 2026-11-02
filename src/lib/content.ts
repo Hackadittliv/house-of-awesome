@@ -39,13 +39,20 @@ export function formatPriceLabel(label: string | null): string | null {
   return label.replace(/(\d+)-kort/g, "klippkort med $1 gånger").replace(/\s+[-–—]\s+/g, ", ");
 }
 
+function isBookable(copy: ServiceCopy, event: LiaEventType | undefined): boolean {
+  // EMHT öppnar det befintliga bokningsflödet även före nästa LIA-snapshot.
+  return copy.kind === "bookable" && (Boolean(event) || copy.slug === "healing-emht");
+}
+
 function toService(copy: ServiceCopy, event: LiaEventType | undefined): Service {
   return {
     ...copy,
     durationMinutes: event?.duration_minutes ?? null,
     priceLabel: formatPriceLabel(event?.price_label_sv ?? null),
-    location: event && event.location_type !== "in_person" ? "digital" : "in_person",
-    bookable: copy.kind === "bookable" && Boolean(event),
+    location: !event && copy.slug === "healing-emht"
+      ? null
+      : event && event.location_type !== "in_person" ? "digital" : "in_person",
+    bookable: isBookable(copy, event),
   };
 }
 
@@ -54,12 +61,12 @@ export function getServices(): Service[] {
   const order = new Map(servicesSnapshot.services.map((event) => [event.slug, event.sort_order]));
 
   const bookable = serviceCopy
-    .filter((copy) => copy.kind === "bookable" && events.has(copy.slug))
-    .sort((a, b) => (order.get(a.slug) ?? 0) - (order.get(b.slug) ?? 0))
+    .filter((copy) => isBookable(copy, events.get(copy.slug)))
+    .sort((a, b) => (order.get(a.slug) ?? Number.MAX_SAFE_INTEGER) - (order.get(b.slug) ?? Number.MAX_SAFE_INTEGER))
     .map((copy) => toService(copy, events.get(copy.slug)));
 
   const inquiry = serviceCopy
-    .filter((copy) => copy.kind === "inquiry" || !events.has(copy.slug))
+    .filter((copy) => !isBookable(copy, events.get(copy.slug)))
     .map((copy) => toService({ ...copy, kind: "inquiry" }, undefined));
 
   return [...bookable, ...inquiry];
