@@ -9,6 +9,7 @@ import { Eyebrow } from "@/components/Eyebrow";
 import { JsonLd } from "@/components/JsonLd";
 import { categoryLabels, formatDuration, getService, getServices, site } from "@/lib/content";
 import { bookingUrl, inquiryUrl, mailtoUrl } from "@/lib/links";
+import { REBECCA } from "@/lib/rebecca";
 import { breadcrumbJsonLd, pageMetadata, serviceJsonLd } from "@/lib/seo";
 
 export const dynamicParams = false;
@@ -135,6 +136,9 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
                     </CtaLink>
                   </>
                 )}
+                {service.slug === "healing-emht" ? (
+                  <CtaLink href={REBECCA.inquiryPath} variant="secondary">{REBECCA.inquiryCta}</CtaLink>
+                ) : null}
               </div>
               <p className="mt-4 text-xs leading-5 text-hoa-ink-muted">
                 {service.bookable

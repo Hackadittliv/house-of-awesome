@@ -31,13 +31,8 @@ describe("tjänster", () => {
     expect(new Set(slugs).size).toBe(slugs.length);
   });
 
-  it("har längd och pris från LIA för varje bokningsbar tjänst", () => {
+  it("har längd och pris för varje bokningsbar tjänst", () => {
     for (const service of getBookableServices()) {
-      if (service.slug === "healing-emht" && !servicesSnapshot.services.some((event) => event.slug === service.slug)) {
-        expect(service.durationMinutes).toBeNull();
-        expect(service.priceLabel).toBeNull();
-        continue;
-      }
       expect(service.durationMinutes).toBeGreaterThan(0);
       expect(service.priceLabel).toBeTruthy();
     }

@@ -30,11 +30,11 @@ export default function Page() {
       </Hero>
       <Section>
         <Grid>
-          <Card id="healing" label="Energi" title="Healing" text="Energimedicinsk healingterapi (EMHT) med Rebecca Gustafsson, på plats eller på distans.">
+          <Card id="healing" label="Energi" title="Healing" text="Energimedicinsk healingterapi (EMHT) med Rebecca Gustafsson. Direktbokning: Healing 45 min på plats.">
             <ul className="space-y-1 text-sm text-hoa-ink">
               <li><span className="text-hoa-gold">950 kr</span> · 45 min på plats</li>
-              <li><span className="text-hoa-gold">750 kr</span> · 45 min på distans</li>
-              <li><span className="text-hoa-gold">1 500 kr</span> · 75 min</li>
+              <li><a href={REBECCA.inquiryPath} className="underline underline-offset-4"><span className="text-hoa-gold">750 kr</span> · 45 min på distans, förfrågan</a></li>
+              <li><a href={REBECCA.inquiryPath} className="underline underline-offset-4"><span className="text-hoa-gold">1 500 kr</span> · 75 min, förfrågan</a></li>
             </ul>
             <CtaLink href="#rebecca" size="sm" className="mt-auto w-fit">Läs mer och boka</CtaLink>
           </Card>
@@ -62,7 +62,7 @@ export default function Page() {
             <ul className="space-y-2 text-sm text-hoa-ink">
               {REBECCA.options.map((o) => (
                 <li key={o.label} className="flex justify-between gap-4 border-b border-hoa-line pb-2">
-                  <span>{o.label}</span>
+                  <a href={o.href} className="underline underline-offset-4">{o.label}</a>
                   <span className="shrink-0 text-hoa-gold">{o.price}</span>
                 </li>
               ))}

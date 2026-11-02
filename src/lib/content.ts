@@ -4,6 +4,7 @@ import servicesCopyData from "../../content/services.json";
 import snapshotData from "../../content/services.snapshot.json";
 import siteData from "../../content/site.json";
 
+import { REBECCA } from "@/lib/rebecca";
 import type {
   FaqItem,
   LiaEventType,
@@ -45,13 +46,12 @@ function isBookable(copy: ServiceCopy, event: LiaEventType | undefined): boolean
 }
 
 function toService(copy: ServiceCopy, event: LiaEventType | undefined): Service {
+  const fallback = copy.slug === "healing-emht" && copy.kind === "bookable" ? REBECCA.booking : undefined;
   return {
     ...copy,
-    durationMinutes: event?.duration_minutes ?? null,
-    priceLabel: formatPriceLabel(event?.price_label_sv ?? null),
-    location: !event && copy.slug === "healing-emht"
-      ? null
-      : event && event.location_type !== "in_person" ? "digital" : "in_person",
+    durationMinutes: event?.duration_minutes ?? fallback?.durationMinutes ?? null,
+    priceLabel: formatPriceLabel(event ? event.price_label_sv : fallback?.priceLabel ?? null),
+    location: event && event.location_type !== "in_person" ? "digital" : "in_person",
     bookable: isBookable(copy, event),
   };
 }

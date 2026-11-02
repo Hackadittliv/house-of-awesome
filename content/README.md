@@ -25,8 +25,8 @@ Allt innehåll ligger som JSON här. Typerna finns i `src/lib/types.ts`.
 | `image`, `imageAlt` | string? | Bild från `public/images` |
 | `healthDeclaration` | boolean? | Kräver hälsodeklaration |
 
-Längd och pris för bokningsbara tjänster kommer alltid från snapshoten, så de stämmer med bokningen.
+Längd och pris för bokningsbara tjänster kommer från snapshoten, med undantaget nedan.
 
-`healing-emht` är ett avgränsat undantag: tjänsten öppnar HOA:s befintliga bokningsflöde även innan nästa snapshot innehåller slugen. Fram till dess är längd, pris och plats `null` i tjänstedatan. Beskrivningen anger att Rebecca erbjuder både besök och distans, medan bokningsflödet hämtar det enskilda upplägget från LIA. När snapshoten innehåller slugen används dess värden automatiskt. Snapshoten uppdateras enbart från LIA.
+`healing-emht` är ett avgränsat undantag: tjänsten öppnar HOA:s befintliga bokningsflöde även innan nästa snapshot innehåller slugen. Direktbokningen gäller healing i 45 minuter på plats för 950 kr. Fram till nästa snapshot används de bekräftade uppgifterna i `src/lib/rebecca.ts`. När snapshoten innehåller slugen används dess värden automatiskt. Snapshoten uppdateras enbart från LIA.
 
-Den primära länken går till `/boka/healing-emht`. `/boka/forfragan/rebecca` finns kvar med Rebeccas mottagarrutt och tre upplägg. Ett 404/409-svar från LIA visar det befintliga generella förfrågningsformuläret i bokningsflödet, med husets mottagarrutt. Det leder alltså aldrig automatiskt till Rebeccas reservsida. Direktbokningen gäller endast det upplägg som LIA kopplar till `healing-emht`.
+Den primära länken går till `/boka/healing-emht`. Distans och 75 minuter länkar till `/boka/forfragan/rebecca`, som behåller Rebeccas mottagarrutt och tre upplägg. Ett 404/409-svar från LIA visar det befintliga generella förfrågningsformuläret i bokningsflödet, med husets mottagarrutt. Det leder alltså aldrig automatiskt till Rebeccas reservsida.

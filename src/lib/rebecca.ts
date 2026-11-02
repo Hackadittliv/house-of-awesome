@@ -2,18 +2,24 @@
 // Direktbokning använder LIA:s healing-emht. Reservsidan /boka/forfragan/rebecca
 // behåller route "rebecca", vars mottagare slås upp i LIA:s vitlista.
 
+const bookingPath = "/boka/healing-emht";
+const inquiryPath = "/boka/forfragan/rebecca";
+
 export const REBECCA = {
   name: "Rebecca Gustafsson",
   service: "Energimedicinsk healingterapi (EMHT)",
   intro:
     "Under behandlingen kopplar du av och riktar uppmärksamheten inåt, medan du tar emot en mjuk och kraftfull energi som arbetar med kroppens egen självläkande förmåga. Den hjälper dig att komma i kontakt med ditt inre och hitta harmoni och balans.",
   options: [
-    { label: "Healingbehandling 45 min, på plats", price: "950 kr" },
-    { label: "Healingbehandling 45 min, på distans", price: "750 kr" },
-    { label: "Healingbehandling 75 min med kompletterande metod efter önskemål", price: "1 500 kr" },
+    { label: "Healing 45 min på plats", price: "950 kr", href: bookingPath },
+    { label: "Healingbehandling 45 min, på distans", price: "750 kr", href: inquiryPath },
+    { label: "Healingbehandling 75 min med kompletterande metod efter önskemål", price: "1 500 kr", href: inquiryPath },
   ],
+  booking: { durationMinutes: 45, priceLabel: "950 kr" },
   /** Används bara om bokningsbackend saknas vid bygget. */
   fallbackEmail: "annieorebecca@gmail.com",
-  requestPath: "/boka/healing-emht",
-  cta: "Boka tid hos Rebecca",
+  requestPath: bookingPath,
+  cta: "Boka healing 45 min på plats",
+  inquiryPath,
+  inquiryCta: "Förfrågan om distans eller 75 min",
 } as const;

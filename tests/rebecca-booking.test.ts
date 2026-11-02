@@ -47,13 +47,15 @@ describe("Rebeccas direktbokning", () => {
     expect(getInquiryServices().map((service) => service.slug)).not.toContain(slug);
   });
 
-  it("lämnar längd, pris och plats tomma utan snapshotdata", () => {
+  it("visar 45 minuter på plats för 950 kr även utan snapshotdata", () => {
     const service = getService(slug)!;
-    expect(service.durationMinutes).toBeNull();
-    expect(service.priceLabel).toBeNull();
-    expect(service.location).toBeNull();
-    expect(formatDuration(service)).toBeNull();
-    expect(serviceJsonLd(service)).not.toHaveProperty("areaServed");
+    expect(service.durationMinutes).toBe(45);
+    expect(service.priceLabel).toBe("950 kr");
+    expect(service.location).toBe("in_person");
+    expect(service.shortName).toBe("Healing hos Rebecca");
+    expect(service.lead).toContain("Healing 45 min på plats");
+    expect(formatDuration(service)).toBe("45 minuter");
+    expect(serviceJsonLd(service).areaServed).toBe(site.address.city);
     expect(new URL(serviceJsonLd(service).potentialAction!.target, site.url).pathname).toBe(REBECCA.requestPath);
   });
 
@@ -84,6 +86,11 @@ describe("Rebeccas direktbokning", () => {
     expect(getInquiryServices().filter((service) => service.slug === "hbot-60")).toHaveLength(1);
   });
 
+  it("behåller tomt pris från en befintlig LIA-post", () => {
+    servicesSnapshot.services.push({ ...eventFixture, price_label_sv: null });
+    expect(getService(slug)!.priceLabel).toBeNull();
+  });
+
   it("behåller uttryckliga förfrågningstjänster även om de finns i snapshoten", () => {
     servicesSnapshot.services.push({ ...eventFixture, slug: "inbody" });
 
@@ -94,11 +101,21 @@ describe("Rebeccas direktbokning", () => {
 
   it("pekar Rebeccas CTA på samma slug som den lokala bokningen", () => {
     expect(REBECCA.requestPath).toBe("/boka/healing-emht");
-    expect(REBECCA.cta).toBe("Boka tid hos Rebecca");
+    expect(REBECCA.cta).toBe("Boka healing 45 min på plats");
     expect(bookingUrl(slug, "rebecca", true)).toBe(REBECCA.requestPath);
 
     const page = readFileSync(new URL("../src/app/behandlingar-och-samtal/page.tsx", import.meta.url), "utf8");
     expect(page).toMatch(/<CtaLink\s+href=\{REBECCA\.requestPath\}[^>]*>\{REBECCA\.cta\}<\/CtaLink>/u);
+  });
+
+  it("leder distans och 75 minuter till Rebeccas förfrågningssida", () => {
+    expect(REBECCA.options.map((option) => option.href)).toEqual([
+      "/boka/healing-emht",
+      "/boka/forfragan/rebecca",
+      "/boka/forfragan/rebecca",
+    ]);
+    expect(REBECCA.inquiryPath).toBe("/boka/forfragan/rebecca");
+    expect(REBECCA.options[0]).toMatchObject({ label: "Healing 45 min på plats", price: "950 kr" });
   });
 
   it("behåller reservsidans mottagarrutt och val av upplägg", () => {
@@ -114,7 +131,7 @@ describe("Rebeccas direktbokning", () => {
 
   it("följer samtliga språkregler i den nya tjänstetexten och CTA:n", () => {
     const service = getService(slug)!;
-    const copy = [service.name, service.shortName, service.lead, ...service.body, ...service.points, REBECCA.cta].join(" ");
+    const copy = [service.name, service.shortName, service.lead, ...service.body, ...service.points, REBECCA.cta, REBECCA.inquiryCta].join(" ");
 
     expect(findCopyViolations(copy)).toEqual([]);
     expect(copy).not.toMatch(/(?<!\p{L})(sjukt|på\s+riktigt|men)(?!\p{L})/iu);
