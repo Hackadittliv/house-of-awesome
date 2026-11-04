@@ -3,6 +3,7 @@
 // behåller route "rebecca", vars mottagare slås upp i LIA:s vitlista.
 
 import { bookingUrl } from "@/lib/links";
+import { REBECCA_BOOKING } from "@/lib/rebecca-data";
 
 const inquiryPath = "/boka/forfragan/rebecca";
 
@@ -16,10 +17,10 @@ export const REBECCA = {
     { label: "Healingbehandling 45 min, på distans", price: "750 kr", href: inquiryPath },
     { label: "Healingbehandling 75 min med kompletterande metod efter önskemål", price: "1 500 kr", href: inquiryPath },
   ],
-  booking: { durationMinutes: 45, priceLabel: "950 kr" },
+  booking: REBECCA_BOOKING,
   /** Används bara om bokningsbackend saknas vid bygget. */
   fallbackEmail: "annieorebecca@gmail.com",
-  // Beräkna länken vid användning, efter att innehållskatalogen har laddats.
+  // Länken följer aktuell bokningskonfiguration.
   get requestPath() { return bookingUrl("healing-emht", "rebecca"); },
   cta: "Boka healing 45 min på plats",
   inquiryPath,

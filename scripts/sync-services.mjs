@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Hämtar publika tjänster för lia och hoa via list_public_booking_event_types.
-// Skriver content/services.snapshot.json efter att båda klinikernas anrop lyckats.
+// Hämtar LIA:s publika tjänster (booking_event_types) och skriver content/services.snapshot.json.
+// Läser bara publika rader med LIA:s publika nyckel, samma anrop som lifeisawesome.se/boka gör.
 // Beskrivningarna från databasen tas inte med: HOA:s egna texter ligger i content/services.json.
 //
 // Användning:
@@ -11,7 +11,7 @@
 import { writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
-const url = (process.env.LIA_SUPABASE_URL ?? "").replace(/\/$/, "");
+const url = process.env.LIA_SUPABASE_URL;
 const key = process.env.LIA_SUPABASE_ANON_KEY;
 
 if (!url || !key) {
@@ -19,36 +19,37 @@ if (!url || !key) {
   process.exit(1);
 }
 
-const services = [];
-for (const clinic of ["lia", "hoa"]) {
-  const response = await fetch(`${url}/rest/v1/rpc/list_public_booking_event_types`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", apikey: key, Authorization: `Bearer ${key}` },
-    body: JSON.stringify({ p_clinic_slug: clinic }),
-  });
+const fields = [
+  "slug",
+  "title_sv",
+  "duration_minutes",
+  "price_label_sv",
+  "location_type",
+  "requires_payment",
+  "sort_order",
+];
 
-  if (!response.ok) {
-    console.error(`Supabase svarade ${response.status} för ${clinic}: ${await response.text()}`);
-    process.exit(1);
-  }
+const query = new URLSearchParams({
+  select: fields.join(","),
+  is_active: "eq.true",
+  is_public: "eq.true",
+  order: "sort_order",
+});
 
-  const events = await response.json();
-  services.push(...events.map((event, index) => ({
-    clinic,
-    slug: event.slug,
-    title_sv: event.title_sv,
-    duration_minutes: event.duration_minutes,
-    price_label_sv: event.price_label_sv,
-    inquiry_only: event.inquiry_only,
-    image_url: event.image_url,
-    // RPC:n sorterar på sort_order, slug utan att returnera sort_order.
-    sort_order: index,
-  })));
+const response = await fetch(`${url}/rest/v1/booking_event_types?${query}`, {
+  headers: { apikey: key, Authorization: `Bearer ${key}` },
+});
+
+if (!response.ok) {
+  console.error(`Supabase svarade ${response.status}: ${await response.text()}`);
+  process.exit(1);
 }
+
+const services = await response.json();
 const projectRef = new URL(url).hostname.split(".")[0];
 
 const snapshot = {
-  source: `Supabase ${projectRef}, list_public_booking_event_types för lia och hoa`,
+  source: `Supabase ${projectRef}, booking_event_types där is_active och is_public är sanna`,
   fetchedAt: new Date().toISOString(),
   services,
 };

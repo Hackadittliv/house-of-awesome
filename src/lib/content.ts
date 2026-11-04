@@ -4,7 +4,7 @@ import servicesCopyData from "../../content/services.json";
 import snapshotData from "../../content/services.snapshot.json";
 import siteData from "../../content/site.json";
 
-import { REBECCA } from "@/lib/rebecca";
+import { REBECCA_BOOKING } from "@/lib/rebecca-data";
 import type {
   FaqItem,
   LiaEventType,
@@ -54,7 +54,7 @@ function isBookable(copy: ServiceCopy, event: LiaEventType | undefined): boolean
 }
 
 function toService(copy: ServiceCopy, event: LiaEventType | undefined): Service {
-  const fallback = isRebecca(copy) ? REBECCA.booking : undefined;
+  const fallback = isRebecca(copy) ? REBECCA_BOOKING : undefined;
   return {
     ...copy,
     durationMinutes: event?.duration_minutes ?? fallback?.durationMinutes ?? null,
