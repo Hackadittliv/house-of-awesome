@@ -17,8 +17,8 @@ describe("llms.txt", () => {
   it("beskriver Rebeccas direktbokning med längd, plats och pris", async () => {
     const text = await GET().text();
     const rebecca = text.split("\n").find((line) => line.includes("/tjanster/healing-emht"));
-    expect(rebecca).toContain("Healing 45 min på plats");
-    expect(rebecca).toContain("45 minuter. 950 kr. Boka:");
+    expect(rebecca).toContain("60 min samtal + 45 min healingbehandling på plats");
+    expect(rebecca).toContain("60 minuter. 1 050 kr. Boka:");
     expect(text).not.toMatch(/\.\s+\./u);
   });
 
@@ -45,8 +45,8 @@ describe("llms.txt", () => {
 
   it.each([
     { durationMinutes: null, priceLabel: null, expected: ". Boka:" },
-    { durationMinutes: 45, priceLabel: null, expected: ". 45 minuter. Boka:" },
-    { durationMinutes: null, priceLabel: "950 kr", expected: ". 950 kr. Boka:" },
+    { durationMinutes: 60, priceLabel: null, expected: ". 60 minuter. Boka:" },
+    { durationMinutes: null, priceLabel: "1 050 kr", expected: ". 1 050 kr. Boka:" },
   ])("skriver korrekt skiljetecken med längd $durationMinutes och pris $priceLabel", async ({ durationMinutes, priceLabel, expected }) => {
     const service = content.getService("healing-emht")!;
     vi.spyOn(content, "getBookableServices").mockReturnValue([{ ...service, durationMinutes, priceLabel }]);

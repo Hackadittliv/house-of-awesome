@@ -13,16 +13,16 @@ export const REBECCA = {
   intro:
     "Under behandlingen kopplar du av och riktar uppmärksamheten inåt, medan du tar emot en mjuk och kraftfull energi som arbetar med kroppens egen självläkande förmåga. Den hjälper dig att komma i kontakt med ditt inre och hitta harmoni och balans.",
   options: [
-    { label: "Healing 45 min på plats", price: "950 kr", get href() { return bookingUrl("healing-emht", "rebecca_option"); } },
-    { label: "Healingbehandling 45 min, på distans", price: "750 kr", href: inquiryPath },
-    { label: "Healingbehandling 75 min med kompletterande metod efter önskemål", price: "1 500 kr", href: inquiryPath },
+    { label: "60 min samtal + 45 min healingbehandling på plats", price: "1 050 kr", get href() { return bookingUrl("healing-emht", "rebecca_option"); } },
+    { label: "45 min healingbehandling på distans med telefonsamtal före och efter", price: "650 kr", href: inquiryPath },
+    { label: "90 min healingbehandling med kompletterande metod efter önskemål", price: "1 550 kr", href: inquiryPath },
   ],
   booking: REBECCA_BOOKING,
   /** Används bara om bokningsbackend saknas vid bygget. */
   fallbackEmail: "annieorebecca@gmail.com",
   // Länken följer aktuell bokningskonfiguration.
   get requestPath() { return bookingUrl("healing-emht", "rebecca"); },
-  cta: "Boka healing 45 min på plats",
+  cta: "Boka samtal och healing på plats",
   inquiryPath,
-  inquiryCta: "Förfrågan om distans eller 75 min",
+  inquiryCta: "Förfrågan om distans eller 90 min",
 } as const;

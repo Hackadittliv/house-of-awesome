@@ -30,11 +30,11 @@ export default function Page() {
       </Hero>
       <Section>
         <Grid>
-          <Card id="healing" label="Energi" title="Healing" text="Energimedicinsk healingterapi (EMHT) med Rebecca Gustafsson. Direktbokning: Healing 45 min på plats.">
+          <Card id="healing" label="Energi" title="Healing" text="Energimedicinsk healingterapi (EMHT) med Rebecca Gustafsson. Direktbokning: 60 min samtal + 45 min healingbehandling på plats.">
             <ul className="space-y-1 text-sm text-hoa-ink">
-              <li><span className="text-hoa-gold">950 kr</span> · 45 min på plats</li>
-              <li><a href={REBECCA.inquiryPath} className="underline underline-offset-4"><span className="text-hoa-gold">750 kr</span> · 45 min på distans, förfrågan</a></li>
-              <li><a href={REBECCA.inquiryPath} className="underline underline-offset-4"><span className="text-hoa-gold">1 500 kr</span> · 75 min, förfrågan</a></li>
+              <li><span className="text-hoa-gold">1 050 kr</span> · 60 min samtal + 45 min healingbehandling på plats</li>
+              <li><a href={REBECCA.inquiryPath} className="underline underline-offset-4"><span className="text-hoa-gold">650 kr</span> · 45 min healingbehandling på distans med telefonsamtal före och efter, förfrågan</a></li>
+              <li><a href={REBECCA.inquiryPath} className="underline underline-offset-4"><span className="text-hoa-gold">1 550 kr</span> · 90 min healingbehandling med kompletterande metod efter önskemål, förfrågan</a></li>
             </ul>
             <CtaLink href="#rebecca" size="sm" className="mt-auto w-fit">Läs mer och boka</CtaLink>
           </Card>

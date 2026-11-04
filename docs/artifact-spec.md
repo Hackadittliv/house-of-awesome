@@ -299,7 +299,7 @@ Rött 660 nm och nä
 
 ## 4. Behandlingar & samtal (#manuellt)
 
-> **TODO:** Början av sidan: intro, healing (kända priser: 45 min 950 kr på plats / 750 kr distans, 75 min 1 500 kr), bioresonans, början av coachningskortet. Texten saknas eller är avklippt i läsarens transkript. Fylls i från artefakten, uppfinn inget.
+> **TODO:** Början av sidan: intro, healing (Rebeccas prislista 2026-11-04: 60 min samtal + 45 min healingbehandling på plats 1 050 kr; 90 min healingbehandling med kompletterande metod efter önskemål 1 550 kr; 45 min healingbehandling på distans 650 kr med telefonsamtal före och efter), bioresonans, början av coachningskortet. Texten saknas eller är avklippt i läsarens transkript. Fylls i från artefakten, uppfinn inget.
 
 ```text
 ess och återhämtning och gör en plan du faktiskt orkar leva efter.
@@ -853,4 +853,4 @@ Gym 24/7 för medlemmar. Bemannat enligt bokning.
 Nästan svart bakgrund, mörkbruna kort med tunna bruna ramar, krämvita rubriker, guld (#e8c35a-ish) på primära pillerknappar, versala etiketter och aktiv nav. Geometrisk sans (Plus Jakarta Sans-lik), stora fetstilta centrerade rubriker.
 
 ## Korskontrollerade fakta
-Medlemskap Gym 599, Longevity 899, Longevity Plus 1 495, Longevity Max 2 495 kr/mån, 12 mån bindning. Coachning/vägledning 1 500 kr. Healing 45 min 950 kr på plats / 750 kr distans, 75 min 1 500 kr. Awesome Protocol enskilt: EWOT 495 kr + rödljus 250 kr. Kontakt: info@lifeisawesome.se, 073-349 08 36, Brålandsvägen 29, 444 60 Stora Höga.
+Medlemskap Gym 599, Longevity 899, Longevity Plus 1 495, Longevity Max 2 495 kr/mån, 12 mån bindning. Coachning/vägledning 1 500 kr. Rebeccas prislista 2026-11-04: 60 min samtal + 45 min healingbehandling på plats 1 050 kr; 90 min healingbehandling med kompletterande metod efter önskemål 1 550 kr; 45 min healingbehandling på distans 650 kr med telefonsamtal före och efter. Awesome Protocol enskilt: EWOT 495 kr + rödljus 250 kr. Kontakt: info@lifeisawesome.se, 073-349 08 36, Brålandsvägen 29, 444 60 Stora Höga.

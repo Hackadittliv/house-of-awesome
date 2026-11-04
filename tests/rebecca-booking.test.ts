@@ -56,17 +56,19 @@ describe("Rebeccas direktbokning", () => {
     expect(getInquiryServices().map((service) => service.slug)).not.toContain(slug);
   });
 
-  it("visar 45 minuter på plats för 950 kr även utan snapshotdata", () => {
+  it("visar 60 minuter i LIA för 1 050 kr även utan snapshotdata", () => {
     const service = getService(slug)!;
-    expect(service.durationMinutes).toBe(45);
-    expect(service.priceLabel).toBe("950 kr");
+    expect(service.durationMinutes).toBe(60);
+    expect(service.priceLabel).toBe("1 050 kr");
     expect(service.location).toBe("in_person");
     expect(service.shortName).toBe("Healing hos Rebecca");
-    expect(service.lead).toContain("Healing 45 min på plats");
-    expect(service.lead).toContain("950 kr, betalning på plats");
+    expect(service.lead).toContain("60 min samtal + 45 min healingbehandling på plats");
+    expect(service.lead).toContain("1 050 kr, betalning på plats");
     expect(service.payment).toBe("on_site");
-    expect(formatDuration(service)).toBe("45 minuter");
+    expect(formatDuration(service)).toBe("60 minuter");
     expect(serviceJsonLd(service).areaServed).toBe(site.address.city);
+    expect(serviceJsonLd(service).description).toContain("60 min samtal + 45 min healingbehandling på plats");
+    expect(serviceJsonLd(service).description).toContain("60 minuter 1 050 kr");
     expect(new URL(serviceJsonLd(service).potentialAction!.target, site.url).pathname).toBe(REBECCA.requestPath);
   });
 
@@ -113,7 +115,7 @@ describe("Rebeccas direktbokning", () => {
 
   it("pekar Rebeccas CTA på samma slug som den lokala bokningen", () => {
     expect(REBECCA.requestPath).toBe("/boka/healing-emht");
-    expect(REBECCA.cta).toBe("Boka healing 45 min på plats");
+    expect(REBECCA.cta).toBe("Boka samtal och healing på plats");
     expect(bookingUrl(slug, "rebecca", true)).toBe(REBECCA.requestPath);
 
     const page = readFileSync(new URL("../src/app/behandlingar-och-samtal/page.tsx", import.meta.url), "utf8");
@@ -140,7 +142,7 @@ describe("Rebeccas direktbokning", () => {
 
   it.each([undefined, null, "lia"])("använder reservvärden när EMHT bara finns i klinik %s", (clinic) => {
     servicesSnapshot.services.push({ ...eventFixture, clinic });
-    expect(getService(slug)).toMatchObject({ clinic: "hoa", durationMinutes: 45, priceLabel: "950 kr", location: "in_person" });
+    expect(getService(slug)).toMatchObject({ clinic: "hoa", durationMinutes: 60, priceLabel: "1 050 kr", location: "in_person" });
   });
 
   it.each([false, true])("skiljer samma slug mellan kliniker oavsett ordning, omvänd: %s", (reverse) => {
@@ -165,14 +167,14 @@ describe("Rebeccas direktbokning", () => {
     expect(getService("hbot-60")).toMatchObject({ kind: "inquiry", bookable: false, priceLabel: null, durationMinutes: null });
   });
 
-  it("leder distans och 75 minuter till Rebeccas förfrågningssida", () => {
+  it("leder distans och 90 minuter till Rebeccas förfrågningssida", () => {
     expect(REBECCA.options.map((option) => option.href)).toEqual([
       "/boka/healing-emht",
       "/boka/forfragan/rebecca",
       "/boka/forfragan/rebecca",
     ]);
     expect(REBECCA.inquiryPath).toBe("/boka/forfragan/rebecca");
-    expect(REBECCA.options[0]).toMatchObject({ label: "Healing 45 min på plats", price: "950 kr" });
+    expect(REBECCA.options[0]).toMatchObject({ label: "60 min samtal + 45 min healingbehandling på plats", price: "1 050 kr" });
   });
 
   it("behåller reservsidans mottagarrutt och val av upplägg", () => {
@@ -182,13 +184,17 @@ describe("Rebeccas direktbokning", () => {
     expect(form).toContain('serviceSlug="healing-emht"');
     expect(form).toContain('route="rebecca"');
     expect(form).toContain("options={REBECCA.options.map(");
-    expect(REBECCA.options).toHaveLength(3);
+    expect(REBECCA.options.map((option) => `${option.label}, ${option.price}`)).toEqual([
+      "60 min samtal + 45 min healingbehandling på plats, 1 050 kr",
+      "45 min healingbehandling på distans med telefonsamtal före och efter, 650 kr",
+      "90 min healingbehandling med kompletterande metod efter önskemål, 1 550 kr",
+    ]);
     expect(page).toContain("mailto:${REBECCA.fallbackEmail}");
   });
 
   it("följer samtliga språkregler i den nya tjänstetexten och CTA:n", () => {
     const service = getService(slug)!;
-    const copy = [service.name, service.shortName, service.lead, ...service.body, ...service.points, REBECCA.cta, REBECCA.inquiryCta].join(" ");
+    const copy = [service.name, service.shortName, service.lead, ...service.body, ...service.points, ...REBECCA.options.map((option) => option.label), REBECCA.cta, REBECCA.inquiryCta].join(" ");
 
     expect(findCopyViolations(copy)).toEqual([]);
     expect(copy).not.toMatch(/(?<!\p{L})(sjukt|på\s+riktigt|men)(?!\p{L})/iu);
