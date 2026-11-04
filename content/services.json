@@ -131,13 +131,14 @@
   {
     "slug": "healing-emht",
     "kind": "bookable",
+    "clinic": "hoa",
     "category": "kropp",
     "name": "Energimedicinsk healingterapi (EMHT) hos Rebecca",
     "shortName": "Healing hos Rebecca",
-    "lead": "Healing 45 min på plats med Rebecca Gustafsson. Boka din tid direkt.",
+    "lead": "Healing 45 min på plats med Rebecca Gustafsson. 950 kr, betalning på plats. Boka din tid direkt.",
     "body": [
       "Hos Rebecca får du en stund för vila och avkoppling med energimedicinsk healingterapi (EMHT).",
-      "Direktbokningen gäller healing i 45 minuter på plats i huset för 950 kr. För healing på distans eller 75 minuter skickar du en förfrågan till Rebecca."
+      "Direktbokningen gäller healing i 45 minuter på plats i huset för 950 kr. Du betalar på plats. För healing på distans eller 75 minuter skickar du en förfrågan till Rebecca."
     ],
     "points": [
       "Healing med Rebecca Gustafsson",

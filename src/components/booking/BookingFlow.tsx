@@ -25,6 +25,7 @@ const DAYS_PER_PAGE = 7;
 
 type Props = {
   slug: string;
+  clinic?: string;
   serviceName: string;
   healthDeclaration: boolean;
 };
@@ -39,7 +40,7 @@ export function locationLabel(type: EventTypeInfo["location_type"]): string {
   return t.locationMeet;
 }
 
-export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
+export function BookingFlow({ slug, clinic, serviceName, healthDeclaration }: Props) {
   const [fromDate, setFromDate] = useState(() => stockholmDate(new Date()));
   const [loaded, setLoaded] = useState<{ key: string; result: AvailabilityResult | "error" } | null>(null);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
@@ -57,11 +58,11 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
 
   const today = useMemo(() => stockholmDate(new Date()), []);
   const toDate = addDays(fromDate, DAYS_PER_PAGE - 1);
-  const requestKey = `${slug}|${fromDate}|${reloadKey}`;
+  const requestKey = `${slug}|${clinic ?? ""}|${fromDate}|${reloadKey}`;
 
   useEffect(() => {
     let active = true;
-    getAvailability(slug, fromDate, toDate)
+    getAvailability(slug, fromDate, toDate, clinic)
       .then((result) => {
         if (!active) return;
         setLoaded({ key: requestKey, result });
@@ -73,7 +74,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
     return () => {
       active = false;
     };
-  }, [slug, fromDate, toDate, requestKey]);
+  }, [slug, clinic, fromDate, toDate, requestKey]);
 
   const availability = loaded?.key === requestKey ? loaded.result : null;
   if (availability === "error") return <Notice tone="error">{t.availabilityError}</Notice>;
@@ -125,6 +126,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
       } else {
         const booking = await createBooking({
           eventTypeSlug: eventType.slug,
+          clinic,
           startAt: slot.start,
           name: name.trim(),
           email: guestEmail,

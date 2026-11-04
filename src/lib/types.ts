@@ -65,6 +65,7 @@ export type ServiceCategory = "syre" | "ljus" | "traning" | "samtal" | "halsa" |
 export type ServiceCopy = {
   slug: string;
   kind: "bookable" | "inquiry";
+  clinic?: string;
   category: ServiceCategory;
   name: string;
   shortName: string;

@@ -48,12 +48,13 @@ async function callFunction<T>(name: string, body: Record<string, unknown>, acce
   return data as T;
 }
 
-export async function getAvailability(slug: string, fromDate: string, toDate: string): Promise<AvailabilityResult> {
+export async function getAvailability(slug: string, fromDate: string, toDate: string, clinic?: string): Promise<AvailabilityResult> {
   try {
     const data = await callFunction<{ event_type: EventTypeInfo; slots: Slot[] }>("get-availability", {
       event_type_slug: slug,
       from_date: fromDate,
       to_date: toDate,
+      ...(clinic ? { clinic_slug: clinic } : {}),
     });
     return { kind: "slots", eventType: data.event_type, slots: data.slots };
   } catch (error) {
@@ -68,6 +69,7 @@ export async function getAvailability(slug: string, fromDate: string, toDate: st
 
 export type BookingInput = {
   eventTypeSlug: string;
+  clinic?: string;
   startAt: string;
   name: string;
   email: string;
@@ -98,6 +100,7 @@ export function createBooking(input: BookingInput): Promise<BookingResult> {
     location_type: input.locationType,
     site: BOOKING_SITE,
     ...input.utm,
+    ...(input.clinic ? { clinic_slug: input.clinic } : {}),
   });
 }
 

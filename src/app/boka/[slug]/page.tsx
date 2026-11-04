@@ -50,7 +50,7 @@ export default async function BookServicePage({ params }: PageProps<"/boka/[slug
         {!bookingEnabled ? (
           <BookingUnavailable slug={service.bookable ? service.slug : null} />
         ) : service.bookable ? (
-          <BookingFlow slug={service.slug} serviceName={service.name} healthDeclaration={Boolean(service.healthDeclaration)} />
+          <BookingFlow slug={service.slug} clinic={service.clinic} serviceName={service.name} healthDeclaration={Boolean(service.healthDeclaration)} />
         ) : (
           <div className="space-y-4">
             <p className="text-hoa-ink-muted">{t.listRequestLead}</p>

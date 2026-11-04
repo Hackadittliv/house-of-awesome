@@ -41,7 +41,7 @@ afterEach(() => {
 
 describe("Rebeccas direktbokning", () => {
   it("har exakt en bokningsbar tjänst även innan LIA-snapshoten innehåller slugen", () => {
-    expect(getService(slug)).toMatchObject({ slug, kind: "bookable", bookable: true });
+    expect(getService(slug)).toMatchObject({ slug, clinic: "hoa", kind: "bookable", bookable: true });
     expect(getServices().filter((service) => service.slug === slug)).toHaveLength(1);
     expect(getBookableServices().filter((service) => service.slug === slug)).toHaveLength(1);
     expect(getInquiryServices().map((service) => service.slug)).not.toContain(slug);
@@ -54,6 +54,7 @@ describe("Rebeccas direktbokning", () => {
     expect(service.location).toBe("in_person");
     expect(service.shortName).toBe("Healing hos Rebecca");
     expect(service.lead).toContain("Healing 45 min på plats");
+    expect(service.lead).toContain("950 kr, betalning på plats");
     expect(formatDuration(service)).toBe("45 minuter");
     expect(serviceJsonLd(service).areaServed).toBe(site.address.city);
     expect(new URL(serviceJsonLd(service).potentialAction!.target, site.url).pathname).toBe(REBECCA.requestPath);
@@ -64,6 +65,7 @@ describe("Rebeccas direktbokning", () => {
 
     const service = getService(slug)!;
     expect(service).toMatchObject({
+      clinic: "hoa",
       bookable: true,
       kind: "bookable",
       durationMinutes: 32,
@@ -106,6 +108,19 @@ describe("Rebeccas direktbokning", () => {
 
     const page = readFileSync(new URL("../src/app/behandlingar-och-samtal/page.tsx", import.meta.url), "utf8");
     expect(page).toMatch(/<CtaLink\s+href=\{REBECCA\.requestPath\}[^>]*>\{REBECCA\.cta\}<\/CtaLink>/u);
+  });
+
+  it("för tjänstens klinik vidare genom BookingFlow till båda API-anropen", () => {
+    const page = readFileSync(new URL("../src/app/boka/[slug]/page.tsx", import.meta.url), "utf8");
+    const flow = readFileSync(new URL("../src/components/booking/BookingFlow.tsx", import.meta.url), "utf8");
+    const component = page.match(/<BookingFlow\b[\s\S]*?\/>/u)?.[0];
+
+    expect(component).toContain("clinic={service.clinic}");
+    expect(flow).toMatch(/function BookingFlow\(\{[^}]*\bclinic\b/u);
+    expect(flow).toMatch(/getAvailability\(slug,\s*fromDate,\s*toDate,\s*clinic\)/u);
+    expect(flow).toMatch(/createBooking\(\{[^}]*\bclinic\s*[,}]/u);
+    expect(flow).toMatch(/const requestKey = `[^`]*\$\{clinic\s*\?\?\s*""\}/u);
+    expect(flow).toMatch(/\},\s*\[[^\]]*\bclinic\b[^\]]*\]\);/u);
   });
 
   it("leder distans och 75 minuter till Rebeccas förfrågningssida", () => {
