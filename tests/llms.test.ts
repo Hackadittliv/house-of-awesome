@@ -11,6 +11,9 @@ describe("llms.txt", () => {
     const rebecca = text.split("\n").find((line) => line.includes("/tjanster/healing-emht"));
     expect(rebecca).toContain("Healing 45 min på plats");
     expect(rebecca).toContain("45 minuter. 950 kr. Boka:");
+    expect(new URL(rebecca!.split("Boka: ")[1]).searchParams.get("clinic")).toBe("hoa");
+    const hbot = text.split("\n").find((line) => line.includes("/tjanster/hbot-60"));
+    expect(new URL(hbot!.split("Boka: ")[1]).searchParams.has("clinic")).toBe(false);
     expect(text).not.toMatch(/\.\s+\./u);
   });
 

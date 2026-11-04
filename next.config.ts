@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+import services from "./content/services.json";
+
 const isProduction = process.env.NODE_ENV === "production";
 // Netlify lägger in sitt granskningsverktyg som iframe på förhandsversioner, aldrig i produktion.
 const isNetlifyPreview = ["deploy-preview", "branch-deploy"].includes(process.env.CONTEXT ?? "");
@@ -64,6 +66,11 @@ const nextConfig: NextConfig = {
         ? []
         : [
             { source: "/boka", destination: `https://lifeisawesome.se/boka?${utm}`, permanent: false },
+            ...services.flatMap((service) => service.clinic ? [{
+              source: `/boka/${encodeURIComponent(service.slug)}`,
+              destination: `https://lifeisawesome.se/boka/${encodeURIComponent(service.slug)}?clinic=${encodeURIComponent(service.clinic)}&${utm}`,
+              permanent: false,
+            }] : []),
             { source: "/boka/:slug", destination: `https://lifeisawesome.se/boka/:slug?${utm}`, permanent: false },
           ]),
     ];

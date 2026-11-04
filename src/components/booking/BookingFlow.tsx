@@ -16,6 +16,7 @@ import {
   type Slot,
 } from "@/lib/booking/api";
 import { bookingCopy as t } from "@/lib/booking/copy";
+import { getAvailabilityArgs, getBookingInput } from "@/lib/booking/flow";
 import { addDays, formatDateTime, formatDayLabel, formatTime, groupSlotsByDay, stockholmDate, utmFrom } from "@/lib/booking/format";
 import { saveConfirmation } from "@/lib/booking/confirmation";
 import { stripePublishableKey } from "@/lib/booking/config";
@@ -62,7 +63,7 @@ export function BookingFlow({ slug, clinic, serviceName, healthDeclaration }: Pr
 
   useEffect(() => {
     let active = true;
-    getAvailability(slug, fromDate, toDate, clinic)
+    getAvailability(...getAvailabilityArgs({ slug, clinic }, fromDate, toDate))
       .then((result) => {
         if (!active) return;
         setLoaded({ key: requestKey, result });
@@ -124,9 +125,7 @@ export function BookingFlow({ slug, clinic, serviceName, healthDeclaration }: Pr
         bookingId = reusable.bookingId;
         priceId = reusable.priceId;
       } else {
-        const booking = await createBooking({
-          eventTypeSlug: eventType.slug,
-          clinic,
+        const booking = await createBooking(getBookingInput({ slug, clinic }, {
           startAt: slot.start,
           name: name.trim(),
           email: guestEmail,
@@ -134,7 +133,7 @@ export function BookingFlow({ slug, clinic, serviceName, healthDeclaration }: Pr
           notes: notes.trim(),
           locationType: eventType.location_type,
           utm: utmFrom(window.location.search),
-        });
+        }));
         const requiresPayment = Boolean(booking.requires_payment && booking.price_id);
         saveConfirmation({
           bookingId: booking.booking_id,

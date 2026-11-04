@@ -142,7 +142,9 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
               </div>
               <p className="mt-4 text-xs leading-5 text-hoa-ink-muted">
                 {service.bookable
-                  ? "Bokning och betalning sker hos Life Is Awesome, som driver House of Awesome."
+                  ? service.payment === "on_site"
+                    ? "Du bokar via Life Is Awesome och betalar på plats."
+                    : "Bokning och betalning sker hos Life Is Awesome, som driver House of Awesome."
                   : "Det korta samtalet är kostnadsfritt och sker via video. Där bokar vi en tid som passar."}
               </p>
             </div>

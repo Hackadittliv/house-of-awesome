@@ -132,6 +132,7 @@
     "slug": "healing-emht",
     "kind": "bookable",
     "clinic": "hoa",
+    "payment": "on_site",
     "category": "kropp",
     "name": "Energimedicinsk healingterapi (EMHT) hos Rebecca",
     "shortName": "Healing hos Rebecca",

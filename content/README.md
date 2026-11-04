@@ -5,7 +5,7 @@ Allt innehåll ligger som JSON här. Typerna finns i `src/lib/types.ts`.
 | Fil | Innehåll | Vem ändrar |
 | --- | --- | --- |
 | `site.json` | Namn, bolag, kontakt, adress, öppettider, länkar till LIA | För hand |
-| `services.snapshot.json` | LIA:s publika tjänster: slug, titel, längd, pris, plats | `npm run sync:services` |
+| `services.snapshot.json` | HOA:s bokningsbara tjänster i LIA: klinik, slug, titel, längd, pris, plats | `npm run sync:services` |
 | `services.json` | HOA:s texter per tjänst | För hand |
 | `memberships.json` | De fyra HOA medlemskapen och deras Stripe pris i LIA | För hand |
 | `faq.json` | Vanliga frågor | För hand |
@@ -17,6 +17,7 @@ Allt innehåll ligger som JSON här. Typerna finns i `src/lib/types.ts`.
 | `slug` | string | Samma slug som i LIA:s bokning för bokningsbara tjänster |
 | `kind` | `bookable` \| `inquiry` | `bookable` kräver att slugen finns i snapshoten, med undantaget `healing-emht` nedan |
 | `clinic` | string? | Klinik i LIA. Angivet värde skickas som `clinic_slug` till `get-availability` och `create-booking`. Utelämnat fält använder LIA:s standard `lia` |
+| `payment` | `on_site`? | Visar att betalningen sker på plats. LIA:s svar styr själva betalningsflödet |
 | `category` | `syre` \| `ljus` \| `traning` \| `samtal` \| `halsa` \| `kropp` | Gruppering och relaterade tjänster |
 | `name`, `shortName` | string | Rubrik och kort namn för knappar |
 | `lead` | string | En mening, används i kort, metabeskrivning och OG bild |
@@ -28,10 +29,12 @@ Allt innehåll ligger som JSON här. Typerna finns i `src/lib/types.ts`.
 
 Längd och pris för bokningsbara tjänster kommer från snapshoten, med undantaget nedan.
 
-`healing-emht` är aktiv i LIA:s klinik `hoa` och använder `"clinic": "hoa"`. Direktbokningen gäller healing i 45 minuter på plats för 950 kr, med betalning på plats. Snapshoten från 2026-10-11 saknar tjänsten, så innehållslagret behåller de bekräftade uppgifterna i `src/lib/rebecca.ts` och öppnar det befintliga bokningsflödet. När snapshoten innehåller slugen används dess värden automatiskt. Snapshoten uppdateras enbart från LIA; framtida synkning behöver skilja på kliniker om samma slug förekommer i flera kliniker.
+`healing-emht` är aktiv i LIA:s klinik `hoa` och använder `"clinic": "hoa"` och `"payment": "on_site"`. Direktbokningen gäller healing i 45 minuter på plats för 950 kr, med betalning på plats. Snapshoten från 2026-10-11 saknar tjänsten, så innehållslagret behåller de bekräftade uppgifterna i `src/lib/rebecca.ts` och öppnar det befintliga bokningsflödet. När snapshoten innehåller kombinationen `hoa` och `healing-emht` används dess värden automatiskt.
+
+Synkningen hämtar tjänstefakta via `get-availability` för varje bokningsbar post i `services.json`, med postens klinik. Snapshoten sparar `clinic` och matchas på `(clinic ?? "lia", slug)` för fakta, bokningsbarhet och sortering. Äldre poster utan klinik tillhör `lia`. Om API-svaret saknar sorteringsvärde behålls tidigare värde för samma klinik och slug; nya tjänster hamnar sist. Ett misslyckat anrop eller saknade tjänstefakta avbryter synkningen och lämnar den befintliga snapshoten kvar. Tillgängliga tider sparas aldrig i snapshoten.
 
 Klinikmodellen beslutades 2026-11-02: terapeuter delar rum, bokning låser både rum och terapeut och terapeuter hanteras som data i LIA-admin. HOA skickar tjänst och klinik. Det befintliga `site: "hoa"` anger avsändarsajt och behålls för alla bokningar. Övriga tjänster och Studion behåller sina request bodies. Betalningssteget styrs som tidigare av LIA:s svar.
 
 Den primära länken går till `/boka/healing-emht`. Distans och 75 minuter länkar till `/boka/forfragan/rebecca`, som behåller Rebeccas mottagarrutt och tre upplägg. Ett 404/409-svar från LIA visar det befintliga generella förfrågningsformuläret i bokningsflödet, med husets mottagarrutt. Det leder alltså aldrig automatiskt till Rebeccas reservsida.
 
-Det inbäddade flödet kräver HOA:s publika bokningskonfiguration vid bygget. Både `liaBookingUrl` och redirect i `next.config.ts` behåller sina befintliga adresser utan klinikparameter. Den bekräftade externa adressen för Rebecca är `https://lifeisawesome.se/boka/healing-emht?clinic=hoa`.
+Det inbäddade flödet kräver HOA:s publika bokningskonfiguration vid bygget. Reservlänkar, JSON-LD, `llms.txt` och redirects lägger till `clinic` när tjänsten har fältet, med befintliga UTM-parametrar kvar. Tjänster utan klinikfält behåller tidigare adresser. Den externa adressen för Rebecca är `https://lifeisawesome.se/boka/healing-emht?clinic=hoa`.

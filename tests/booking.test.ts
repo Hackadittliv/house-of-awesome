@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { findCopyViolations } from "../scripts/copy-rules.mjs";
 import { createBooking, createStudionBooking, getAvailability, getStudionSlots, type BookingInput } from "@/lib/booking/api";
 import { bookingCopy } from "@/lib/booking/copy";
+import { getAvailabilityArgs, getBookingInput } from "@/lib/booking/flow";
 import { addDays, groupSlotsByDay, interestFor, stockholmDate, utmFrom } from "@/lib/booking/format";
 import { getBookableServices, getInquiryServices } from "@/lib/content";
 import { bookingUrl, inquiryUrl, liaBookingUrl } from "@/lib/links";
@@ -34,9 +35,20 @@ describe("klinik i bokningsanrop", () => {
 
   afterEach(() => vi.unstubAllGlobals());
 
+  it.each(getBookableServices())("$slug ger BookingFlow rätt anropsargument", (service) => {
+    expect(getAvailabilityArgs(service, fromDate, toDate)).toEqual([
+      service.slug, fromDate, toDate, service.slug === "healing-emht" ? "hoa" : undefined,
+    ]);
+    expect(getBookingInput(service, guest)).toEqual({
+      ...guest,
+      eventTypeSlug: service.slug,
+      ...(service.slug === "healing-emht" ? { clinic: "hoa" } : {}),
+    });
+  });
+
   it.each(getBookableServices())("$slug skickar rätt fullständig body för tillgänglighet", async (service) => {
     const checkRequest = captureRequest();
-    await getAvailability(service.slug, fromDate, toDate, service.clinic);
+    await getAvailability(...getAvailabilityArgs(service, fromDate, toDate));
 
     checkRequest("get-availability", {
       event_type_slug: service.slug,
@@ -48,7 +60,7 @@ describe("klinik i bokningsanrop", () => {
 
   it.each(getBookableServices())("$slug skickar rätt fullständig body för bokning", async (service) => {
     const checkRequest = captureRequest();
-    await createBooking({ ...guest, eventTypeSlug: service.slug, clinic: service.clinic });
+    await createBooking(getBookingInput(service, guest));
 
     checkRequest("create-booking", {
       event_type_slug: service.slug,

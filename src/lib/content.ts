@@ -40,13 +40,21 @@ export function formatPriceLabel(label: string | null): string | null {
   return label.replace(/(\d+)-kort/g, "klippkort med $1 gånger").replace(/\s+[-–—]\s+/g, ", ");
 }
 
+function serviceKey(service: { slug: string; clinic?: string | null }): string {
+  return JSON.stringify([service.clinic ?? "lia", service.slug]);
+}
+
+function isRebecca(copy: ServiceCopy): boolean {
+  return copy.slug === "healing-emht" && copy.clinic === "hoa" && copy.kind === "bookable";
+}
+
 function isBookable(copy: ServiceCopy, event: LiaEventType | undefined): boolean {
   // EMHT öppnar det befintliga bokningsflödet även före nästa LIA-snapshot.
-  return copy.kind === "bookable" && (Boolean(event) || copy.slug === "healing-emht");
+  return copy.kind === "bookable" && (Boolean(event) || isRebecca(copy));
 }
 
 function toService(copy: ServiceCopy, event: LiaEventType | undefined): Service {
-  const fallback = copy.slug === "healing-emht" && copy.kind === "bookable" ? REBECCA.booking : undefined;
+  const fallback = isRebecca(copy) ? REBECCA.booking : undefined;
   return {
     ...copy,
     durationMinutes: event?.duration_minutes ?? fallback?.durationMinutes ?? null,
@@ -57,16 +65,16 @@ function toService(copy: ServiceCopy, event: LiaEventType | undefined): Service 
 }
 
 export function getServices(): Service[] {
-  const events = new Map(servicesSnapshot.services.map((event) => [event.slug, event]));
-  const order = new Map(servicesSnapshot.services.map((event) => [event.slug, event.sort_order]));
+  const events = new Map(servicesSnapshot.services.map((event) => [serviceKey(event), event]));
+  const order = new Map(servicesSnapshot.services.map((event) => [serviceKey(event), event.sort_order]));
 
   const bookable = serviceCopy
-    .filter((copy) => isBookable(copy, events.get(copy.slug)))
-    .sort((a, b) => (order.get(a.slug) ?? Number.MAX_SAFE_INTEGER) - (order.get(b.slug) ?? Number.MAX_SAFE_INTEGER))
-    .map((copy) => toService(copy, events.get(copy.slug)));
+    .filter((copy) => isBookable(copy, events.get(serviceKey(copy))))
+    .sort((a, b) => (order.get(serviceKey(a)) ?? Number.MAX_SAFE_INTEGER) - (order.get(serviceKey(b)) ?? Number.MAX_SAFE_INTEGER))
+    .map((copy) => toService(copy, events.get(serviceKey(copy))));
 
   const inquiry = serviceCopy
-    .filter((copy) => !isBookable(copy, events.get(copy.slug)))
+    .filter((copy) => !isBookable(copy, events.get(serviceKey(copy))))
     .map((copy) => toService({ ...copy, kind: "inquiry" }, undefined));
 
   return [...bookable, ...inquiry];

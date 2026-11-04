@@ -23,6 +23,7 @@ const originalEvents = [...servicesSnapshot.services];
 // Testvärden, fristående från Rebeccas verkliga upplägg i LIA.
 const eventFixture: LiaEventType = {
   slug,
+  clinic: "hoa",
   title_sv: "EMHT testupplägg",
   duration_minutes: 32,
   price_label_sv: "123 kr",
@@ -55,6 +56,7 @@ describe("Rebeccas direktbokning", () => {
     expect(service.shortName).toBe("Healing hos Rebecca");
     expect(service.lead).toContain("Healing 45 min på plats");
     expect(service.lead).toContain("950 kr, betalning på plats");
+    expect(service.payment).toBe("on_site");
     expect(formatDuration(service)).toBe("45 minuter");
     expect(serviceJsonLd(service).areaServed).toBe(site.address.city);
     expect(new URL(serviceJsonLd(service).potentialAction!.target, site.url).pathname).toBe(REBECCA.requestPath);
@@ -94,7 +96,7 @@ describe("Rebeccas direktbokning", () => {
   });
 
   it("behåller uttryckliga förfrågningstjänster även om de finns i snapshoten", () => {
-    servicesSnapshot.services.push({ ...eventFixture, slug: "inbody" });
+    servicesSnapshot.services.push({ ...eventFixture, slug: "inbody", clinic: "lia" });
 
     expect(getService("inbody")).toMatchObject({ kind: "inquiry", bookable: false, priceLabel: null, durationMinutes: null });
     expect(getBookableServices().map((service) => service.slug)).not.toContain("inbody");
@@ -110,17 +112,31 @@ describe("Rebeccas direktbokning", () => {
     expect(page).toMatch(/<CtaLink\s+href=\{REBECCA\.requestPath\}[^>]*>\{REBECCA\.cta\}<\/CtaLink>/u);
   });
 
-  it("för tjänstens klinik vidare genom BookingFlow till båda API-anropen", () => {
-    const page = readFileSync(new URL("../src/app/boka/[slug]/page.tsx", import.meta.url), "utf8");
-    const flow = readFileSync(new URL("../src/components/booking/BookingFlow.tsx", import.meta.url), "utf8");
-    const component = page.match(/<BookingFlow\b[\s\S]*?\/>/u)?.[0];
+  it.each([undefined, null, "lia"])("använder reservvärden när EMHT bara finns i klinik %s", (clinic) => {
+    servicesSnapshot.services.push({ ...eventFixture, clinic });
+    expect(getService(slug)).toMatchObject({ clinic: "hoa", durationMinutes: 45, priceLabel: "950 kr", location: "in_person" });
+  });
 
-    expect(component).toContain("clinic={service.clinic}");
-    expect(flow).toMatch(/function BookingFlow\(\{[^}]*\bclinic\b/u);
-    expect(flow).toMatch(/getAvailability\(slug,\s*fromDate,\s*toDate,\s*clinic\)/u);
-    expect(flow).toMatch(/createBooking\(\{[^}]*\bclinic\s*[,}]/u);
-    expect(flow).toMatch(/const requestKey = `[^`]*\$\{clinic\s*\?\?\s*""\}/u);
-    expect(flow).toMatch(/\},\s*\[[^\]]*\bclinic\b[^\]]*\]\);/u);
+  it.each([false, true])("skiljer samma slug mellan kliniker oavsett ordning, omvänd: %s", (reverse) => {
+    const events = [eventFixture, { ...eventFixture, clinic: "lia", duration_minutes: 99, price_label_sv: "99 kr", sort_order: -1 }];
+    servicesSnapshot.services.push(...(reverse ? events.reverse() : events));
+    expect(getService(slug)).toMatchObject({ clinic: "hoa", durationMinutes: 32, priceLabel: "123 kr" });
+    const bookedSlugs = getBookableServices().map((service) => service.slug);
+    expect(bookedSlugs.indexOf(slug)).toBeGreaterThan(bookedSlugs.indexOf("hbot-80"));
+    expect(bookedSlugs.indexOf(slug)).toBeLessThan(bookedSlugs.indexOf("ihht-50"));
+  });
+
+  it.each([undefined, null, "lia"])("behåller standardklinikens HBOT med snapshotklinik %s", (clinic) => {
+    const hbot = servicesSnapshot.services.find((event) => event.slug === "hbot-60")!;
+    servicesSnapshot.services = servicesSnapshot.services.filter((event) => event.slug !== "hbot-60");
+    servicesSnapshot.services.push({ ...hbot, clinic }, { ...hbot, clinic: "hoa", duration_minutes: 99, price_label_sv: "99 kr" });
+    expect(getService("hbot-60")).toMatchObject({ durationMinutes: hbot.duration_minutes, bookable: true });
+  });
+
+  it("gör aldrig en LIA-tjänst bokningsbar med enbart HOA:s snapshotpost", () => {
+    servicesSnapshot.services = servicesSnapshot.services.filter((event) => event.slug !== "hbot-60");
+    servicesSnapshot.services.push({ ...eventFixture, slug: "hbot-60", clinic: "hoa" });
+    expect(getService("hbot-60")).toMatchObject({ kind: "inquiry", bookable: false, priceLabel: null, durationMinutes: null });
   });
 
   it("leder distans och 75 minuter till Rebeccas förfrågningssida", () => {
