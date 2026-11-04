@@ -4,11 +4,12 @@ import { SHORT_CALL_SLUG, bookingUrl, inquiryUrl, mailtoUrl } from "@/lib/links"
 import { PORTRAITS } from "@/lib/people";
 import { practitioners } from "@/lib/practitioners";
 import { REBECCA } from "@/lib/rebecca";
+import { SANDRA } from "@/lib/sandra";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Behandlingar & samtal",
-  description: "Healing, coachning, vägledning, traumaterapi och samtal i House of Awesome.",
+  description: "Healing, svensk klassisk massage, coachning, vägledning, traumaterapi och samtal i House of Awesome.",
   path: "/behandlingar-och-samtal",
 });
 
@@ -25,18 +26,26 @@ export default function Page() {
   const book = bookingUrl(SHORT_CALL_SLUG, "beh_samtal");
   return (
     <>
-      <Hero eyebrow="Behandlingar & samtal" title="För kropp och sinne" lead="Healing, bioresonans, coachning och samtal.">
+      <Hero eyebrow="Behandlingar & samtal" title="För kropp och sinne" lead="Healing, svensk klassisk massage, bioresonans, coachning och samtal.">
         <CtaLink href={bookingUrl(null, "beh_hero")}>Boka behandling eller samtal</CtaLink>
       </Hero>
       <Section>
         <Grid>
           <Card id="healing" label="Energi" title="Healing" text="Energimedicinsk healingterapi (EMHT) med Rebecca Gustafsson, på plats eller på distans.">
             <ul className="space-y-1 text-sm text-hoa-ink">
-              <li><span className="text-hoa-gold">950 kr</span> · 45 min på plats</li>
-              <li><span className="text-hoa-gold">750 kr</span> · 45 min på distans</li>
-              <li><span className="text-hoa-gold">1 500 kr</span> · 75 min</li>
+              {REBECCA.options.map((o) => (
+                <li key={o.label}><span className="text-hoa-gold">{o.price}</span> · {o.label}</li>
+              ))}
             </ul>
-            <CtaLink href="#rebecca" size="sm" className="mt-auto w-fit">Läs mer och boka</CtaLink>
+            <CtaLink href="#rebecca" size="sm" className="mt-auto w-fit">Läs mer och skicka förfrågan</CtaLink>
+          </Card>
+          <Card id="massage" label="Kropp" title={SANDRA.service} text={`Massage med ${SANDRA.name}, friskvårdsmassör. ${SANDRA.location}`}>
+            <ul className="space-y-1 text-sm text-hoa-ink">
+              {SANDRA.options.map((o) => (
+                <li key={o.label}><span className="text-hoa-gold">{o.price}</span> · {o.label}</li>
+              ))}
+            </ul>
+            <CtaLink href="#sandra" size="sm" className="mt-auto w-fit">Läs mer och skicka förfrågan</CtaLink>
           </Card>
           <Card id="bioresonans" label="Frekvens" title="Bioresonans">
             <Soon>Mer information kommer snart</Soon>
@@ -71,7 +80,28 @@ export default function Page() {
           </div>
         </div>
       </Section>
-      <Section id="terapeuter" eyebrow="Terapeuter & coacher" title="Möt dem som arbetar i huset" lead="Varje terapeut och coach har sin egen bokning. Följ länken på kortet.">
+      <Section id="sandra" eyebrow="Massage · Friskvård" title={SANDRA.name} lead={SANDRA.location} band>
+        <div className="mx-auto grid max-w-3xl gap-6 md:grid-cols-[auto_1fr]">
+          <div className="flex justify-center md:block">
+            <Avatar {...PORTRAITS.sandra} size="lg" />
+          </div>
+          <div className="space-y-5">
+            <p className="leading-relaxed text-hoa-ink/90">{SANDRA.intro}</p>
+            <h3 className="text-xl text-hoa-ink">{SANDRA.service}</h3>
+            <p className="leading-relaxed text-hoa-ink/90">{SANDRA.description}</p>
+            <ul className="space-y-2 text-sm text-hoa-ink">
+              {SANDRA.options.map((o) => (
+                <li key={o.label} className="flex justify-between gap-4 border-b border-hoa-line pb-2">
+                  <span>{o.label}</span>
+                  <span className="shrink-0 text-hoa-gold">{o.price}</span>
+                </li>
+              ))}
+            </ul>
+            <CtaLink href={SANDRA.requestPath} className="w-fit">Skicka förfrågan om massage hos Sandra</CtaLink>
+          </div>
+        </div>
+      </Section>
+      <Section id="terapeuter" eyebrow="Terapeuter & coacher" title="Möt dem som arbetar i huset" lead="Följ länken på kortet för förfrågan eller bokning hos respektive terapeut och coach.">
         <Grid>
           {practitioners.map((p) => (
             <Card key={p.id} id={p.id} label={p.company ? `${p.role} · ${p.company}` : p.role} title={p.name} text={p.intro}>
@@ -103,6 +133,10 @@ export default function Page() {
           <Card label="Healing" title="Rebecca Gustafsson" text="Energimedicinsk healingterapi (EMHT). På plats i huset eller på distans.">
             <Avatar {...PORTRAITS.rebecca} />
             <CtaLink href="#rebecca" size="sm" variant="secondary" className="mt-auto w-fit">Läs mer</CtaLink>
+          </Card>
+          <Card label={SANDRA.role} title={SANDRA.name} text={`${SANDRA.service}. ${SANDRA.location}`}>
+            <Avatar {...PORTRAITS.sandra} />
+            <CtaLink href="#sandra" size="sm" variant="secondary" className="mt-auto w-fit">Läs mer</CtaLink>
           </Card>
           <Card label="Coach" title="Lucas Eliasson" text="Träning, Basläger och The Awesome Protocol, med fokus på en stark kropp som håller hela livet.">
             <Avatar {...PORTRAITS.lucas} />

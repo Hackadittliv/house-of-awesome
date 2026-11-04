@@ -9,6 +9,8 @@ import {
   site,
 } from "@/lib/content";
 import { bookingUrl } from "@/lib/links";
+import { REBECCA } from "@/lib/rebecca";
+import { SANDRA } from "@/lib/sandra";
 import { absoluteUrl } from "@/lib/seo";
 
 export const dynamic = "force-static";
@@ -23,6 +25,10 @@ export function GET() {
 
   const inquiry = getInquiryServices()
     .map((service) => `- [${service.name}](${absoluteUrl(`/tjanster/${service.slug}`)}): ${service.lead}`)
+    .join("\n");
+
+  const practitionerInquiries = [REBECCA, SANDRA]
+    .map((person) => `- [${person.service} hos ${person.name}](${absoluteUrl(person.requestPath)}): ${person.options.map((o) => `${o.label}, ${o.price}`).join(". ")}. Bokas efter förfrågan.${person === SANDRA ? ` ${SANDRA.location}` : ""}`)
     .join("\n");
 
   const memberships = getMemberships()
@@ -49,6 +55,8 @@ ${bookable}
 ## Tjänster efter förfrågan
 
 ${inquiry}
+
+${practitionerInquiries}
 
 ## Medlemskap (12 månaders bindningstid)
 
