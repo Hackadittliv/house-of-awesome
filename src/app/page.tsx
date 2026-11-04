@@ -91,14 +91,18 @@ export default function HomePage() {
             <CtaLink href={advice} className="mt-3 w-full sm:w-fit">Boka kostnadsfri rådgivning</CtaLink>
           </Card>
         </Grid>
-        <div className="mt-8 space-y-4 text-center">
-          <p className="text-hoa-ink-muted">Healing hos Rebecca och massage hos Sandra bokas efter förfrågan.</p>
+      </Section>
+
+      <section aria-labelledby="forfragan" className="px-4 pb-14 text-center md:pb-20">
+        <div className="mx-auto max-w-2xl space-y-4">
+          <h2 id="forfragan" className="text-2xl text-hoa-ink">Healing och massage efter förfrågan</h2>
+          <p className="text-hoa-ink-muted">Healing hos Rebecca och massage hos Sandra Bengts bokas efter förfrågan.</p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <CtaLink href={REBECCA.requestPath} variant="secondary">Förfrågan till Rebecca</CtaLink>
-            <CtaLink href={SANDRA.requestPath} variant="secondary">Förfrågan om massage hos Sandra</CtaLink>
+            <CtaLink href={SANDRA.requestPath} variant="secondary">Förfrågan om massage hos Sandra Bengts</CtaLink>
           </div>
         </div>
-      </Section>
+      </section>
 
       <Section eyebrow="Vanliga frågor" title="Det du kanske undrar">
         <div className="mx-auto max-w-2xl divide-y divide-hoa-line border-y border-hoa-line">

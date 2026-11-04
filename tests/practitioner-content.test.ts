@@ -33,12 +33,20 @@ describe("healing och massage efter förfrågan", () => {
 
   it("länkar till Sandra från menyn och till båda formulären från startsidan", () => {
     expect(offerGroup.items.flatMap((item) => item.sections ?? [])).toContainEqual({
-      href: "/behandlingar-och-samtal#massage", label: "Massage hos Sandra",
+      href: "/behandlingar-och-samtal#massage", label: "Massage hos Sandra Bengts",
     });
     const html = renderToStaticMarkup(createElement(HomePage));
-    expect(html).toContain("Healing hos Rebecca och massage hos Sandra bokas efter förfrågan.");
+    expect(html).toContain("Healing hos Rebecca och massage hos Sandra Bengts bokas efter förfrågan.");
     expect(html).toContain(`href="${REBECCA.requestPath}"`);
     expect(html).toContain(`href="${SANDRA.requestPath}"`);
+    expect(html).toMatch(/href="\/boka\/forfragan\/sandra"[^>]*>Förfrågan om massage hos Sandra Bengts<\/a>/);
+    const sections = [...html.matchAll(/<section\b[^>]*>[\s\S]*?<\/section>/g)].map((match) => match[0]);
+    const start = sections.find((section) => section.includes("Två enkla sätt att börja"))!;
+    expect(start.match(/<article\b/g)).toHaveLength(2);
+    expect(start).not.toContain("/boka/forfragan/");
+    const inquiry = sections.find((section) => section.includes('aria-labelledby="forfragan"'))!;
+    expect(inquiry).toContain(`href="${REBECCA.requestPath}"`);
+    expect(inquiry).toContain(`href="${SANDRA.requestPath}"`);
     expect(html).not.toContain("Healing, coachning och samtal");
   });
 

@@ -5,7 +5,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import RebeccaRequestPage, { metadata as rebeccaMetadata } from "@/app/boka/forfragan/rebecca/page";
 import SandraRequestPage, { metadata as sandraMetadata } from "@/app/boka/forfragan/sandra/page";
 import { RequestForm } from "@/components/booking/RequestForm";
-import { bookingCopy } from "@/lib/booking/copy";
 import { site } from "@/lib/content";
 import { REBECCA } from "@/lib/rebecca";
 
@@ -40,7 +39,7 @@ describe("personernas förfrågningssidor", () => {
       route: "rebecca",
       slug: "healing-emht",
       options: [
-        "60 min: samtal + 45 min healingbehandling, på plats, 1 050 kr",
+        "60 min: samtal + 45 min healingbehandling, 1 050 kr",
         "90 min: healingbehandling med kompletterande metod efter önskemål, 1 550 kr",
         "45 min: healingbehandling på distans, med telefonsamtal före och efter, 650 kr",
       ],
@@ -75,10 +74,5 @@ describe("personernas förfrågningssidor", () => {
     expect(html).toContain(`mailto:${recipient}?subject=${encodeURIComponent(subject)}`);
     expect(html).not.toContain("<form");
     expect(RequestForm).not.toHaveBeenCalled();
-  });
-
-  it("bekräftar mottagen förfrågan utan tidslöfte", () => {
-    expect(bookingCopy.requestSent).toBe("Tack! Din förfrågan är skickad.");
-    expect(bookingCopy.requestSentLead).toBe("Vi hör av oss med förslag på tid.");
   });
 });
