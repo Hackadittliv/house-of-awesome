@@ -29,9 +29,9 @@ Allt innehåll ligger som JSON här. Typerna finns i `src/lib/types.ts`.
 
 Längd och pris för bokningsbara tjänster kommer alltid från snapshoten, så de stämmer med bokningen.
 
-Undantaget är `healing-emht`, som är aktiv i LIA:s klinik `hoa` och använder `"clinic": "hoa"` och `"payment": "on_site"`. Direktbokningen gäller healing i 45 minuter på plats för 950 kr, med betalning på plats. Snapshoten från 2026-10-11 saknar tjänsten, så innehållslagret behåller de bekräftade uppgifterna i `src/lib/rebecca-data.ts` och öppnar det befintliga bokningsflödet. När snapshoten innehåller kombinationen `hoa` och `healing-emht` används dess värden automatiskt.
+Undantaget är `healing-emht`, som är aktiv i LIA:s klinik `hoa` och använder `"clinic": "hoa"` och `"payment": "on_site"`. Direktbokningen gäller healing i 45 minuter på plats för 950 kr, med betalning på plats. Snapshoten från 2026-10-11 saknar tjänsten, så innehållslagret behåller de bekräftade uppgifterna i `src/lib/rebecca-data.ts` och öppnar det befintliga bokningsflödet. Synkningen hämtar i dag inget klinikfält, så reservvärdena gäller tills synken byggs om.
 
-`npm run sync:services` är känt trasigt sedan LIA #41 eftersom anon saknar läsrättighet till tabellen; det åtgärdas separat på LIA-sidan.
+`npm run sync:services` är känt trasigt sedan LIA #41 eftersom anon saknar läsrättighet till tabellen `booking_event_types` i LIA:s produktion (avläst 2026-11-04); det åtgärdas separat på LIA-sidan.
 
 Klinikmodellen beslutades 2026-11-02: terapeuter delar rum, bokning låser både rum och terapeut och terapeuter hanteras som data i LIA-admin. HOA skickar tjänst och klinik. Det befintliga `site: "hoa"` anger avsändarsajt och behålls för alla bokningar. Övriga tjänster och Studion behåller sina request bodies. Betalningssteget styrs som tidigare av LIA:s svar.
 
