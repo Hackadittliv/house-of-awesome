@@ -125,7 +125,7 @@ export function BookingFlow({ slug, clinic, serviceName, healthDeclaration }: Pr
         bookingId = reusable.bookingId;
         priceId = reusable.priceId;
       } else {
-        const booking = await createBooking(getBookingInput({ slug, clinic }, {
+        const booking = await createBooking(getBookingInput({ slug: eventType.slug, clinic }, {
           startAt: slot.start,
           name: name.trim(),
           email: guestEmail,

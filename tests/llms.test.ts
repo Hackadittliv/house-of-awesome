@@ -1,9 +1,17 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GET } from "@/app/llms.txt/route";
 import * as content from "@/lib/content";
 
+const bookingConfig = vi.hoisted(() => ({ bookingEnabled: false }));
+vi.mock("@/lib/booking/config", () => bookingConfig);
+
+beforeEach(() => { bookingConfig.bookingEnabled = false; });
 afterEach(() => vi.restoreAllMocks());
+
+function bookingLink(text: string, slug: string): string {
+  return text.split("\n").find((line) => line.includes(`/tjanster/${slug}`))!.split("Boka: ")[1];
+}
 
 describe("llms.txt", () => {
   it("beskriver Rebeccas direktbokning med längd, plats och pris", async () => {
@@ -11,10 +19,28 @@ describe("llms.txt", () => {
     const rebecca = text.split("\n").find((line) => line.includes("/tjanster/healing-emht"));
     expect(rebecca).toContain("Healing 45 min på plats");
     expect(rebecca).toContain("45 minuter. 950 kr. Boka:");
-    expect(new URL(rebecca!.split("Boka: ")[1]).searchParams.get("clinic")).toBe("hoa");
-    const hbot = text.split("\n").find((line) => line.includes("/tjanster/hbot-60"));
-    expect(new URL(hbot!.split("Boka: ")[1]).searchParams.has("clinic")).toBe(false);
     expect(text).not.toMatch(/\.\s+\./u);
+  });
+
+  it("länkar internt när HOA:s bokning är konfigurerad", async () => {
+    bookingConfig.bookingEnabled = true;
+    const text = await GET().text();
+    expect(bookingLink(text, "healing-emht")).toBe("/boka/healing-emht");
+    expect(bookingLink(text, "hbot-60")).toBe("/boka/hbot-60");
+  });
+
+  it("lägger klinik på den externa EMHT-länken när bokningskonfiguration saknas", async () => {
+    const text = await GET().text();
+    const rebecca = new URL(bookingLink(text, "healing-emht"));
+    expect(rebecca.origin).toBe("https://lifeisawesome.se");
+    expect(rebecca.pathname).toBe("/boka/healing-emht");
+    expect(rebecca.searchParams.get("clinic")).toBe("hoa");
+    expect(rebecca.searchParams.get("utm_source")).toBe("houseofawesome");
+    expect(rebecca.searchParams.get("utm_content")).toBe("llms");
+    const hbot = new URL(bookingLink(text, "hbot-60"));
+    expect(hbot.origin).toBe("https://lifeisawesome.se");
+    expect(hbot.pathname).toBe("/boka/hbot-60");
+    expect(hbot.searchParams.has("clinic")).toBe(false);
   });
 
   it.each([
