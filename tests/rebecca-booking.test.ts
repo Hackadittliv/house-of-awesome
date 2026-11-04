@@ -1,6 +1,10 @@
 import { readFileSync } from "node:fs";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import TreatmentPage from "@/app/behandlingar-och-samtal/page";
+
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { findCopyViolations } from "../scripts/copy-rules.mjs";
 import {
@@ -16,6 +20,9 @@ import { bookingUrl } from "@/lib/links";
 import { REBECCA } from "@/lib/rebecca";
 import { serviceJsonLd } from "@/lib/seo";
 import type { LiaEventType } from "@/lib/types";
+
+const bookingConfig = vi.hoisted(() => ({ bookingEnabled: true }));
+vi.mock("@/lib/booking/config", () => bookingConfig);
 
 const slug = "healing-emht";
 const originalEvents = [...servicesSnapshot.services];
@@ -33,6 +40,7 @@ const eventFixture: LiaEventType = {
 };
 
 beforeEach(() => {
+  bookingConfig.bookingEnabled = true;
   servicesSnapshot.services = originalEvents.filter((event) => event.slug !== slug);
 });
 
@@ -110,6 +118,24 @@ describe("Rebeccas direktbokning", () => {
 
     const page = readFileSync(new URL("../src/app/behandlingar-och-samtal/page.tsx", import.meta.url), "utf8");
     expect(page).toMatch(/<CtaLink\s+href=\{REBECCA\.requestPath\}[^>]*>\{REBECCA\.cta\}<\/CtaLink>/u);
+  });
+
+  it.each([true, false])("för Rebeccas alternativ och CTA genom bookingUrl, inbäddat: %s", (enabled) => {
+    bookingConfig.bookingEnabled = enabled;
+    const expected = (placement: string) => enabled
+      ? "/boka/healing-emht"
+      : `https://lifeisawesome.se/boka/healing-emht?clinic=hoa&utm_source=houseofawesome&utm_medium=referral&utm_campaign=hoa_site&utm_content=${placement}`;
+    expect(REBECCA.options[0].href).toBe(expected("rebecca_option"));
+    expect(REBECCA.requestPath).toBe(expected("rebecca"));
+    expect(REBECCA.options.slice(1).map((option) => option.href)).toEqual([
+      "/boka/forfragan/rebecca", "/boka/forfragan/rebecca",
+    ]);
+
+    const html = renderToStaticMarkup(createElement(TreatmentPage));
+    const links = [...html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/gu)]
+      .map((match) => ({ href: match[1].replaceAll("&amp;", "&"), text: match[2] }));
+    expect(links).toContainEqual({ href: expected("rebecca_option"), text: REBECCA.options[0].label });
+    expect(links).toContainEqual({ href: expected("rebecca"), text: REBECCA.cta });
   });
 
   it.each([undefined, null, "lia"])("använder reservvärden när EMHT bara finns i klinik %s", (clinic) => {
