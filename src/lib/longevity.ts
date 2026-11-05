@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 // Publiceringsvillkor finns i content/README.md.
-export const LONGEVITY_PUBLISHED = false;
+export const LONGEVITY_PUBLISHED = true;
 
 export function isLongevityBlocked(
   published: boolean = LONGEVITY_PUBLISHED,

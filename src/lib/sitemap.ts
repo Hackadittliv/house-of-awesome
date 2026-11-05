@@ -7,7 +7,7 @@ import { absoluteUrl } from "@/lib/seo";
 
 const CONTENT_UPDATED = new Date("2026-10-11");
 /** Uppdateras till publiceringsdagen när LONGEVITY_PUBLISHED sätts till true. */
-const LONGEVITY_UPDATED = new Date("2026-10-31");
+const LONGEVITY_UPDATED = new Date("2026-11-05");
 
 export function getSitemap(published: boolean = LONGEVITY_PUBLISHED): MetadataRoute.Sitemap {
   const pages: { path: string; priority: number }[] = [

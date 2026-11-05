@@ -65,20 +65,24 @@ function setEnvironment({ context, nodeEnv, preview }: AccessCase) {
   vi.stubEnv("LONGEVITY_PREVIEW", preview);
 }
 
+function liveBlocked(environment: AccessCase) {
+  return !LONGEVITY_PUBLISHED && environment.blocked;
+}
+
 describe.each(pages)("longevity: $content.path", ({ content, Page, metadata, placement }) => {
   let html: string;
   beforeEach(() => { html = renderToStaticMarkup(createElement(Page)); });
 
   it.each(environments)("skyddar både sida och metadata: $name", (environment) => {
     setEnvironment(environment);
-    if (environment.blocked) {
+    if (liveBlocked(environment)) {
       expect(() => renderToStaticMarkup(createElement(Page))).toThrow("NEXT_HTTP_ERROR_FALLBACK;404");
       expect(() => metadata()).toThrow("NEXT_HTTP_ERROR_FALLBACK;404");
     } else {
       expect(renderToStaticMarkup(createElement(Page))).toContain(escaped(content.h1));
       expect(metadata()).toEqual({
         ...pageMetadata({ title: content.title, description: content.metaDescription, path: content.path }),
-        robots: { index: false, follow: false, noimageindex: true },
+        robots: longevityRobots(),
       });
     }
   });
@@ -190,11 +194,12 @@ it.each(environments)("publiceringsflaggan öppnar oberoende av miljö: $name", 
 it.each(environments)("skyddar porträttets bytes utan offentlig cache: $name", async (environment) => {
   setEnvironment(environment);
   const response = await getPortrait();
-  expect(response.status).toBe(environment.blocked ? 404 : 200);
+  const blocked = liveBlocked(environment);
+  expect(response.status).toBe(blocked ? 404 : 200);
   expect(response.headers.get("cache-control")).toBe("private, no-store");
   expect(response.headers.get("x-robots-tag")).toContain("noimageindex");
   const body = Buffer.from(await response.arrayBuffer());
-  if (environment.blocked) {
+  if (blocked) {
     expect(body.length).toBe(0);
     expect(response.headers.get("content-type")).toBeNull();
   } else {
@@ -242,7 +247,7 @@ describe.each([false, true])("publicering = %s", (published) => {
 });
 
 it("använder samma publiceringsflagga i faktisk meny, sidfot och sitemap", () => {
-  expect(LONGEVITY_PUBLISHED).toBe(false);
+  expect(LONGEVITY_PUBLISHED).toBe(true);
   expect(mainMenu).toEqual(getMainMenu(LONGEVITY_PUBLISHED));
   expect(offerGroup).toEqual(getOfferGroup(LONGEVITY_PUBLISHED));
   expect(aboutNav).toEqual(getAboutNav(LONGEVITY_PUBLISHED));
