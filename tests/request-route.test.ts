@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { requestConsultation, type RequestInput } from "@/lib/booking/api";
+import { SANDRA } from "@/lib/sandra";
 
 const base: RequestInput = {
   firstName: "Test",
@@ -34,5 +35,13 @@ describe("förfrågningens mottagare", () => {
     const body = captureBody();
     await requestConsultation(base);
     expect(body()).not.toHaveProperty("route");
+  });
+
+  it("skickar Sandras tjänst och upplägg till husets standardmottagare", async () => {
+    const body = captureBody();
+    const message = "Tjänst: Svensk klassisk massage hos Sandra Bengts\n\nUpplägg: Svensk klassisk massage 50 min, 800 kr";
+    await requestConsultation({ ...base, sourceSlug: `hoa:${SANDRA.serviceSlug}`, message });
+    expect(body()).not.toHaveProperty("route");
+    expect(body()).toMatchObject({ source_slug: "hoa:massage-sandra", message, interest_type: "other", flow: "hoa_request" });
   });
 });

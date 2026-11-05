@@ -6,6 +6,8 @@ import { Wordmark } from "@/components/Logo";
 import { Bullets, Card, Grid, Section } from "@/components/v2/ui";
 import { site } from "@/lib/content";
 import { SHORT_CALL_SLUG, bookingUrl } from "@/lib/links";
+import { REBECCA } from "@/lib/rebecca";
+import { SANDRA } from "@/lib/sandra";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = {
@@ -16,7 +18,7 @@ export const metadata = {
 const areas = [
   { href: "/longevity-behandlingar", title: "Longevity-behandlingar", text: "Celloxy IHHT, tryckkammare, rödljus + PEMF och EWOT." },
   { href: "/funktionsmedicin", title: "Funktionsmedicin", text: "Blodprover, DNA-metylering, borrelia, tungmetaller och mögel." },
-  { href: "/behandlingar-och-samtal", title: "Behandlingar & samtal", text: "Healing, bioresonans, trauma och samtal." },
+  { href: "/behandlingar-och-samtal", title: "Behandlingar & samtal", text: "Healing, svensk klassisk massage, bioresonans, trauma och samtal." },
   { href: "/medlemskap", title: "Gym & medlemskap", text: "Longevity-gym dygnet runt, från 599 kr/mån." },
   { href: "/awesome-protocol", title: "The Awesome Protocol", text: "Kraft, syre och ljus. Vårt signaturpass på 60 minuter." },
   { href: "/klinik-24-7", title: "24/7-klinik", text: "Obemannad longevity-klinik med bokning i mobilen." },
@@ -81,7 +83,7 @@ export default function HomePage() {
       <Section eyebrow="Kom igång" title="Två enkla sätt att börja" lead="Vet du vad du vill ha? Boka direkt. Osäker? Prata med oss först, det kostar ingenting.">
         <Grid cols={2}>
           <Card label="Jag vet vad jag vill ha" title="Boka behandling" text="Välj behandling och tid direkt i bokningen. Du får information om upplägg och eventuell hälsodeklaration innan du kommer.">
-            <Bullets items={["Celloxy IHHT, tryckkammare, rödljus + PEMF, EWOT", "Blodprovtagning och vitamindropp", "Healing, coachning och samtal"]} />
+            <Bullets items={["Celloxy IHHT, tryckkammare, rödljus + PEMF, EWOT", "Blodprovtagning och vitamindropp", "Coachning och samtal"]} />
             <CtaLink href={book} className="mt-3 w-full sm:w-fit">Boka behandling</CtaLink>
           </Card>
           <Card label="Jag känner mig osäker" title="Kostnadsfri rådgivning" text="Ett kort samtal på 10 minuter där vi lyssnar och hjälper dig hitta rätt. Inget köpkrav." featured>
@@ -90,6 +92,17 @@ export default function HomePage() {
           </Card>
         </Grid>
       </Section>
+
+      <section aria-labelledby="forfragan" className="px-4 pb-14 text-center md:pb-20">
+        <div className="mx-auto max-w-2xl space-y-4">
+          <h2 id="forfragan" className="text-2xl text-hoa-ink">Healing och massage efter förfrågan</h2>
+          <p className="text-hoa-ink-muted">Healing hos Rebecca och massage hos Sandra Bengts bokas efter förfrågan.</p>
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <CtaLink href={REBECCA.requestPath} variant="secondary">Förfrågan till Rebecca</CtaLink>
+            <CtaLink href={SANDRA.requestPath} variant="secondary">Förfrågan om massage hos Sandra Bengts</CtaLink>
+          </div>
+        </div>
+      </section>
 
       <Section eyebrow="Vanliga frågor" title="Det du kanske undrar">
         <div className="mx-auto max-w-2xl divide-y divide-hoa-line border-y border-hoa-line">
