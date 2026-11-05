@@ -110,6 +110,8 @@ export type LongevitySection = {
   items?: { title: string; text: string }[];
 };
 
+export type LongevityCta = { heading: string; text: string; buttonLabel: string; body?: string[] };
+
 export type LongevityPageContent = {
   path: string;
   title: string;
@@ -118,7 +120,8 @@ export type LongevityPageContent = {
   h1: string;
   lead: string;
   sections: LongevitySection[];
-  cta: { heading: string; text: string; buttonLabel: string };
+  cta: LongevityCta;
+  secondaryCta?: LongevityCta;
   disclaimer: string;
   links: { label: string; href: string }[];
 };

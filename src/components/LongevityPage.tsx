@@ -5,6 +5,7 @@ import { Disclaimer } from "@/components/Disclaimer";
 import { JsonLd } from "@/components/JsonLd";
 import { Prose } from "@/components/Prose";
 import { Avatar, Card, Grid, Hero, Section } from "@/components/v2/ui";
+import { ANNE_BOOKING_URL } from "@/lib/anne";
 import { bookingUrl, SHORT_CALL_SLUG } from "@/lib/links";
 import { PORTRAITS } from "@/lib/people";
 import { breadcrumbJsonLd } from "@/lib/seo";
@@ -64,6 +65,18 @@ export function LongevityPage({ content, placement, portrait = false }: {
         <div className="mt-8 text-center">
           <CtaLink href={bookingUrl(SHORT_CALL_SLUG, `${placement}_cta`)}>{content.cta.buttonLabel}</CtaLink>
         </div>
+        {content.secondaryCta ? (
+          <div className="mx-auto mt-12 max-w-3xl space-y-6 border-t border-hoa-line pt-10 text-left">
+            <h3 className="font-display text-2xl text-hoa-ink">{content.secondaryCta.heading}</h3>
+            <Prose>
+              <p>{content.secondaryCta.text}</p>
+              {content.secondaryCta.body?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            </Prose>
+            <div className="text-center">
+              <CtaLink href={ANNE_BOOKING_URL}>{content.secondaryCta.buttonLabel}</CtaLink>
+            </div>
+          </div>
+        ) : null}
         <Disclaimer text={content.disclaimer} className="mx-auto mt-10" />
         <nav aria-label="Läs vidare" className="mt-8">
           <ul className="flex flex-wrap justify-center gap-x-8 gap-y-2">

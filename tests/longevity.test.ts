@@ -86,8 +86,9 @@ describe.each(pages)("longevity: $content.path", ({ content, Page, metadata, pla
   it("renderar alla granskade innehållsblock utan omskrivning", () => {
     expect(html.match(/<h1\b/g)).toHaveLength(1);
     const texts = [content.h1, content.eyebrow, content.lead, content.cta.heading, content.cta.text,
+      ...content.cta.body ?? [], content.secondaryCta?.heading, content.secondaryCta?.text, ...content.secondaryCta?.body ?? [],
       ...content.sections.flatMap((section) => [section.heading, ...section.body ?? [], ...section.points ?? [],
-        ...section.bodyAfter ?? [], ...[...section.steps ?? [], ...section.items ?? []].flatMap((item) => [item.title, item.text])])];
+        ...section.bodyAfter ?? [], ...[...section.steps ?? [], ...section.items ?? []].flatMap((item) => [item.title, item.text])])].filter((text): text is string => Boolean(text));
     for (const text of texts) expect(html).toContain(escaped(text));
     for (const section of content.sections) expect(html).toContain(`id="${section.id}"`);
   });
@@ -137,7 +138,8 @@ describe.each(pages)("longevity: $content.path", ({ content, Page, metadata, pla
   it.each([false, true])("bokar kort samtal med bokning aktiverad = %s", (enabled) => {
     bookingConfig.enabled = enabled;
     const rendered = renderToStaticMarkup(createElement(Page));
-    const ctas = [...rendered.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>Boka kort samtal med Patrik<\/a>/g)];
+    const label = content.cta.buttonLabel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const ctas = [...rendered.matchAll(new RegExp(`<a\\b[^>]*href="([^"]+)"[^>]*>${label}</a>`, "g"))];
     expect(ctas).toHaveLength(2);
     for (const [index, position] of ["hero", "cta"].entries()) {
       const href = ctas[index][1].replaceAll("&amp;", "&");
@@ -249,7 +251,7 @@ it("använder samma publiceringsflagga i faktisk meny, sidfot och sitemap", () =
 
 it("visar legitimationsmeningen ordagrant som sista utbildningspunkt och inte i Annes ingress", () => {
   const sentence = "Anne saknar legitimation som hälso- och sjukvårdspersonal, och hennes stöd är ett komplement till vården.";
-  const lead = "Hälsovetare och PNI-terapeut som hjälper dig att se helheten i livsstil, stress och återhämtning.";
+  const lead = "Anne arbetar med det som ofta hamnar mellan stolarna.";
   const education = longevity.anne.sections.find((section) => section.id === "utbildning");
   expect(longevity.anne.lead).toBe(lead);
   expect(longevity.anne.lead).not.toContain(sentence);
@@ -282,6 +284,29 @@ it("visar Anne med svensk alt-text i befintlig Avatar", () => {
 
 it("bevarar standardfriskrivningen på befintliga sidor", () => {
   expect(renderToStaticMarkup(createElement(Disclaimer))).toContain(escaped(HEALTH_DISCLAIMER));
+});
+
+
+it("visar Annes personliga hälsointroduktion bredvid Patriks samtal", () => {
+  const html = renderToStaticMarkup(createElement(AnnePage));
+  expect(html).toContain(escaped("Personlig hälsointroduktion | 20 minuter · 95 €"));
+  expect(html).toContain(escaped("Boka samtal med Anne"));
+  expect(html).toContain('href="/boka/forfragan?tjanst=anne-wevers"');
+  expect(longevity.anne.secondaryCta?.buttonLabel).toBe("Boka samtal med Anne");
+});
+
+it("har Vitamindropp i blodanalysens longevityplan utan tryckkammare eller HBOT", () => {
+  const plan = longevity.blodanalys.sections.find((section) => section.id === "longevityplan");
+  expect(plan?.points).toEqual([
+    "IHHT (intervallträning med växlande syrenivåer)",
+    "Rödljus",
+    "Bastu",
+    "Kallbad",
+    "Vitamindropp",
+    "Med mera",
+  ]);
+  const joined = JSON.stringify(longevity.blodanalys);
+  expect(joined).not.toMatch(/tryckkammare|HBOT|hälsodeklaration|garantier/i);
 });
 
 it("använder befintliga kostnadsfria Meet-samtalet på tio minuter", () => {
