@@ -87,7 +87,7 @@ export function businessJsonLd() {
               itemOffered: {
                 "@type": "Service",
                 name: `${person.service} hos ${person.name}: ${option.label}`,
-                description: `${option.label}, ${option.price}. Bokas efter förfrågan.${person === SANDRA ? ` ${SANDRA.location}` : ""}`,
+                description: `${option.label}, ${option.price}.${person === SANDRA ? ` Bokas efter förfrågan. ${SANDRA.location}` : "href" in option && option.href === "/boka/forfragan/rebecca" ? " Bokas efter förfrågan." : ""}`,
                 url: `${site.url}${person.requestPath}`,
                 provider: { "@type": "Person", name: person.name },
               },
