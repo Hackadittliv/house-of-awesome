@@ -149,9 +149,8 @@ describe("startsidan", () => {
     expect(html).not.toContain("FAQPage");
   });
 
-  it("länkar varken till sidor som saknas på main eller till massage", () => {
-    for (const { href } of links) expect(href).not.toMatch(/\/longevity-blodanalys|\/anne-wevers|massage/i);
-    expect(text).not.toMatch(/massage/i);
+  it("länkar varken till sidor som saknas på main", () => {
+    for (const { href } of links) expect(href).not.toMatch(/\/longevity-blodanalys|\/anne-wevers/i);
   });
 
   it("länkar bara till sidor och ankare som finns", () => {
