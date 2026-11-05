@@ -1,6 +1,6 @@
 import { CtaLink } from "@/components/CtaLink";
 import { Bullets, Card, Grid, Hero, Section, Soon, Steps } from "@/components/v2/ui";
-import { mailtoUrl } from "@/lib/links";
+import { inquiryUrl } from "@/lib/links";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -21,7 +21,7 @@ const day = [
 ];
 
 export default function Page() {
-  const inquiry = mailtoUrl("Förfrågan om longevity-resa");
+  const inquiry = inquiryUrl("longevity-resa", "longevity_resa");
   return (
     <>
       <Hero eyebrow="Longevity-resor i Bohuslän" title="Res hit. Åk hem med en plan." lead="Ett individuellt program på tre nätter till två veckor, med västkustens natur runt omkring.">
