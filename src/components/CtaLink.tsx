@@ -6,6 +6,7 @@ type CtaLinkProps = {
   variant?: "primary" | "secondary" | "ghost";
   size?: "lg" | "sm";
   className?: string;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 };
 
 const base =
@@ -30,6 +31,7 @@ export function CtaLink({
   variant = "primary",
   size = "lg",
   className = "",
+  onClick,
 }: CtaLinkProps) {
   const classes =
     variant === "ghost"
@@ -38,14 +40,14 @@ export function CtaLink({
 
   if (/^(https?:|mailto:|tel:)/.test(href)) {
     return (
-      <a href={href} className={classes}>
+      <a href={href} className={classes} onClick={onClick}>
         {children}
       </a>
     );
   }
 
   return (
-    <Link href={href} className={classes}>
+    <Link href={href} className={classes} onClick={onClick}>
       {children}
     </Link>
   );
