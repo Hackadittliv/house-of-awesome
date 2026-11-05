@@ -1,5 +1,5 @@
 import { bookingEnabled } from "@/lib/booking/config";
-import { site } from "@/lib/content";
+import { getService, site } from "@/lib/content";
 
 export const SHORT_CALL_SLUG = "forsta-halsosamtal";
 
@@ -16,7 +16,8 @@ function withUtm(base: string, placement: string, extra: Record<string, string> 
 /** Bokning på lifeisawesome.se. Används när HOA:s egen bokning inte är konfigurerad. */
 export function liaBookingUrl(slug: string | null, placement: string): string {
   const base = slug ? `${site.booking.base}/${encodeURIComponent(slug)}` : site.booking.base;
-  return withUtm(base, placement);
+  const clinic = slug ? getService(slug)?.clinic : undefined;
+  return withUtm(base, placement, clinic ? { clinic } : {});
 }
 
 export function bookingUrl(slug: string | null, placement: string, enabled = bookingEnabled): string {

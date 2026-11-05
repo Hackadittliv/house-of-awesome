@@ -9,6 +9,7 @@ import { Eyebrow } from "@/components/Eyebrow";
 import { JsonLd } from "@/components/JsonLd";
 import { categoryLabels, formatDuration, getService, getServices, site } from "@/lib/content";
 import { bookingUrl, inquiryUrl, mailtoUrl } from "@/lib/links";
+import { REBECCA } from "@/lib/rebecca";
 import { breadcrumbJsonLd, pageMetadata, serviceJsonLd } from "@/lib/seo";
 
 export const dynamicParams = false;
@@ -113,14 +114,16 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
                   <dt className="text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold">Pris</dt>
                   <dd className="mt-1 text-hoa-ink">{service.priceLabel ?? "Enligt förfrågan"}</dd>
                 </div>
-                <div>
-                  <dt className="text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold">Plats</dt>
-                  <dd className="mt-1 text-hoa-ink">
-                    {service.location === "digital"
-                      ? "Digitalt via videosamtal"
-                      : `I huset på ${site.address.street}, ${site.address.city}`}
-                  </dd>
-                </div>
+                {service.location ? (
+                  <div>
+                    <dt className="text-xs font-semibold uppercase tracking-[0.25em] text-hoa-gold">Plats</dt>
+                    <dd className="mt-1 text-hoa-ink">
+                      {service.location === "digital"
+                        ? "Digitalt via videosamtal"
+                        : `I huset på ${site.address.street}, ${site.address.city}`}
+                    </dd>
+                  </div>
+                ) : null}
               </dl>
               <div className="mt-6 flex flex-col gap-3">
                 {service.bookable ? (
@@ -133,10 +136,15 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
                     </CtaLink>
                   </>
                 )}
+                {service.slug === "healing-emht" ? (
+                  <CtaLink href={REBECCA.inquiryPath} variant="secondary">{REBECCA.inquiryCta}</CtaLink>
+                ) : null}
               </div>
               <p className="mt-4 text-xs leading-5 text-hoa-ink-muted">
                 {service.bookable
-                  ? "Bokning och betalning sker hos Life Is Awesome, som driver House of Awesome."
+                  ? service.payment === "on_site"
+                    ? "Du bokar via Life Is Awesome och betalar på plats."
+                    : "Bokning och betalning sker hos Life Is Awesome, som driver House of Awesome."
                   : "Det korta samtalet är kostnadsfritt och sker via video. Där bokar vi en tid som passar."}
               </p>
             </div>

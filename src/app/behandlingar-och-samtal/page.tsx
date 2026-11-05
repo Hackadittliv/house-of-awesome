@@ -31,13 +31,13 @@ export default function Page() {
       </Hero>
       <Section>
         <Grid>
-          <Card id="healing" label="Energi" title="Healing" text="Energimedicinsk healingterapi (EMHT) med Rebecca Gustafsson, på plats eller på distans.">
+          <Card id="healing" label="Energi" title="Healing" text="Energimedicinsk healingterapi (EMHT) med Rebecca Gustafsson. Direktbokning: 60 min samtal + 45 min healingbehandling på plats.">
             <ul className="space-y-1 text-sm text-hoa-ink">
-              {REBECCA.options.map((o) => (
-                <li key={o.label}><span className="text-hoa-gold">{o.price}</span> · {o.label}</li>
-              ))}
+              <li><span className="text-hoa-gold">1 050 kr</span> · 60 min samtal + 45 min healingbehandling på plats</li>
+              <li><a href={REBECCA.inquiryPath} className="underline underline-offset-4"><span className="text-hoa-gold">650 kr</span> · 45 min healingbehandling på distans med telefonsamtal före och efter, förfrågan</a></li>
+              <li><a href={REBECCA.inquiryPath} className="underline underline-offset-4"><span className="text-hoa-gold">1 550 kr</span> · 90 min healingbehandling med kompletterande metod efter önskemål, förfrågan</a></li>
             </ul>
-            <CtaLink href="#rebecca" size="sm" className="mt-auto w-fit">Läs mer och skicka förfrågan</CtaLink>
+            <CtaLink href={REBECCA.requestPath} size="sm" className="mt-auto w-fit">{REBECCA.cta}</CtaLink>
           </Card>
           <Card id="massage" label="Kropp" title={SANDRA.service} text={`Massage med ${SANDRA.name}, friskvårdsmassör. ${SANDRA.location}`}>
             <ul className="space-y-1 text-sm text-hoa-ink">
@@ -71,12 +71,12 @@ export default function Page() {
             <ul className="space-y-2 text-sm text-hoa-ink">
               {REBECCA.options.map((o) => (
                 <li key={o.label} className="flex justify-between gap-4 border-b border-hoa-line pb-2">
-                  <span>{o.label}</span>
+                  <a href={o.href} className="underline underline-offset-4">{o.label}</a>
                   <span className="shrink-0 text-hoa-gold">{o.price}</span>
                 </li>
               ))}
             </ul>
-            <CtaLink href={REBECCA.requestPath} className="w-fit">Skicka förfrågan till Rebecca</CtaLink>
+            <CtaLink href={REBECCA.requestPath} className="w-fit">{REBECCA.cta}</CtaLink>
           </div>
         </div>
       </Section>

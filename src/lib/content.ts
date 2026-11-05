@@ -4,6 +4,7 @@ import servicesCopyData from "../../content/services.json";
 import snapshotData from "../../content/services.snapshot.json";
 import siteData from "../../content/site.json";
 
+import { REBECCA_BOOKING } from "@/lib/rebecca-data";
 import type {
   FaqItem,
   LiaEventType,
@@ -39,27 +40,41 @@ export function formatPriceLabel(label: string | null): string | null {
   return label.replace(/(\d+)-kort/g, "klippkort med $1 gånger").replace(/\s+[-–—]\s+/g, ", ");
 }
 
+function serviceKey(service: { slug: string; clinic?: string | null }): string {
+  return JSON.stringify([service.clinic ?? "lia", service.slug]);
+}
+
+function isRebecca(copy: ServiceCopy): boolean {
+  return copy.slug === "healing-emht" && copy.clinic === "hoa" && copy.kind === "bookable";
+}
+
+function isBookable(copy: ServiceCopy, event: LiaEventType | undefined): boolean {
+  // EMHT öppnar det befintliga bokningsflödet även före nästa LIA-snapshot.
+  return copy.kind === "bookable" && (Boolean(event) || isRebecca(copy));
+}
+
 function toService(copy: ServiceCopy, event: LiaEventType | undefined): Service {
+  const fallback = isRebecca(copy) ? REBECCA_BOOKING : undefined;
   return {
     ...copy,
-    durationMinutes: event?.duration_minutes ?? null,
-    priceLabel: formatPriceLabel(event?.price_label_sv ?? null),
+    durationMinutes: event?.duration_minutes ?? fallback?.durationMinutes ?? null,
+    priceLabel: formatPriceLabel(event ? event.price_label_sv : fallback?.priceLabel ?? null),
     location: event && event.location_type !== "in_person" ? "digital" : "in_person",
-    bookable: copy.kind === "bookable" && Boolean(event),
+    bookable: isBookable(copy, event),
   };
 }
 
 export function getServices(): Service[] {
-  const events = new Map(servicesSnapshot.services.map((event) => [event.slug, event]));
-  const order = new Map(servicesSnapshot.services.map((event) => [event.slug, event.sort_order]));
+  const events = new Map(servicesSnapshot.services.map((event) => [serviceKey(event), event]));
+  const order = new Map(servicesSnapshot.services.map((event) => [serviceKey(event), event.sort_order]));
 
   const bookable = serviceCopy
-    .filter((copy) => copy.kind === "bookable" && events.has(copy.slug))
-    .sort((a, b) => (order.get(a.slug) ?? 0) - (order.get(b.slug) ?? 0))
-    .map((copy) => toService(copy, events.get(copy.slug)));
+    .filter((copy) => isBookable(copy, events.get(serviceKey(copy))))
+    .sort((a, b) => (order.get(serviceKey(a)) ?? Number.MAX_SAFE_INTEGER) - (order.get(serviceKey(b)) ?? Number.MAX_SAFE_INTEGER))
+    .map((copy) => toService(copy, events.get(serviceKey(copy))));
 
   const inquiry = serviceCopy
-    .filter((copy) => copy.kind === "inquiry" || !events.has(copy.slug))
+    .filter((copy) => !isBookable(copy, events.get(serviceKey(copy))))
     .map((copy) => toService({ ...copy, kind: "inquiry" }, undefined));
 
   return [...bookable, ...inquiry];

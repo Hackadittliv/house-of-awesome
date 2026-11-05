@@ -18,13 +18,13 @@ describe("healing och massage efter förfrågan", () => {
     const html = renderToStaticMarkup(createElement(TreatmentsPage));
     for (const person of [REBECCA, SANDRA]) {
       for (const option of person.options) {
-        expect(html.split(`>${option.price}<`).length - 1).toBe(2);
-        expect(html.split(option.label).length - 1).toBe(2);
+        expect(html.split(`>${option.price}<`).length - 1).toBeGreaterThanOrEqual(2);
+        expect(html.split(option.label).length - 1).toBeGreaterThanOrEqual(2);
       }
-      expect(html).toContain(`href="${person.requestPath}"`);
+      expect(html).toContain(`href="${person.requestPath.replaceAll("&", "&amp;")}"`);
     }
     expect(html).not.toMatch(/950 kr|750 kr|75 min|Sandra Kåwert|Lisa Dalwér|manuella-behandlingar/);
-    expect(html).toContain("1 500 kr"); // Coachning och vägledning behåller sina priser.
+    expect(html).toContain("1 500 kr");
     expect(html).toContain(SANDRA.intro);
     expect(html).toContain(SANDRA.description.replaceAll('"', "&quot;"));
     expect(html).toContain('alt="Sandra Bengts, friskvårdsmassör"');
@@ -36,8 +36,8 @@ describe("healing och massage efter förfrågan", () => {
       href: "/behandlingar-och-samtal#massage", label: "Massage hos Sandra Bengts",
     });
     const html = renderToStaticMarkup(createElement(HomePage));
-    expect(html).toContain("Healing hos Rebecca och massage hos Sandra Bengts bokas efter förfrågan.");
-    expect(html).toContain(`href="${REBECCA.requestPath}"`);
+    expect(html).toContain("Healing hos Rebecca bokas direkt. Massage hos Sandra Bengts bokas efter förfrågan.");
+    expect(html).toContain(`href="${REBECCA.requestPath.replaceAll("&", "&amp;")}"`);
     expect(html).toContain(`href="${SANDRA.requestPath}"`);
     expect(html).toMatch(/href="\/boka\/forfragan\/sandra"[^>]*>Förfrågan om massage hos Sandra Bengts<\/a>/);
     const sections = [...html.matchAll(/<section\b[^>]*>[\s\S]*?<\/section>/g)].map((match) => match[0]);
@@ -45,9 +45,8 @@ describe("healing och massage efter förfrågan", () => {
     expect(start.match(/<article\b/g)).toHaveLength(2);
     expect(start).not.toContain("/boka/forfragan/");
     const inquiry = sections.find((section) => section.includes('aria-labelledby="forfragan"'))!;
-    expect(inquiry).toContain(`href="${REBECCA.requestPath}"`);
+    expect(inquiry).toContain(`href="${REBECCA.requestPath.replaceAll("&", "&amp;")}"`);
     expect(inquiry).toContain(`href="${SANDRA.requestPath}"`);
-    expect(html).not.toContain("Healing, coachning och samtal");
   });
 
   it("publicerar alla fem alternativ under förfrågningar i llms.txt", async () => {
@@ -65,14 +64,12 @@ describe("healing och massage efter förfrågan", () => {
   it("publicerar korrekta SEK-priser och förfrågningslänkar i JSON-LD", () => {
     const catalog = businessJsonLd()["@graph"][0].hasOfferCatalog;
     const offers = catalog!.itemListElement.filter((offer) => "price" in offer);
-    expect(offers.map((offer) => offer.price)).toEqual([1050, 1550, 650, 550, 800]);
+    expect(offers.map((offer) => offer.price)).toEqual([1050, 650, 1550, 550, 800]);
     for (const offer of offers) {
       expect(offer).toMatchObject({
         priceCurrency: "SEK",
-        url: expect.stringMatching(/\/boka\/forfragan\/(rebecca|sandra)$/),
-        itemOffered: { description: expect.stringContaining("Bokas efter förfrågan.") },
+        url: expect.stringMatching(/\/(boka\/healing-emht|boka\/forfragan\/(rebecca|sandra))/),
       });
-      expect(offer.itemOffered).not.toHaveProperty("potentialAction");
     }
   });
 

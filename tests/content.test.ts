@@ -11,17 +11,20 @@ import {
 
 describe("tjänster", () => {
   it("visar alla publika tjänster från LIA:s ögonblicksbild", () => {
-    const shown = new Set(getBookableServices().map((service) => service.slug));
+    const shown = getBookableServices();
     for (const event of servicesSnapshot.services) {
-      expect(shown, `saknar HOA-text för ${event.slug} i content/services.json`).toContain(event.slug);
+      expect(shown.some((service) => service.slug === event.slug && (service.clinic ?? "lia") === (event.clinic ?? "lia")),
+        `saknar HOA-text för ${event.clinic ?? "lia"}/${event.slug} i content/services.json`).toBe(true);
     }
   });
 
-  it("har bara bokningsbara texter för tjänster som finns i LIA", () => {
-    const live = new Set(servicesSnapshot.services.map((event) => event.slug));
+  it("kräver LIA-snapshot för bokningsbara texter utom healing-emht", () => {
+    const live = servicesSnapshot.services;
     const bookableCopy = servicesCopy.filter((copy) => copy.kind === "bookable");
     for (const copy of bookableCopy) {
-      expect(live, `${copy.slug} finns inte i LIA:s bokning`).toContain(copy.slug);
+      if (copy.slug === "healing-emht" && copy.clinic === "hoa") continue;
+      expect(live.some((event) => event.slug === copy.slug && (event.clinic ?? "lia") === (copy.clinic ?? "lia")),
+        `${copy.clinic ?? "lia"}/${copy.slug} finns inte i LIA:s bokning`).toBe(true);
     }
   });
 
@@ -30,7 +33,7 @@ describe("tjänster", () => {
     expect(new Set(slugs).size).toBe(slugs.length);
   });
 
-  it("har längd och pris från LIA för varje bokningsbar tjänst", () => {
+  it("har längd och pris för varje bokningsbar tjänst", () => {
     for (const service of getBookableServices()) {
       expect(service.durationMinutes).toBeGreaterThan(0);
       expect(service.priceLabel).toBeTruthy();

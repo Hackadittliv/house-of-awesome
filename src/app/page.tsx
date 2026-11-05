@@ -95,10 +95,10 @@ export default function HomePage() {
 
       <section aria-labelledby="forfragan" className="px-4 pb-14 text-center md:pb-20">
         <div className="mx-auto max-w-2xl space-y-4">
-          <h2 id="forfragan" className="text-2xl text-hoa-ink">Healing och massage efter förfrågan</h2>
-          <p className="text-hoa-ink-muted">Healing hos Rebecca och massage hos Sandra Bengts bokas efter förfrågan.</p>
+          <h2 id="forfragan" className="text-2xl text-hoa-ink">Healing och massage</h2>
+          <p className="text-hoa-ink-muted">Healing hos Rebecca bokas direkt. Massage hos Sandra Bengts bokas efter förfrågan.</p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <CtaLink href={REBECCA.requestPath} variant="secondary">Förfrågan till Rebecca</CtaLink>
+            <CtaLink href={REBECCA.requestPath} variant="secondary">Boka healing hos Rebecca</CtaLink>
             <CtaLink href={SANDRA.requestPath} variant="secondary">Förfrågan om massage hos Sandra Bengts</CtaLink>
           </div>
         </div>

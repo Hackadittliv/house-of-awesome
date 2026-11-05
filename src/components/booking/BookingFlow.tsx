@@ -16,6 +16,7 @@ import {
   type Slot,
 } from "@/lib/booking/api";
 import { bookingCopy as t } from "@/lib/booking/copy";
+import { getAvailabilityArgs, getBookingInput } from "@/lib/booking/flow";
 import { addDays, formatDateTime, formatDayLabel, formatTime, groupSlotsByDay, stockholmDate, utmFrom } from "@/lib/booking/format";
 import { saveConfirmation } from "@/lib/booking/confirmation";
 import { stripePublishableKey } from "@/lib/booking/config";
@@ -25,6 +26,7 @@ const DAYS_PER_PAGE = 7;
 
 type Props = {
   slug: string;
+  clinic?: string;
   serviceName: string;
   healthDeclaration: boolean;
 };
@@ -39,7 +41,7 @@ export function locationLabel(type: EventTypeInfo["location_type"]): string {
   return t.locationMeet;
 }
 
-export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
+export function BookingFlow({ slug, clinic, serviceName, healthDeclaration }: Props) {
   const [fromDate, setFromDate] = useState(() => stockholmDate(new Date()));
   const [loaded, setLoaded] = useState<{ key: string; result: AvailabilityResult | "error" } | null>(null);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
@@ -57,11 +59,11 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
 
   const today = useMemo(() => stockholmDate(new Date()), []);
   const toDate = addDays(fromDate, DAYS_PER_PAGE - 1);
-  const requestKey = `${slug}|${fromDate}|${reloadKey}`;
+  const requestKey = `${slug}|${clinic ?? ""}|${fromDate}|${reloadKey}`;
 
   useEffect(() => {
     let active = true;
-    getAvailability(slug, fromDate, toDate)
+    getAvailability(...getAvailabilityArgs({ slug, clinic }, fromDate, toDate))
       .then((result) => {
         if (!active) return;
         setLoaded({ key: requestKey, result });
@@ -73,7 +75,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
     return () => {
       active = false;
     };
-  }, [slug, fromDate, toDate, requestKey]);
+  }, [slug, clinic, fromDate, toDate, requestKey]);
 
   const availability = loaded?.key === requestKey ? loaded.result : null;
   if (availability === "error") return <Notice tone="error">{t.availabilityError}</Notice>;
@@ -123,8 +125,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
         bookingId = reusable.bookingId;
         priceId = reusable.priceId;
       } else {
-        const booking = await createBooking({
-          eventTypeSlug: eventType.slug,
+        const booking = await createBooking(getBookingInput({ slug: eventType.slug, clinic }, {
           startAt: slot.start,
           name: name.trim(),
           email: guestEmail,
@@ -132,7 +133,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
           notes: notes.trim(),
           locationType: eventType.location_type,
           utm: utmFrom(window.location.search),
-        });
+        }));
         const requiresPayment = Boolean(booking.requires_payment && booking.price_id);
         saveConfirmation({
           bookingId: booking.booking_id,

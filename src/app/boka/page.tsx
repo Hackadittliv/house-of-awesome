@@ -42,9 +42,11 @@ export default function BookingIndexPage() {
                     className="flex h-full flex-col gap-2 rounded-lia-lg border border-hoa-line bg-hoa-card p-5 transition-colors hover:border-hoa-gold"
                   >
                     <span className="font-display text-lg text-hoa-ink">{service.name}</span>
-                    <span className="text-sm text-hoa-ink-muted">
-                      {[formatDuration(service), service.priceLabel].filter(Boolean).join(" · ")}
-                    </span>
+                    {formatDuration(service) || service.priceLabel ? (
+                      <span className="text-sm text-hoa-ink-muted">
+                        {[formatDuration(service), service.priceLabel].filter(Boolean).join(" · ")}
+                      </span>
+                    ) : null}
                     <span className="mt-auto pt-2 text-sm text-hoa-gold">{t.chooseTime}</span>
                   </Link>
                 </li>

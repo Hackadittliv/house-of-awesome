@@ -39,9 +39,9 @@ describe("personernas förfrågningssidor", () => {
       route: "rebecca",
       slug: "healing-emht",
       options: [
-        "60 min: samtal + 45 min healingbehandling, 1 050 kr",
-        "90 min: healingbehandling med kompletterande metod efter önskemål, 1 550 kr",
-        "45 min: healingbehandling på distans, med telefonsamtal före och efter, 650 kr",
+        "60 min samtal + 45 min healingbehandling på plats, 1 050 kr",
+        "45 min healingbehandling på distans med telefonsamtal före och efter, 650 kr",
+        "90 min healingbehandling med kompletterande metod efter önskemål, 1 550 kr",
       ],
     },
     {

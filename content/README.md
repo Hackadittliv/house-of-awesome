@@ -15,7 +15,9 @@ Allt innehåll ligger som JSON här. Typerna finns i `src/lib/types.ts`.
 | Fält | Typ | Kommentar |
 | --- | --- | --- |
 | `slug` | string | Samma slug som i LIA:s bokning för bokningsbara tjänster |
-| `kind` | `bookable` \| `inquiry` | `bookable` kräver att slugen finns i snapshoten |
+| `kind` | `bookable` \| `inquiry` | `bookable` kräver att slugen finns i snapshoten, med undantaget `healing-emht` nedan |
+| `clinic` | string? | Klinik i LIA. Angivet värde skickas som `clinic_slug` till `get-availability` och `create-booking`. Utelämnat fält använder LIA:s standard `lia` |
+| `payment` | `on_site`? | Visar att betalningen sker på plats. LIA:s svar styr själva betalningsflödet |
 | `category` | `syre` \| `ljus` \| `traning` \| `samtal` \| `halsa` \| `kropp` | Gruppering och relaterade tjänster |
 | `name`, `shortName` | string | Rubrik och kort namn för knappar |
 | `lead` | string | En mening, används i kort, metabeskrivning och OG bild |
@@ -26,3 +28,15 @@ Allt innehåll ligger som JSON här. Typerna finns i `src/lib/types.ts`.
 | `healthDeclaration` | boolean? | Kräver hälsodeklaration |
 
 Längd och pris för bokningsbara tjänster kommer alltid från snapshoten, så de stämmer med bokningen.
+
+Undantaget är `healing-emht`, som är aktiv i LIA:s klinik `hoa` och använder `"clinic": "hoa"` och `"payment": "on_site"`. Rebeccas egen prislista gäller enligt beslutet 2026-11-04: 60 min samtal + 45 min healingbehandling på plats för 1 050 kr, med betalning på plats. LIA:s bokningslängd är 60 minuter. Alternativen är 90 min healingbehandling med kompletterande metod efter önskemål för 1 550 kr och 45 min healingbehandling på distans för 650 kr, med telefonsamtal före och efter. Snapshoten från 2026-10-11 saknar tjänsten, så innehållslagret behåller de bekräftade uppgifterna i `src/lib/rebecca-data.ts` och öppnar det befintliga bokningsflödet. Synkningen hämtar i dag inget klinikfält, så reservvärdena gäller tills synken byggs om.
+
+`npm run sync:services` är känt trasigt sedan LIA #41 eftersom anon saknar läsrättighet till tabellen `booking_event_types` i LIA:s produktion (avläst 2026-11-04); det åtgärdas separat på LIA-sidan.
+
+Klinikmodellen beslutades 2026-11-02: terapeuter delar rum, bokning låser både rum och terapeut och terapeuter hanteras som data i LIA-admin. HOA skickar tjänst och klinik. Det befintliga `site: "hoa"` anger avsändarsajt och behålls för alla bokningar. Övriga tjänster och Studion behåller sina request bodies. Betalningssteget styrs som tidigare av LIA:s svar.
+
+Rebeccas primära knapp och första behandlingsalternativ använder `bookingUrl`: `/boka/healing-emht` med bokningskonfiguration, annars LIA-adressen med `clinic=hoa` och UTM-parametrar. Distans och 90 minuter länkar till `/boka/forfragan/rebecca`, som behåller Rebeccas mottagarrutt och tre upplägg. Ett 404/409-svar från LIA visar det befintliga generella förfrågningsformuläret i bokningsflödet, med husets mottagarrutt. Det leder alltså aldrig automatiskt till Rebeccas reservsida.
+
+Det inbäddade flödet kräver HOA:s publika bokningskonfiguration vid bygget. Reservlänkar, JSON-LD och `llms.txt` lägger till `clinic` på externa adresser när tjänsten har fältet, med befintliga UTM-parametrar kvar. Tjänster utan klinikfält behåller tidigare adresser. Den externa adressen för Rebecca är `https://lifeisawesome.se/boka/healing-emht?clinic=hoa`.
+
+Den automatiska HTTP-redirecten för `/boka/:slug` i `next.config.ts` är oförändrad och saknar klinikparameter när LIA-konfiguration saknas vid bygget. Produktionen har LIA-konfiguration vid bygget och använder det inbäddade flödet. `next.config.ts` lämnas utanför PR #13 för att undvika överlapp med Anne i PR #11.

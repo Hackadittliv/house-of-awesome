@@ -19,7 +19,7 @@ export function GET() {
   const bookable = getBookableServices()
     .map((service) => {
       const facts = [formatDuration(service), service.priceLabel].filter(Boolean).join(". ");
-      return `- [${service.name}](${absoluteUrl(`/tjanster/${service.slug}`)}): ${service.lead} ${facts}. Boka: ${bookingUrl(service.slug, "llms")}`;
+      return `- [${service.name}](${absoluteUrl(`/tjanster/${service.slug}`)}): ${service.lead}${facts ? ` ${facts}.` : ""} Boka: ${bookingUrl(service.slug, "llms")}`;
     })
     .join("\n");
 

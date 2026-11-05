@@ -46,6 +46,7 @@ export type LiaLocationType = "meet" | "phone" | "in_person";
 
 export type LiaEventType = {
   slug: string;
+  clinic?: string | null;
   title_sv: string;
   duration_minutes: number;
   price_label_sv: string | null;
@@ -65,6 +66,8 @@ export type ServiceCategory = "syre" | "ljus" | "traning" | "samtal" | "halsa" |
 export type ServiceCopy = {
   slug: string;
   kind: "bookable" | "inquiry";
+  clinic?: string;
+  payment?: "on_site";
   category: ServiceCategory;
   name: string;
   shortName: string;
@@ -80,7 +83,7 @@ export type ServiceCopy = {
 export type Service = ServiceCopy & {
   durationMinutes: number | null;
   priceLabel: string | null;
-  location: "in_person" | "digital";
+  location: "in_person" | "digital" | null;
   bookable: boolean;
 };
 
