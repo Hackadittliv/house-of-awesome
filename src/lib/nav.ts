@@ -17,6 +17,7 @@ export type MenuGroup = {
   items: MenuEntry[];
 };
 
+
 export function getOfferGroup(published: boolean = LONGEVITY_PUBLISHED): MenuGroup {
   return {
     label: "Vårt utbud",
@@ -46,6 +47,7 @@ export function getOfferGroup(published: boolean = LONGEVITY_PUBLISHED): MenuGro
         label: "Behandlingar & samtal",
         sections: [
           { href: "/behandlingar-och-samtal#healing", label: "Healing" },
+          { href: "/behandlingar-och-samtal#massage", label: "Massage hos Sandra Bengts" },
           { href: "/behandlingar-och-samtal#coachning", label: "Coachning & vägledning" },
           { href: "/behandlingar-och-samtal#samtal", label: "Trauma & samtal" },
           { href: "/behandlingar-och-samtal#terapeuter", label: "Terapeuter & coacher" },
@@ -72,6 +74,7 @@ export function getOfferGroup(published: boolean = LONGEVITY_PUBLISHED): MenuGro
 }
 
 export const offerGroup = getOfferGroup();
+
 
 /** Menyn från Christians skärmbild. */
 export function getMainMenu(published: boolean = LONGEVITY_PUBLISHED): (MenuEntry | MenuGroup)[] {

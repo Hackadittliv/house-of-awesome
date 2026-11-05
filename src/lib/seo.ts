@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 
 import { formatDuration, getServices, site } from "@/lib/content";
 import { bookingUrl } from "@/lib/links";
+import { REBECCA } from "@/lib/rebecca";
+import { SANDRA } from "@/lib/sandra";
 import type { FaqItem, Service } from "@/lib/types";
 
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || site.url).replace(/\/$/, "");
@@ -81,14 +83,29 @@ export function businessJsonLd() {
         hasOfferCatalog: {
           "@type": "OfferCatalog",
           name: "Tjänster",
-          itemListElement: getServices().map((service) => ({
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Service",
-              name: service.name,
-              url: `${site.url}/tjanster/${service.slug}`,
-            },
-          })),
+          itemListElement: [
+            ...getServices().map((service) => ({
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: service.name,
+                url: `${site.url}/tjanster/${service.slug}`,
+              },
+            })),
+            ...[REBECCA, SANDRA].flatMap((person) => person.options.map((option) => ({
+              "@type": "Offer",
+              price: Number(option.price.replace(/\D/g, "")),
+              priceCurrency: "SEK",
+              url: `${site.url}${person.requestPath}`,
+              itemOffered: {
+                "@type": "Service",
+                name: `${person.service} hos ${person.name}: ${option.label}`,
+                description: `${option.label}, ${option.price}. Bokas efter förfrågan.${person === SANDRA ? ` ${SANDRA.location}` : ""}`,
+                url: `${site.url}${person.requestPath}`,
+                provider: { "@type": "Person", name: person.name },
+              },
+            }))),
+          ],
         },
       },
       {

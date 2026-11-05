@@ -9,6 +9,8 @@ import { Avatar, Card, Grid, Section, cardClass, gridGap } from "@/components/v2
 import { getFaqItems, getService, site } from "@/lib/content";
 import { SHORT_CALL_SLUG, bookingUrl } from "@/lib/links";
 import { PORTRAITS } from "@/lib/people";
+import { REBECCA } from "@/lib/rebecca";
+import { SANDRA } from "@/lib/sandra";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = {
@@ -16,6 +18,7 @@ export const metadata = {
   ...pageMetadata({ title: `${site.name} | Longevity i Stora Höga`, description: site.description, path: "/", ownOgImage: true }),
   title: { absolute: `${site.name} | Longevity i Stora Höga` },
 };
+
 
 // Samma bilder och alt texter som på /longevity-behandlingar. Texten är tjänstens lead i content/services.json.
 const treatments = [
@@ -40,6 +43,7 @@ const treatments = [
     more: "Läs mer om rödljus",
     image: { src: "/images/rodljus.webp", alt: "En person ligger avslappnad under rödljuspanelen i House of Awesome" },
   },
+
 ];
 
 const moreInHouse = [
@@ -213,6 +217,7 @@ export default function HomePage() {
         </div>
       </Section>
 
+
       <Section id="personerna" eyebrow="Personerna" title="Människorna i huset" band>
         <ul className={`grid grid-cols-1 ${gridGap} md:grid-cols-3`}>
           {people.map((p) => (
@@ -222,6 +227,7 @@ export default function HomePage() {
               <h3 className="text-xl text-hoa-ink">{p.name}</h3>
               <p className="text-sm leading-relaxed text-hoa-ink/80">{p.text}</p>
             </li>
+
           ))}
         </ul>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -229,6 +235,19 @@ export default function HomePage() {
           <CtaLink href="/behandlingar-och-samtal#terapeuter" variant="ghost">Terapeuter och coacher</CtaLink>
         </div>
       </Section>
+
+      <section aria-labelledby="forfragan" className="px-4 pb-14 text-center md:pb-20">
+        <div className="mx-auto max-w-2xl space-y-4">
+          <h2 id="forfragan" className="text-2xl text-hoa-ink">Healing och massage efter förfrågan</h2>
+          <p className="text-hoa-ink-muted">Healing hos Rebecca och massage hos Sandra Bengts bokas efter förfrågan.</p>
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <CtaLink href={REBECCA.requestPath} variant="secondary">Förfrågan till Rebecca</CtaLink>
+            <CtaLink href={SANDRA.requestPath} variant="secondary">Förfrågan om massage hos Sandra Bengts</CtaLink>
+          </div>
+        </div>
+      </section>
+
+
 
       <Section
         id="event"
