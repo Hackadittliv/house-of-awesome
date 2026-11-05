@@ -4,9 +4,12 @@ import { Container } from "@/components/Container";
 import { PageHeader } from "@/components/PageHeader";
 import { BookingUnavailable } from "@/components/booking/BookingUnavailable";
 import { CancelLinkForwarder } from "@/components/booking/CancelLinkForwarder";
+import { ANNE_BOOKING_URL } from "@/lib/anne";
 import { bookingEnabled } from "@/lib/booking/config";
 import { bookingCopy as t } from "@/lib/booking/copy";
 import { formatDuration, getBookableServices, getInquiryServices } from "@/lib/content";
+import { REBECCA } from "@/lib/rebecca";
+import { SANDRA } from "@/lib/sandra";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -15,9 +18,36 @@ export const metadata = pageMetadata({
   path: "/boka",
 });
 
+// Egna förfrågningsadresser. De ligger inte i tjänstekatalogen, eftersom en katalogpost
+// också skulle skapa en sida under /boka/[slug].
+const personRequests = [
+  {
+    id: "rebecca",
+    name: `${REBECCA.service} hos ${REBECCA.name}`,
+    href: REBECCA.requestPath,
+  },
+  {
+    id: "sandra",
+    name: `Massage hos ${SANDRA.name}`,
+    href: SANDRA.requestPath,
+  },
+  {
+    id: "anne",
+    name: "Rådgivning hos Anne Wevers",
+    href: ANNE_BOOKING_URL,
+  },
+] as const;
+
 export default function BookingIndexPage() {
   const bookable = getBookableServices();
-  const inquiry = getInquiryServices();
+  const inquiry = [
+    ...getInquiryServices().map((service) => ({
+      id: service.slug,
+      name: service.name,
+      href: `/boka/forfragan?tjanst=${service.slug}`,
+    })),
+    ...personRequests,
+  ];
 
   return (
     <Container className="space-y-14 py-16 md:py-24">
@@ -61,9 +91,9 @@ export default function BookingIndexPage() {
             </div>
             <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {inquiry.map((service) => (
-                <li key={service.slug}>
+                <li key={service.id}>
                   <Link
-                    href={`/boka/forfragan?tjanst=${service.slug}`}
+                    href={service.href}
                     className="flex min-h-12 items-center justify-between gap-3 rounded-lia-md border border-hoa-line px-4 py-3 text-hoa-ink transition-colors hover:border-hoa-gold"
                   >
                     {service.name}
