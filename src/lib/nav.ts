@@ -41,6 +41,7 @@ export const offerGroup: MenuGroup = {
       label: "Behandlingar & samtal",
       sections: [
         { href: "/behandlingar-och-samtal#healing", label: "Healing" },
+        { href: "/behandlingar-och-samtal#massage", label: "Massage hos Sandra Bengts" },
         { href: "/behandlingar-och-samtal#coachning", label: "Coachning & vägledning" },
         { href: "/behandlingar-och-samtal#samtal", label: "Trauma & samtal" },
         { href: "/behandlingar-och-samtal#terapeuter", label: "Terapeuter & coacher" },
