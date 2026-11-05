@@ -4,10 +4,12 @@ import { describe, expect, it, vi } from "vitest";
 
 import { findCopyViolations } from "../scripts/copy-rules.mjs";
 import BookingIndexPage from "@/app/boka/page";
-import { ANNE_BOOKING_URL } from "@/lib/anne";
+import { ANNE_BOOKING_URL, anneRequestDetail } from "@/lib/anne";
 import { bookingCopy } from "@/lib/booking/copy";
 import { addDays, groupSlotsByDay, interestFor, stockholmDate, utmFrom } from "@/lib/booking/format";
-import { getBookableServices, getInquiryServices } from "@/lib/content";
+import { optionDetail } from "@/lib/booking/offer-line";
+import { formatDuration, getBookableServices, getInquiryServices } from "@/lib/content";
+import { longevity } from "@/lib/longevity-content";
 import { bookingUrl, inquiryUrl, liaBookingUrl } from "@/lib/links";
 import { REBECCA } from "@/lib/rebecca";
 import { SANDRA } from "@/lib/sandra";
@@ -84,19 +86,52 @@ describe("bokningshjälpare", () => {
   });
 });
 
+function mutedLine(anchor: string): string | undefined {
+  return anchor.match(/text-hoa-ink-muted">([^<]*)</)?.[1];
+}
+
+describe("underrad för tid och pris", () => {
+  it("sammanfattar Rebecca och Sandra utan att hitta på ett pris", () => {
+    expect(optionDetail(REBECCA.options)).toBe("45, 60 eller 90 minuter · från 650 kr");
+    expect(optionDetail(SANDRA.options)).toBe("30 eller 50 minuter · från 550 kr");
+    expect(optionDetail([{ label: "30 min", price: "550 kr" }])).toBe("30 minuter · 550 kr");
+    expect(optionDetail([
+      { label: "30 min", price: "550 kr" },
+      { label: "50 min", price: "550 kr" },
+    ])).toBe("30 eller 50 minuter · 550 kr");
+    expect(optionDetail([
+      { label: "20 minuter", price: "95 €" },
+      { label: "40 minuter", price: "150 €" },
+    ])).toBe("20 eller 40 minuter");
+    expect(optionDetail([])).toBeNull();
+    expect(findCopyViolations("45, 60 eller 90 minuter · från 650 kr\n30 eller 50 minuter · från 550 kr")).toEqual([]);
+  });
+
+  it("tar Annes tid och pris från den publicerade rubriken", () => {
+    const heading = longevity.anne.secondaryCta?.heading;
+    expect(heading).toContain("20 minuter · 95 €");
+    expect(anneRequestDetail(heading, longevity.anne.lead)).toBe("20 minuter · 95 €");
+    expect(anneRequestDetail("Bara en rubrik", longevity.anne.lead)).toBe(longevity.anne.lead);
+    expect(anneRequestDetail(undefined, "  ingress  ")).toBe("ingress");
+  });
+});
+
 describe("personförfrågningar på /boka", () => {
   const people = [
     {
       name: `${REBECCA.service} hos ${REBECCA.name}`,
       href: "/boka/forfragan/rebecca",
+      detail: "45, 60 eller 90 minuter · från 650 kr",
     },
     {
       name: `Massage hos ${SANDRA.name}`,
       href: "/boka/forfragan/sandra",
+      detail: "30 eller 50 minuter · från 550 kr",
     },
     {
       name: "Rådgivning hos Anne Wevers",
       href: "/boka/forfragan?tjanst=anne-wevers",
+      detail: "20 minuter · 95 €",
     },
   ];
 
@@ -117,12 +152,19 @@ describe("personförfrågningar på /boka", () => {
 
     expect(lastCatalog).toBe(getInquiryServices().length - 1);
     expect(anchors).toHaveLength(getInquiryServices().length + people.length);
+    getInquiryServices().forEach((service, index) => {
+      const facts = [formatDuration(service), service.priceLabel].filter(Boolean).join(" · ");
+      expect(anchors[index]).toContain(`href="/boka/forfragan?tjanst=${service.slug}"`);
+      expect(mutedLine(anchors[index])).toBe(facts || service.lead);
+    });
+    expect(mutedLine(anchors[getInquiryServices().findIndex((service) => service.slug === "awesome-protocol")])).toBe("60 minuter");
     people.forEach((person, index) => {
       const anchor = anchors[lastCatalog + 1 + index];
       const href = person.href.replaceAll("&", "&amp;");
       expect(anchor).toContain(`href="${href}"`);
       expect(anchor).toContain(person.name);
       expect(anchor).toContain(bookingCopy.sendRequest);
+      expect(mutedLine(anchor)).toBe(person.detail);
       expect(anchor).not.toContain(bookingCopy.chooseTime);
       expect(bookable).not.toContain(href);
     });

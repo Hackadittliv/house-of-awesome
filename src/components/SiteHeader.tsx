@@ -89,7 +89,9 @@ export function SiteHeader({ bookingHref, menu }: { bookingHref: string; menu: (
   }, [open]);
 
   return (
-    <header className="hoa-site-header hoa-surface-light sticky top-0 z-50 border-b border-hoa-light-line bg-hoa-light text-hoa-light-ink">
+    <header
+      className={`hoa-site-header hoa-surface-light sticky top-0 border-b border-hoa-light-line bg-hoa-light text-hoa-light-ink ${open ? "z-[65]" : "z-50"}`}
+    >
       <Container wide className="@container flex h-20 items-center justify-between gap-2 sm:gap-4 lg:h-24">
         <Logo />
 
@@ -125,7 +127,7 @@ export function SiteHeader({ bookingHref, menu }: { bookingHref: string; menu: (
         </nav>
 
         <div className="hidden xl:block">
-          <CtaLink href={bookingHref} size="sm" className="px-6">
+          <CtaLink href={bookingHref} onClick={close} size="sm" className="px-6">
             Boka
           </CtaLink>
         </div>
@@ -145,7 +147,9 @@ export function SiteHeader({ bookingHref, menu }: { bookingHref: string; menu: (
       </Container>
 
       {open ? (
-        <div id="mobilmeny" role="dialog" aria-modal="true" aria-label="Meny" className="fixed inset-0 z-[60] flex flex-col bg-hoa-bg xl:hidden">
+        // z-60 på menyn räcker inte: den ligger i sidhuvudets staplingskontext, och cookiebannern
+        // (också z-60, senare i DOM) hamnar då över Boka. Öppet sidhuvud lyfts till z-65.
+        <div id="mobilmeny" role="dialog" aria-modal="true" aria-label="Meny" className="fixed inset-0 z-[65] flex flex-col bg-hoa-bg xl:hidden">
           <div className="flex h-20 shrink-0 items-center justify-between border-b border-hoa-line px-4 sm:px-6">
             <p className="font-display text-sm font-bold tracking-[0.25em] text-hoa-ink">HOUSE OF AWESOME</p>
             <button type="button" onClick={close} className="inline-flex h-12 w-12 items-center justify-center text-3xl text-hoa-ink">
@@ -165,7 +169,7 @@ export function SiteHeader({ bookingHref, menu }: { bookingHref: string; menu: (
             </ul>
           </nav>
           <div className="shrink-0 border-t border-hoa-line p-4 sm:p-6">
-            <CtaLink href={bookingHref} className="min-h-14 w-full text-lg">
+            <CtaLink href={bookingHref} onClick={close} className="min-h-14 w-full text-lg">
               Boka
             </CtaLink>
           </div>
