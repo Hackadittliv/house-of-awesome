@@ -11,7 +11,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { cardClass } from "@/components/v2/ui";
 import { categoryLabels, formatDuration, getService, getServices, site } from "@/lib/content";
 import { fitStyle } from "@/lib/heading";
-import { bookingUrl, inquiryUrl, mailtoUrl } from "@/lib/links";
+import { bookingUrl, inquiryUrl } from "@/lib/links";
 import { breadcrumbJsonLd, pageMetadata, serviceJsonLd } from "@/lib/seo";
 
 export const dynamicParams = false;
@@ -133,8 +133,8 @@ export default async function ServicePage({ params }: PageProps<"/tjanster/[slug
                 ) : (
                   <>
                     <CtaLink href={inquiryUrl(service.slug, "service_page")}>Boka ett kort samtal</CtaLink>
-                    <CtaLink href={mailtoUrl(`Förfrågan: ${service.name}`)} variant="secondary">
-                      Mejla en förfrågan
+                    <CtaLink href={inquiryUrl(service.slug, "service_page_inquiry")} variant="secondary">
+                      Skicka en förfrågan
                     </CtaLink>
                   </>
                 )}

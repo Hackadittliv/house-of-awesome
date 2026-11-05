@@ -1,6 +1,6 @@
 import { CtaLink } from "@/components/CtaLink";
 import { Card, Grid, Hero, Section, Soon } from "@/components/v2/ui";
-import { mailtoUrl } from "@/lib/links";
+import { inquiryUrl } from "@/lib/links";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -10,7 +10,7 @@ export const metadata = pageMetadata({
 });
 
 export default function Page() {
-  const inquiry = mailtoUrl("Förfrågan om event i House of Awesome");
+  const inquiry = inquiryUrl("event", "event_page");
   return (
     <>
       <Hero eyebrow="Event · Workshops · Föreläsningar" title="Ett hus att samlas i" lead="Egna föreläsningar och workshops, och ett hus du kan hyra för dina." />

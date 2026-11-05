@@ -4,7 +4,7 @@ import { BookingUnavailable } from "@/components/booking/BookingUnavailable";
 import { RequestPage } from "@/components/booking/RequestPage";
 import { bookingEnabled } from "@/lib/booking/config";
 import { bookingCopy as t } from "@/lib/booking/copy";
-import { getServices } from "@/lib/content";
+import { requestServiceNames } from "@/lib/inquiry-services";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -14,7 +14,7 @@ export const metadata = pageMetadata({
 });
 
 export default function RequestFormPage() {
-  const services = Object.fromEntries(getServices().map((service) => [service.slug, service.name]));
+  const services = requestServiceNames();
   return (
     <Container className="py-16 md:py-24">
       <div className="mx-auto max-w-2xl space-y-10">

@@ -1,6 +1,6 @@
 import { CtaLink } from "@/components/CtaLink";
 import { Avatar, Card, Grid, Hero, Section, Soon } from "@/components/v2/ui";
-import { SHORT_CALL_SLUG, bookingUrl, inquiryUrl, mailtoUrl } from "@/lib/links";
+import { SHORT_CALL_SLUG, bookingUrl, inquiryUrl } from "@/lib/links";
 import { PORTRAITS } from "@/lib/people";
 import { practitioners } from "@/lib/practitioners";
 import { REBECCA } from "@/lib/rebecca";
@@ -142,7 +142,7 @@ export default function Page() {
             <Avatar {...PORTRAITS.lucas} />
           </Card>
           <Card label="Är du terapeut?" title="Hyr behandlingsrum" text="Arbeta i ett hus med diagnostik, gym och behandlingar, med kunder som redan söker helhet.">
-            <CtaLink href={mailtoUrl("Behandlingsrum i House of Awesome")} size="sm" variant="secondary" className="mt-auto w-fit">Hör av dig</CtaLink>
+            <CtaLink href={inquiryUrl("behandlingsrum", "beh_rum")} size="sm" variant="secondary" className="mt-auto w-fit">Hör av dig</CtaLink>
           </Card>
         </Grid>
       </Section>
