@@ -27,7 +27,8 @@ export default function Page() {
       <Hero eyebrow="Longevity-resor i Bohuslän" title="Res hit. Åk hem med en plan." lead="Ett individuellt program på tre nätter till två veckor, med västkustens natur runt omkring.">
         <CtaLink href={inquiry}>Gör en förfrågan</CtaLink>
       </Hero>
-      <Section id="program">
+      {/* Programmen på kräm, så att Awesome Week är en mörk ö och inte ett svart kort i ett svart band. */}
+      <Section id="program" band>
         <Grid>
           <Card label="3 nätter" title="Awesome Reset" text="En introduktion till ditt eget protokoll.">
             <Bullets items={["Blodpanel, InBody, HRV", "Läkarsamtal", "Daglig behandling och träning", "Personligt protokoll att ta med hem"]} />
@@ -53,7 +54,7 @@ export default function Page() {
           {day.map(([time, title, text]) => (
             <li key={time} className="flex gap-6 py-4">
               <span className="w-14 shrink-0 font-display font-bold text-hoa-gold">{time}</span>
-              <span><span className="block text-hoa-ink">{title}</span><span className="text-sm text-hoa-ink-muted">{text}</span></span>
+              <span className="min-w-0"><span className="block text-hoa-ink">{title}</span><span className="text-sm text-hoa-ink-muted">{text}</span></span>
             </li>
           ))}
         </ol>

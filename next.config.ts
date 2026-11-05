@@ -44,8 +44,16 @@ const utm = "utm_source=houseofawesome&utm_medium=referral&utm_campaign=hoa_site
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  outputFileTracingIncludes: {
+    "/portratt/anne-wevers": ["./src/assets/anne-wevers.webp"],
+  },
   images: {
     formats: ["image/avif", "image/webp"],
+    // Skyddade porträtt måste gå via sin route, aldrig via optimerarens publika cache.
+    localPatterns: [
+      { pathname: "/images/**", search: "" },
+      { pathname: "/_next/static/media/**", search: "" },
+    ],
   },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];

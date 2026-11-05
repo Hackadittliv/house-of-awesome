@@ -11,6 +11,7 @@ import { SharedBottom } from "@/components/v2/SharedBottom";
 import { scrubSensitiveParamsScript } from "@/lib/booking/sensitive-url";
 import { site } from "@/lib/content";
 import { SHORT_CALL_SLUG, bookingUrl } from "@/lib/links";
+import { mainMenu } from "@/lib/nav";
 import { businessJsonLd, siteUrl } from "@/lib/seo";
 
 import "./globals.css";
@@ -18,7 +19,7 @@ import "./globals.css";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: "variable",
 });
 
 const jakarta = Plus_Jakarta_Sans({
@@ -47,7 +48,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#FDF5E2",
+  // Sajten är mörk i grunden (:root har color-scheme: dark). Sidhuvudet och
+  // ljusa band sätter color-scheme: light via .hoa-surface-light.
   colorScheme: "dark",
 };
 
@@ -65,7 +68,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           >
             Hoppa till innehåll
           </a>
-          <SiteHeader bookingHref={bookingUrl(null, "header")} />
+          <SiteHeader bookingHref={bookingUrl(null, "header")} menu={mainMenu} />
           <main id="innehall" className="flex-1 bg-hoa-bg">
             {children}
           </main>

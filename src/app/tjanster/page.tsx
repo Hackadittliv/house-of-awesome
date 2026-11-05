@@ -3,7 +3,9 @@ import { Disclaimer } from "@/components/Disclaimer";
 import { JsonLd } from "@/components/JsonLd";
 import { PageHeader } from "@/components/PageHeader";
 import { ServiceCard } from "@/components/ServiceCard";
+import { Section, gridGap } from "@/components/v2/ui";
 import { getBookableServices, getInquiryServices } from "@/lib/content";
+import { fitStyle } from "@/lib/heading";
 import { breadcrumbJsonLd, pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -13,48 +15,58 @@ export const metadata = pageMetadata({
   path: "/tjanster",
 });
 
+const bookTitle = "Boka direkt";
+const inquiryTitle = "Efter förfrågan";
+
 export default function TjansterPage() {
   const bookable = getBookableServices();
   const inquiry = getInquiryServices();
 
+  // Rubriken på svart, tjänstekorten på ett krämband. Bandet är mains sista innehåll,
+  // så den gemensamma avslutningen blir svart CTA före nyhetsbrevet. Delsektionerna är
+  // containrar för rubrikernas fit, som i Section.
   return (
-    <Container className="py-16 md:py-24">
-      <PageHeader
-        eyebrow="Tjänster"
-        title="Tjänster och behandlingar"
-        lead="Allt vi erbjuder i huset och digitalt. Tjänsterna med egen kalender bokar du direkt, övriga bokar vi efter en kort förfrågan."
-      />
+    <>
+      <Container className="pt-14 pb-12 md:pt-20 md:pb-16">
+        <PageHeader
+          eyebrow="Tjänster"
+          title="Tjänster och behandlingar"
+          lead="Allt vi erbjuder i huset och digitalt. Tjänsterna med egen kalender bokar du direkt, övriga bokar vi efter en kort förfrågan."
+        />
+      </Container>
 
-      <section aria-labelledby="boka-direkt" className="mt-14">
-        <h2 id="boka-direkt" className="text-2xl text-hoa-ink md:text-3xl">
-          Boka direkt
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm text-hoa-ink-muted">
-          Du kommer till rätt tjänst i bokningen hos Life Is Awesome, där vi har en gemensam
-          kalender.
-        </p>
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {bookable.map((service) => (
-            <ServiceCard key={service.slug} service={service} placement="services_list" />
-          ))}
-        </div>
-      </section>
+      <Section band>
+        <section aria-labelledby="boka-direkt" className="@container">
+          <h2 id="boka-direkt" className="hoa-h2 text-hoa-ink" style={fitStyle(bookTitle)}>
+            {bookTitle}
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-hoa-ink-muted">
+            Du kommer till rätt tjänst i bokningen hos Life Is Awesome, där vi har en gemensam
+            kalender.
+          </p>
+          <div className={`mt-6 grid grid-cols-1 ${gridGap} sm:grid-cols-2 lg:grid-cols-3`}>
+            {bookable.map((service) => (
+              <ServiceCard key={service.slug} service={service} placement="services_list" />
+            ))}
+          </div>
+        </section>
 
-      <section aria-labelledby="efter-forfragan" className="mt-16">
-        <h2 id="efter-forfragan" className="text-2xl text-hoa-ink md:text-3xl">
-          Efter förfrågan
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm text-hoa-ink-muted">
-          Boka ett kostnadsfritt kort samtal eller mejla oss, så hittar vi en tid som passar.
-        </p>
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {inquiry.map((service) => (
-            <ServiceCard key={service.slug} service={service} placement="services_list" />
-          ))}
-        </div>
-      </section>
+        <section aria-labelledby="efter-forfragan" className="@container mt-14 md:mt-16">
+          <h2 id="efter-forfragan" className="hoa-h2 text-hoa-ink" style={fitStyle(inquiryTitle)}>
+            {inquiryTitle}
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-hoa-ink-muted">
+            Boka ett kostnadsfritt kort samtal eller mejla oss, så hittar vi en tid som passar.
+          </p>
+          <div className={`mt-6 grid grid-cols-1 ${gridGap} sm:grid-cols-2 lg:grid-cols-3`}>
+            {inquiry.map((service) => (
+              <ServiceCard key={service.slug} service={service} placement="services_list" />
+            ))}
+          </div>
+        </section>
 
-      <Disclaimer className="mt-14" />
+        <Disclaimer className="mt-14" />
+      </Section>
 
       <JsonLd
         data={breadcrumbJsonLd([
@@ -62,6 +74,6 @@ export default function TjansterPage() {
           { name: "Tjänster", path: "/tjanster" },
         ])}
       />
-    </Container>
+    </>
   );
 }

@@ -42,15 +42,32 @@ export default function CookiesPage() {
   }
 
   return (
-    <Container className="py-16 md:py-24">
+    <Container className="py-14 md:py-20">
       <PageHeader
         eyebrow="Integritet"
         title="Cookies"
         lead="Vi frågar innan något annat än det nödvändiga sparas. Inget verktyg för analys eller marknadsföring laddas innan du har sagt ja."
       />
 
-      <div className="mt-12 overflow-x-auto">
-        <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
+      {/* På mobil en lista per post i stället för en tabell som måste scrollas i sidled. */}
+      <ul className="mt-12 divide-y divide-hoa-line border-y border-hoa-line md:hidden">
+        {rows.map((row) => (
+          <li key={row.name} className="py-4">
+            <p className="font-mono text-sm text-hoa-ink">{row.name}</p>
+            <dl className="mt-2 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-sm">
+              <dt className="text-hoa-ink-muted">Kategori</dt>
+              <dd className="text-hoa-ink">{row.category}</dd>
+              <dt className="text-hoa-ink-muted">Syfte</dt>
+              <dd className="text-hoa-ink-muted">{row.purpose}</dd>
+              <dt className="text-hoa-ink-muted">Lagringstid</dt>
+              <dd className="text-hoa-ink-muted">{row.lifetime}</dd>
+            </dl>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-12 hidden md:block">
+        <table className="w-full border-collapse text-left text-sm">
           <caption className="sr-only">Cookies och lagring på houseofawesome.se</caption>
           <thead>
             <tr className="border-b border-hoa-gold/50 text-hoa-gold">
@@ -78,7 +95,7 @@ export default function CookiesPage() {
           {rows.length === 1 ? (
             <p>
               Just nu använder sajten inga verktyg för analys eller marknadsföring. Därför finns
-              bara den nödvändiga lagringen i tabellen.
+              bara den nödvändiga lagringen i översikten ovan.
             </p>
           ) : null}
           <p>
@@ -90,7 +107,7 @@ export default function CookiesPage() {
             <Link href="/integritetspolicy">integritetspolicy</Link>.
           </p>
         </Prose>
-        <CookieSettingsButton className="mt-8 inline-flex min-h-11 items-center justify-center rounded-lia-md border border-hoa-gold px-5 py-2.5 text-sm font-medium text-hoa-gold transition-colors hover:bg-hoa-gold hover:text-hoa-bg" />
+        <CookieSettingsButton className="mt-8 inline-flex min-h-11 max-w-full items-center justify-center rounded-lia-md border border-hoa-gold px-5 py-2.5 text-sm font-medium text-hoa-gold transition-colors hover:bg-hoa-gold hover:text-hoa-bg" />
       </div>
     </Container>
   );
