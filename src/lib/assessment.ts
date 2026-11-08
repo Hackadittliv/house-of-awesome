@@ -7,10 +7,10 @@ export const ASSESSMENT_TIMEOUT_MS = 15_000;
 export const ASSESSMENT_FLOWS = {
   personal: {
     title: "Min hälsa och återhämtning",
-    description: "Berätta om din vardag, dina mål och vad du vill ha stöd med.",
+    description: "Fyra korta steg om dina mål, intressen och när du vill börja.",
     iframeTitle: "Behovsanalys för hälsa och återhämtning hos Life Is Awesome",
     embedPath: "/embed/behovsanalys/privat",
-    fallbackPath: "/longevity-guide",
+    fallbackPath: "/behovsanalys",
   },
   equipment: {
     title: "Utrustning för hem eller verksamhet",

@@ -6,7 +6,7 @@ Christian valde den 8 november 2026 att behovsanalyserna ska visas inbäddade p�
 
 HOA:s `/behovsanalys` har två val:
 
-* Min hälsa och återhämtning: LIA:s befintliga Longevity Guide.
+* Min hälsa och återhämtning: LIA:s befintliga behovsanalys på `/behovsanalys`, med fyra steg för mål, intressen, tid och kontakt.
 * Utrustning för hem eller verksamhet: LIA:s befintliga Professionalanalys, som även stöder utrustning för hemmabruk.
 
 Företagets hälsostrategi för medarbetare och förfrågningar om event eller lokaler behåller sina befintliga kontaktvägar.

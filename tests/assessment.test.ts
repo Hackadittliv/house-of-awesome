@@ -55,10 +55,10 @@ describe("behovsanalysens adresser", () => {
   it("håller reservlänkar i den skrivskyddade granskningen", () => {
     vi.stubEnv("NEXT_PUBLIC_ASSESSMENT_REVIEW", "true");
     vi.stubEnv("NEXT_PUBLIC_LIA_ASSESSMENT_ORIGIN", ASSESSMENT_REVIEW_ORIGIN);
-    expect(assessmentFallbackUrl("personal")).toBe(`${ASSESSMENT_REVIEW_ORIGIN}/longevity-guide`);
+    expect(assessmentFallbackUrl("personal")).toBe(`${ASSESSMENT_REVIEW_ORIGIN}/behovsanalys`);
     expect(assessmentFallbackUrl("equipment")).toBe(`${ASSESSMENT_REVIEW_ORIGIN}/professional#professional-contact`);
     vi.stubEnv("NEXT_PUBLIC_ASSESSMENT_REVIEW", "false");
-    expect(assessmentFallbackUrl("personal")).toBe(`${ASSESSMENT_ORIGIN}/longevity-guide`);
+    expect(assessmentFallbackUrl("personal")).toBe(`${ASSESSMENT_ORIGIN}/behovsanalys`);
   });
 
   it.each(["http://localhost:5173", "http://127.0.0.1:5173", "http://[::1]:5173"])("tillåter lokal utveckling på %s", (origin) => {
@@ -79,7 +79,7 @@ describe("behovsanalysens adresser", () => {
     expect(Object.fromEntries(url.searchParams)).toEqual({ parentOrigin: "https://preview.example:444", channel: "random-channel", source: "houseofawesome" });
     expect(new URL(assessmentEmbedUrl("equipment", "http://localhost:3000", "other", "http://localhost:5173")).href)
       .toBe("http://localhost:5173/embed/behovsanalys/utrustning?parentOrigin=http%3A%2F%2Flocalhost%3A3000&channel=other&source=houseofawesome");
-    expect(assessmentFallbackUrl("personal")).toBe("https://lifeisawesome.se/longevity-guide");
+    expect(assessmentFallbackUrl("personal")).toBe("https://lifeisawesome.se/behovsanalys");
     expect(assessmentFallbackUrl("equipment")).toBe("https://lifeisawesome.se/professional#professional-contact");
   });
 });
