@@ -26,6 +26,7 @@ export function getSitemap(published: boolean = LONGEVITY_PUBLISHED): MetadataRo
     { path: "/butik", priority: 0.6 },
     { path: "/zazen-scalar", priority: 0.6 },
     { path: "/besok", priority: 0.8 },
+    { path: "/behovsanalys", priority: 0.8 },
     { path: "/faq", priority: 0.6 },
     { path: "/integritetspolicy", priority: 0.2 },
     { path: "/cookies", priority: 0.2 },
@@ -41,7 +42,7 @@ export function getSitemap(published: boolean = LONGEVITY_PUBLISHED): MetadataRo
     })),
     ...pages.map(({ path, priority }) => ({
       url: absoluteUrl(path),
-      lastModified: CONTENT_UPDATED,
+      lastModified: path === "/behovsanalys" ? new Date("2026-11-08") : CONTENT_UPDATED,
       priority,
     })),
     ...getServices().map((service) => ({

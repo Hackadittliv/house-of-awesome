@@ -45,6 +45,7 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image" },
   formatDetection: { telephone: false },
+  robots: process.env.NEXT_PUBLIC_ASSESSMENT_REVIEW === "true" ? { index: false, follow: false } : undefined,
 };
 
 export const viewport: Viewport = {
@@ -62,6 +63,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="flex min-h-full flex-col bg-hoa-bg text-hoa-ink">
         <ConsentProvider>
+          {process.env.NEXT_PUBLIC_ASSESSMENT_REVIEW === "true" ? (
+            <div role="status" className="bg-hoa-gold px-4 py-2 text-center text-xs font-medium text-hoa-espresso">
+              Förhandsvisning · Inga förfrågningar skickas
+            </div>
+          ) : null}
           <a
             href="#innehall"
             className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[70] focus:bg-hoa-gold focus:px-3 focus:py-2 focus:text-hoa-bg"

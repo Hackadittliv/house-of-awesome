@@ -68,6 +68,7 @@ ${memberships}
 - [Medlemskap](${absoluteUrl("/medlemskap")})
 - [Om huset](${absoluteUrl("/om")})
 - [Besök och kontakt](${absoluteUrl("/besok")})
+- [Behovsanalys](${absoluteUrl("/behovsanalys")}): Personlig uppföljning eller hjälp med utrustning för hem och verksamhet.
 - [Frågor och svar](${absoluteUrl("/faq")})
 - [Integritetspolicy](${absoluteUrl("/integritetspolicy")})
 

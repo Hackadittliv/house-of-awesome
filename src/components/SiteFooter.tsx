@@ -38,6 +38,7 @@ export function SiteFooter() {
         <nav aria-label="Utforska">
           <p className={head}>Utforska</p>
           <ul className="mt-2">
+            <li><a href="/behovsanalys" className={linkClass}>Behovsanalys</a></li>
             <li><a href={site.operator.url} className={linkClass}>Börja här</a></li>
             <li><a href={site.operator.url} className={linkClass}>Recept</a></li>
             <li><a href={site.operator.url} className={linkClass}>Podcasts</a></li>

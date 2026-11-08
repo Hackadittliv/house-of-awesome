@@ -26,12 +26,13 @@ function runScrub(href: string) {
     },
   };
   const window = {
+    __hoaDocumentPath: undefined as string | undefined,
     location,
     history,
     sessionStorage: { setItem: (key: string, value: string) => storage.set(key, value) },
   };
   new Function("window", "URL", scrubSensitiveParamsScript)(window, URL);
-  return { storage, calls, href: location.href };
+  return { storage, calls, href: location.href, documentPath: window.__hoaDocumentPath };
 }
 
 describe("skriptet som rensar adressfältet", () => {
@@ -60,6 +61,16 @@ describe("skriptet som rensar adressfältet", () => {
     const result = runScrub("https://houseofawesome.se/tjanster?utm_source=ig");
     expect(result.calls).toEqual([]);
     expect(result.storage.size).toBe(0);
+    expect(result.documentPath).toBe("/tjanster");
+  });
+
+  it("bevarar dokumentets ursprungliga sida när skriptet körs igen efter klientnavigering", () => {
+    const window = {
+      __hoaDocumentPath: "/tjanster",
+      location: { href: "https://houseofawesome.se/behovsanalys" },
+    };
+    new Function("window", "URL", scrubSensitiveParamsScript)(window, URL);
+    expect(window.__hoaDocumentPath).toBe("/tjanster");
   });
 
   it("tar bort koden även när sessionStorage inte går att använda", () => {
@@ -79,11 +90,11 @@ describe("skriptet som rensar adressfältet", () => {
 });
 
 describe("sidor utan spårare", () => {
-  it.each(["/avboka", "/boka/tack", "/boka/tack/"])("%s laddar inga spårare", (path) => {
+  it.each(["/avboka", "/boka/tack", "/boka/tack/", "/behovsanalys", "/behovsanalys/privat"])("%s laddar inga spårare", (path) => {
     expect(isTrackingFreePath(path)).toBe(true);
   });
 
-  it.each(["/", "/boka", "/boka/hbot-60", "/tjanster", "/avbokat", null])("%s får spårare efter samtycke", (path) => {
+  it.each(["/", "/boka", "/boka/hbot-60", "/tjanster", "/avbokat", "/behovsanalysen", null])("%s får spårare efter samtycke", (path) => {
     expect(isTrackingFreePath(path)).toBe(false);
   });
 });

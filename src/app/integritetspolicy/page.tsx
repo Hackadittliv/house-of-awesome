@@ -15,7 +15,7 @@ export const metadata = pageMetadata({
   path: "/integritetspolicy",
 });
 
-const UPDATED = "11 oktober 2026";
+const UPDATED = "8 november 2026";
 
 export default function IntegritetspolicyPage() {
   const { operator, contact } = site;
@@ -72,7 +72,13 @@ export default function IntegritetspolicyPage() {
               för ärendet.
             </li>
           </ul>
-          <p>Den här sajten har inga formulär och inga konton.</p>
+          <p>
+            På sidan <a href="/behovsanalys">Behovsanalys</a> kan du fylla i ett formulär för personlig
+            uppföljning eller hjälp med utrustning. Formulären tillhandahålls av {operator.legalName}
+            och visas inbäddade från lifeisawesome.se. Svaren skickas direkt till verksamhetens
+            gemensamma system och används för att hantera din förfrågan. Läs informationen vid
+            formuläret innan du skickar. Verktyg för analys och marknadsföring laddas inte på sidan.
+          </p>
 
           <ProseHeading>Mottagare</ProseHeading>
           <p>
