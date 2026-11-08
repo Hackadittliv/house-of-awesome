@@ -7,7 +7,7 @@ export const CANCEL_TOKEN_KEY = "hoa-cancel-token";
 export const CHECKOUT_SESSION_KEY = "hoa-checkout-session";
 
 /** Sidor där GA och Meta aldrig laddas. */
-export const TRACKING_FREE_PATHS = ["/avboka", "/boka/tack"] as const;
+export const TRACKING_FREE_PATHS = ["/avboka", "/boka/tack", "/behovsanalys"] as const;
 
 export function isTrackingFreePath(pathname: string | null | undefined): boolean {
   if (!pathname) return false;
@@ -17,6 +17,7 @@ export function isTrackingFreePath(pathname: string | null | undefined): boolean
 // Fristående skript utan beroenden, eftersom det körs innan Next.js har laddats.
 export const scrubSensitiveParamsScript = `(function(){try{
 var w=window,l=w.location,u=new URL(l.href),q=u.searchParams,c=q.get("avboka"),s=q.get("session_id");
+if(typeof w.__hoaDocumentPath!=="string")w.__hoaDocumentPath=u.pathname;
 if(c===null&&s===null)return;
 function keep(k,v){try{if(v)w.sessionStorage.setItem(k,v);}catch(e){}}
 if(c!==null){keep("${CANCEL_TOKEN_KEY}",c);q.delete("avboka");}

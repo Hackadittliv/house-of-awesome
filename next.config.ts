@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { getAssessmentOrigin } from "./src/lib/assessment";
 
 const isProduction = process.env.NODE_ENV === "production";
 // Netlify lägger in sitt granskningsverktyg som iframe på förhandsversioner, aldrig i produktion.
@@ -24,7 +25,7 @@ const contentSecurityPolicy = [
   `connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.facebook.com https://connect.facebook.net https://api.stripe.com https://*.stripe.com${liaSupabaseOrigin ? ` ${liaSupabaseOrigin}` : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",
-  `frame-src ${stripeFrames}${isNetlifyPreview ? " https://app.netlify.com" : ""}`,
+  `frame-src ${stripeFrames} ${getAssessmentOrigin()}${isNetlifyPreview ? " https://app.netlify.com" : ""}`,
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

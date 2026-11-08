@@ -38,7 +38,8 @@ export function CtaLink({
       ? `${base} min-h-11 ${variants.ghost} ${className}`
       : `${base} ${sizes[size]} ${variants[variant]} ${className}`;
 
-  if (/^(https?:|mailto:|tel:)/.test(href)) {
+  // En hel sidladdning håller redan laddade spårare borta från behovsanalysen.
+  if (/^(https?:|mailto:|tel:)/.test(href) || /^\/behovsanalys(?:[/?#]|$)/.test(href)) {
     return (
       <a href={href} className={classes} onClick={onClick}>
         {children}
