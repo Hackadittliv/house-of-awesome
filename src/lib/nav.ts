@@ -79,6 +79,7 @@ export const offerGroup = getOfferGroup();
 /** Menyn från Christians skärmbild. */
 export function getMainMenu(published: boolean = LONGEVITY_PUBLISHED): (MenuEntry | MenuGroup)[] {
   return [
+    { href: "/behovsanalys", label: "Behovsanalys" },
     { href: "/medlemskap#medlemskap", label: "Medlemskap" },
     getOfferGroup(published),
     {
