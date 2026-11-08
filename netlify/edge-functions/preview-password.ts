@@ -2,7 +2,7 @@
 // mobilers inbyggda webbläsare. Produktion påverkas inte. Saknat lösenord nekar
 // åtkomst. Befintliga HTTP Basic-klienter kan fortsätta använda samma lösenord.
 
-type DeployContext = { deploy?: { context?: string } };
+type DeployContext = { deploy?: { context?: string }; next?: () => Promise<Response> };
 declare const Netlify: { env: { get(name: string): string | undefined } };
 
 export const PROTECTED_CONTEXTS = new Set(["deploy-preview", "branch-deploy"]);
@@ -120,8 +120,17 @@ async function readLoginBody(request: Request): Promise<string | null> {
 
 export default async function previewPassword(request: Request, context: DeployContext) {
   if (!context.deploy?.context || !PROTECTED_CONTEXTS.has(context.deploy.context)) return;
-  const password = Netlify.env.get("PREVIEW_PASSWORD");
   const url = new URL(request.url);
+  // Explicitly public, read-only assessment review requested by Christian.
+  // This deploy-only flag never opens other preview hosts.
+  if (url.origin === "https://behovsanalys-review--house-of-awesome.netlify.app" && Netlify.env.get("HOA_PUBLIC_ASSESSMENT_REVIEW") === "true") {
+    const response = await context.next?.();
+    if (!response) return;
+    const headers = new Headers(response.headers);
+    headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+    return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+  }
+  const password = Netlify.env.get("PREVIEW_PASSWORD");
   const returnTo = safeReturnPath(url.pathname + url.search, url.origin);
   if (!password) return loginPage(returnTo, "Förhandsvisningen är inte tillgänglig just nu.");
 

@@ -25,6 +25,8 @@ För separat mobilgranskning kan ett granskningsbygge sätta `NEXT_PUBLIC_ASSESS
 
 Netlifys skydd för förhandsvisningar visar en mobilanpassad inloggningssida med ett lösenordsfält. En lyckad inloggning skapar en signerad sessionscookie för samma värd som gäller i sju dagar och är märkt `HttpOnly`, `Secure` och `SameSite=Lax`. Granskningslösenordet sätts bara för den aktuella driftsättningen via `PREVIEW_PASSWORD` och ska inte sparas i källkod eller dokumentation.
 
+Christian begärde den 8 november 2026 att den skrivskyddade mobilgranskningen ska kunna öppnas direkt utan lösenord. Driftsättningsflaggan `HOA_PUBLIC_ASSESSMENT_REVIEW=true` öppnar därför endast den exakta granskningsvärden `https://behovsanalys-review--house-of-awesome.netlify.app`. Svaret märks med `X-Robots-Tag: noindex, nofollow, noarchive`. Övriga förhandsvisningar behåller sitt lösenordsskydd.
+
 Meddelanden har formen `{type: "lia:assessment", version: 1, event, flow, channel, height?}`. Tillåtna event är `ready`, `resize`, `step` och `complete`; `flow` är `personal` eller `equipment`. Värden behöver matcha exakt origin, aktuellt iframefönster och den aktuella kanalen. Höjd behöver vara ett ändligt tal mellan 160 och 6000 px. Värden läser aldrig formulärsvaren.
 
 Laddningen bekräftas genom protokollet, inte genom `iframe.onload`. Ett SPAfelsvar kan annars ge HTTP 200 utan formulär. Efter 15 sekunder utan svar visas en reservlänk och möjlighet att försöka igen med ny kanal. Byte av inriktning varnar innan ett annat formulär ersätter det gamla.

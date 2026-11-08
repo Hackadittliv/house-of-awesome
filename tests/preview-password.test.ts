@@ -140,4 +140,36 @@ describe("mobil inloggning till förhandsvisningen", () => {
     expect(await previewPassword(new Request(`${origin}/behovsanalys`, { headers: { authorization: basic("x", password) } }), context)).toBeUndefined();
     expect(await previewPassword(login("fel"), { deploy: { context: "production" } })).toBeUndefined();
   });
+
+  it.each(["branch-deploy", "deploy-preview"])("öppnar endast den uttryckligen aktiverade mobilgranskningen i %s", async (deployContext) => {
+    vi.stubGlobal("Netlify", { env: { get: (name: string) => name === "HOA_PUBLIC_ASSESSMENT_REVIEW" ? "true" : password } });
+    const reviewContext = { deploy: { context: deployContext } };
+    expect(await previewPassword(page(), reviewContext)).toBeUndefined();
+    expect(await previewPassword(new Request(`${origin}/_next/static/chunks/example.js`), reviewContext)).toBeUndefined();
+    for (const otherOrigin of [
+      "https://other-preview--house-of-awesome.netlify.app",
+      "https://behovsanalys-review--house-of-awesome.netlify.app.example.com",
+      "http://behovsanalys-review--house-of-awesome.netlify.app",
+    ]) {
+      expect((await previewPassword(page(undefined, otherOrigin), reviewContext))?.status).toBe(401);
+    }
+  });
+
+  it.each(["false", undefined])("behåller inloggningen när publik granskningsflagga är %s", async (flag) => {
+    vi.stubGlobal("Netlify", { env: { get: (name: string) => name === "HOA_PUBLIC_ASSESSMENT_REVIEW" ? flag : password } });
+    expect((await previewPassword(page(), context))?.status).toBe(401);
+    expect(await previewPassword(page(), { deploy: { context: "production" } })).toBeUndefined();
+  });
+
+  it("märker den publika granskningens strömmade svar som noindex", async () => {
+    vi.stubGlobal("Netlify", { env: { get: (name: string) => name === "HOA_PUBLIC_ASSESSMENT_REVIEW" ? "true" : password } });
+    const next = vi.fn(async () => new Response("preview", { headers: { "content-type": "text/html" } }));
+    const response = await previewPassword(page(), { ...context, next });
+    expect(next).toHaveBeenCalledOnce();
+    expect(response?.headers.get("x-robots-tag")).toMatch(/noindex/);
+    expect(response?.headers.get("x-robots-tag")).toMatch(/nofollow/);
+    expect(response?.headers.get("x-robots-tag")).toMatch(/noarchive/);
+    expect(response?.headers.get("content-type")).toBe("text/html");
+    expect(await response!.text()).toBe("preview");
+  });
 });
