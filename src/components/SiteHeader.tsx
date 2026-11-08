@@ -19,12 +19,15 @@ function Plus({ open }: { open: boolean }) {
 
 function MobileEntry({ entry, onNavigate }: { entry: MenuEntry; onNavigate: () => void }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  // Behovsanalysen behöver ett nytt dokument utan spårare från föregående sida.
+  const EntryLink = entry.href === "/behovsanalys" ? "a" : Link;
   return (
     <li>
       <div className="flex items-center justify-between gap-3">
-        <Link href={entry.href} onClick={onNavigate} className="inline-flex min-h-12 min-w-0 items-center text-lg text-hoa-ink">
+        <EntryLink href={entry.href} onClick={onNavigate} aria-current={pathname === entry.href.split("#")[0] ? "page" : undefined} className="inline-flex min-h-12 min-w-0 items-center text-lg text-hoa-ink">
           <span className="min-w-0">{entry.label}</span>
-        </Link>
+        </EntryLink>
         {entry.sections ? (
           <button
             type="button"
@@ -95,9 +98,10 @@ export function SiteHeader({ bookingHref, menu }: { bookingHref: string; menu: (
       <Container wide className="@container flex h-20 items-center justify-between gap-2 sm:gap-4 lg:h-24">
         <Logo />
 
-        <nav aria-label="Huvudmeny" className="hidden items-center gap-6 xl:flex">
-          {menu.map((entry) =>
-            "items" in entry ? (
+        <nav aria-label="Huvudmeny" className="hidden items-center gap-3 xl:flex 2xl:gap-6">
+          {menu.map((entry) => {
+            const EntryLink = "href" in entry && entry.href === "/behovsanalys" ? "a" : Link;
+            return "items" in entry ? (
               <div key={entry.label} className="group relative">
                 <button type="button" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-hoa-ink hover:underline underline-offset-4">
                   {entry.label} <span aria-hidden>▾</span>
@@ -111,16 +115,16 @@ export function SiteHeader({ bookingHref, menu }: { bookingHref: string; menu: (
                 </div>
               </div>
             ) : (
-              <Link
+              <EntryLink
                 key={entry.href}
                 href={entry.href}
                 aria-current={pathname === entry.href.split("#")[0] ? "page" : undefined}
                 className="inline-flex min-h-11 items-center text-sm font-medium text-hoa-ink hover:underline underline-offset-4 aria-[current=page]:underline"
               >
                 {entry.label}
-              </Link>
-            ),
-          )}
+              </EntryLink>
+            );
+          })}
           <Link href="/om" className="inline-flex min-h-11 items-center text-sm font-medium text-hoa-ink hover:underline underline-offset-4">
             Om oss
           </Link>

@@ -106,6 +106,13 @@ export default function HomePage() {
               <CtaLink href={bookingUrl(SHORT_CALL_SLUG, "home_hero")}>Boka kostnadsfritt samtal med Patrik</CtaLink>
               <CtaLink href={bookingUrl(null, "home_hero")} variant="secondary">Boka behandling</CtaLink>
             </div>
+            <div className="mt-5 flex flex-col items-center justify-center gap-1 text-sm sm:flex-row sm:gap-3">
+              <p className="text-hoa-ink-muted">Osäker på vad som passar dig?</p>
+              <CtaLink href="/behovsanalys" variant="ghost">
+                Gör vår behovsanalys
+                <span aria-hidden="true">→</span>
+              </CtaLink>
+            </div>
           </div>
         </div>
         <FacadeImage />
