@@ -23,6 +23,8 @@ Vanliga produktionsbyggen använder alltid `https://lifeisawesome.se`. `NEXT_PUB
 
 För separat mobilgranskning kan ett granskningsbygge sätta `NEXT_PUBLIC_ASSESSMENT_REVIEW=true` tillsammans med `NEXT_PUBLIC_LIA_ASSESSMENT_ORIGIN=https://hoa-review--lia-professional-pr1-preview-20260829.netlify.app`. Endast denna exakta HTTPSorigin godtas. Reservlänkarna använder samma resolver så att granskningen stannar i den skrivskyddade LIA-versionen. LIA måste byggas med `VITE_PREVIEW_READ_ONLY=true` och dess byggda embedhuvuden måste tillåta exakt `https://behovsanalys-review--house-of-awesome.netlify.app`. Granskningsflaggan ska inte sättas i produktionskontexten.
 
+Netlifys skydd för förhandsvisningar visar en mobilanpassad inloggningssida med ett lösenordsfält. En lyckad inloggning skapar en signerad sessionscookie för samma värd som gäller i sju dagar och är märkt `HttpOnly`, `Secure` och `SameSite=Lax`. Granskningslösenordet sätts bara för den aktuella driftsättningen via `PREVIEW_PASSWORD` och ska inte sparas i källkod eller dokumentation.
+
 Meddelanden har formen `{type: "lia:assessment", version: 1, event, flow, channel, height?}`. Tillåtna event är `ready`, `resize`, `step` och `complete`; `flow` är `personal` eller `equipment`. Värden behöver matcha exakt origin, aktuellt iframefönster och den aktuella kanalen. Höjd behöver vara ett ändligt tal mellan 160 och 6000 px. Värden läser aldrig formulärsvaren.
 
 Laddningen bekräftas genom protokollet, inte genom `iframe.onload`. Ett SPAfelsvar kan annars ge HTTP 200 utan formulär. Efter 15 sekunder utan svar visas en reservlänk och möjlighet att försöka igen med ny kanal. Byte av inriktning varnar innan ett annat formulär ersätter det gamla.
