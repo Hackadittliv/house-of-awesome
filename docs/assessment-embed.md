@@ -19,7 +19,9 @@ HOA skickar bara `parentOrigin`, en tillfällig `channel` och det fasta källnam
 
 ## Gränsen mellan webbplatserna
 
-Produktion använder alltid `https://lifeisawesome.se`. `NEXT_PUBLIC_LIA_ASSESSMENT_ORIGIN` tillåter endast en lokal HTTPorigin i development. Samma resolver används av iframe och CSP.
+Vanliga produktionsbyggen använder alltid `https://lifeisawesome.se`. `NEXT_PUBLIC_LIA_ASSESSMENT_ORIGIN` tillåter en lokal HTTPorigin i development. Samma resolver används av iframe och CSP.
+
+För separat mobilgranskning kan ett granskningsbygge sätta `NEXT_PUBLIC_ASSESSMENT_REVIEW=true` tillsammans med `NEXT_PUBLIC_LIA_ASSESSMENT_ORIGIN=https://hoa-review--lia-professional-pr1-preview-20260829.netlify.app`. Endast denna exakta HTTPSorigin godtas. Reservlänkarna använder samma resolver så att granskningen stannar i den skrivskyddade LIA-versionen. LIA måste byggas med `VITE_PREVIEW_READ_ONLY=true` och dess byggda embedhuvuden måste tillåta exakt `https://behovsanalys-review--house-of-awesome.netlify.app`. Granskningsflaggan ska inte sättas i produktionskontexten.
 
 Meddelanden har formen `{type: "lia:assessment", version: 1, event, flow, channel, height?}`. Tillåtna event är `ready`, `resize`, `step` och `complete`; `flow` är `personal` eller `equipment`. Värden behöver matcha exakt origin, aktuellt iframefönster och den aktuella kanalen. Höjd behöver vara ett ändligt tal mellan 160 och 6000 px. Värden läser aldrig formulärsvaren.
 

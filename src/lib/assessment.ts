@@ -1,4 +1,5 @@
 export const ASSESSMENT_ORIGIN = "https://lifeisawesome.se";
+export const ASSESSMENT_REVIEW_ORIGIN = "https://hoa-review--lia-professional-pr1-preview-20260829.netlify.app";
 export const ASSESSMENT_MESSAGE_TYPE = "lia:assessment";
 export const ASSESSMENT_MESSAGE_VERSION = 1;
 export const ASSESSMENT_TIMEOUT_MS = 15_000;
@@ -22,11 +23,13 @@ export const ASSESSMENT_FLOWS = {
 
 export type AssessmentFlow = keyof typeof ASSESSMENT_FLOWS;
 
-/** Production is always pinned. Only local HTTP origins can override it during development. */
+/** Normal builds stay pinned. Review builds trust only the designated read-only LIA host. */
 export function getAssessmentOrigin(
   configuredOrigin = process.env.NEXT_PUBLIC_LIA_ASSESSMENT_ORIGIN,
   mode = process.env.NODE_ENV,
+  reviewBuild = process.env.NEXT_PUBLIC_ASSESSMENT_REVIEW === "true",
 ): string {
+  if (reviewBuild && configuredOrigin === ASSESSMENT_REVIEW_ORIGIN) return ASSESSMENT_REVIEW_ORIGIN;
   if (mode !== "development" || !configuredOrigin) return ASSESSMENT_ORIGIN;
   try {
     const url = new URL(configuredOrigin);
@@ -55,7 +58,7 @@ export function assessmentEmbedUrl(
 }
 
 export function assessmentFallbackUrl(flow: AssessmentFlow): string {
-  return new URL(ASSESSMENT_FLOWS[flow].fallbackPath, ASSESSMENT_ORIGIN).href;
+  return new URL(ASSESSMENT_FLOWS[flow].fallbackPath, getAssessmentOrigin()).href;
 }
 
 export type AssessmentMessage = {

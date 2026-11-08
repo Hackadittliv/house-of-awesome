@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AssessmentExperience } from "@/components/assessment/AssessmentExperience";
 import {
   ASSESSMENT_ORIGIN,
+  ASSESSMENT_REVIEW_ORIGIN,
   ASSESSMENT_TIMEOUT_MS,
   assessmentEmbedUrl,
   assessmentFallbackUrl,
@@ -23,9 +24,41 @@ const expected = { origin: ASSESSMENT_ORIGIN, source, channel: "current-frame", 
 const envelope = (data: unknown) => ({ data, origin: ASSESSMENT_ORIGIN, source });
 
 describe("behovsanalysens adresser", () => {
+  afterEach(() => vi.unstubAllEnvs());
+
   it("låser produktionsbyggen till LIA även om miljön anger en annan värd", () => {
     expect(getAssessmentOrigin("http://localhost:5173", "production")).toBe(ASSESSMENT_ORIGIN);
     expect(getAssessmentOrigin("https://elsewhere.example", "production")).toBe(ASSESSMENT_ORIGIN);
+  });
+
+  it("kräver granskningsflaggan även för den exakta granskningsvärden", () => {
+    vi.stubEnv("NEXT_PUBLIC_ASSESSMENT_REVIEW", undefined);
+    expect(getAssessmentOrigin(ASSESSMENT_REVIEW_ORIGIN, "production")).toBe(ASSESSMENT_ORIGIN);
+    expect(getAssessmentOrigin(ASSESSMENT_REVIEW_ORIGIN, "production", false)).toBe(ASSESSMENT_ORIGIN);
+    expect(getAssessmentOrigin(ASSESSMENT_REVIEW_ORIGIN, "development", false)).toBe(ASSESSMENT_ORIGIN);
+    expect(getAssessmentOrigin(ASSESSMENT_REVIEW_ORIGIN, "production", true)).toBe(ASSESSMENT_REVIEW_ORIGIN);
+  });
+
+  it.each([
+    `${ASSESSMENT_REVIEW_ORIGIN}.attacker.example`,
+    `${ASSESSMENT_REVIEW_ORIGIN}/`,
+    `${ASSESSMENT_REVIEW_ORIGIN}/form`,
+    `${ASSESSMENT_REVIEW_ORIGIN}?token=private`,
+    `${ASSESSMENT_REVIEW_ORIGIN}#form`,
+    ASSESSMENT_REVIEW_ORIGIN.replace("https:", "http:"),
+    ASSESSMENT_REVIEW_ORIGIN.replace("https://", "https://user:password@"),
+    "https://another-preview.netlify.app",
+  ])("avvisar andra granskningsadresser även med flaggan: %s", (origin) => {
+    expect(getAssessmentOrigin(origin, "production", true)).toBe(ASSESSMENT_ORIGIN);
+  });
+
+  it("håller reservlänkar i den skrivskyddade granskningen", () => {
+    vi.stubEnv("NEXT_PUBLIC_ASSESSMENT_REVIEW", "true");
+    vi.stubEnv("NEXT_PUBLIC_LIA_ASSESSMENT_ORIGIN", ASSESSMENT_REVIEW_ORIGIN);
+    expect(assessmentFallbackUrl("personal")).toBe(`${ASSESSMENT_REVIEW_ORIGIN}/longevity-guide`);
+    expect(assessmentFallbackUrl("equipment")).toBe(`${ASSESSMENT_REVIEW_ORIGIN}/professional#professional-contact`);
+    vi.stubEnv("NEXT_PUBLIC_ASSESSMENT_REVIEW", "false");
+    expect(assessmentFallbackUrl("personal")).toBe(`${ASSESSMENT_ORIGIN}/longevity-guide`);
   });
 
   it.each(["http://localhost:5173", "http://127.0.0.1:5173", "http://[::1]:5173"])("tillåter lokal utveckling på %s", (origin) => {
