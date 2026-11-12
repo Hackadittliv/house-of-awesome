@@ -7,6 +7,7 @@ import {
   GIFT_CARD_OFFER_LINE,
   GIFT_CARD_PROMO_TIMEOUT_MS,
   GIFT_CARD_PROMO_UNREACHABLE,
+  formatSek,
   giftCardCheckoutPayload,
   giftCardMetadata,
   giftCardPendingText,
@@ -222,9 +223,9 @@ describe("checkout utan nominellt värde", () => {
     const receipt = readGiftCardReceipt({ paidSek: 1000, valueSek: 1200, promoCode: "AWESOME2027", bonusPercent: 20 });
     const pending = giftCardPendingText(receipt);
     const thanks = giftCardThanksText(receipt);
-    expect(pending).toMatch(/betalar/);
-    expect(pending).not.toMatch(/betalade/);
-    expect(pending).toMatch(/1[\s\u00a0\u202f]?200 kr/);
+    expect(pending).toBe(`Du betalar ${formatSek(1000)}. Presentkortet blir värt ${formatSek(1200)}.`);
+    expect(pending).not.toMatch(/[\u2013\u2014]|betalade/);
+    expect(findCopyViolations(pending ?? "")).toEqual([]);
     expect(thanks).toMatch(/betalade/);
     expect(thanks).not.toMatch(/betalar/);
     expect(giftCardPendingText(readGiftCardReceipt({ paidSek: 1000, valueSek: 1000, promoCode: "AWESOME2027", bonusPercent: 0 }))).toBeNull();

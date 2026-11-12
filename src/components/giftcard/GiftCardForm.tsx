@@ -66,16 +66,16 @@ export function GiftCardForm() {
   const [promoNote, setPromoNote] = useState<string | null>(null);
 
   const amountSek = custom ? Number(custom) : preset;
-  const offerOpen = showGiftCardOffer();
+  const promoAvailable = showGiftCardOffer();
   const trimmedPromo = promoCode.trim();
   const promoKey =
-    trimmedPromo && Number.isInteger(amountSek) && amountSek >= GIFT_CARD_MIN_SEK && amountSek <= GIFT_CARD_MAX_SEK
+    promoAvailable && trimmedPromo && Number.isInteger(amountSek) && amountSek >= GIFT_CARD_MIN_SEK && amountSek <= GIFT_CARD_MAX_SEK
       ? `${trimmedPromo}\u0000${amountSek}`
       : "";
   const promo: PromoState = !promoKey ? { state: "idle" } : settledPromo?.key === promoKey ? settledPromo.preview : { state: "checking" };
 
   useEffect(() => {
-    if (!promoKey) return;
+    if (!promoAvailable || !promoKey) return;
     const controller = new AbortController();
     const timer = window.setTimeout(() => {
       void previewGiftCardPromo({ promoCode: trimmedPromo, amountSek, signal: controller.signal })
@@ -88,7 +88,7 @@ export function GiftCardForm() {
       controller.abort();
       window.clearTimeout(timer);
     };
-  }, [promoKey, trimmedPromo, amountSek]);
+  }, [promoAvailable, promoKey, trimmedPromo, amountSek]);
 
   useEffect(() => {
     if (!promoOpen) return;
@@ -113,7 +113,7 @@ export function GiftCardForm() {
       let promoCodeForCheckout: string | undefined;
       let droppedNote: string | null = null;
       const trimmed = promoCode.trim();
-      if (trimmed) {
+      if (showGiftCardOffer() && trimmed) {
         const preview = await previewGiftCardPromo({ promoCode: trimmed, amountSek });
         setSettledPromo({ key: `${trimmed}\u0000${amountSek}`, preview });
         if (preview.state === "valid" && preview.paidSek === amountSek) promoCodeForCheckout = trimmed;
@@ -172,7 +172,12 @@ export function GiftCardForm() {
 
   const promoMessage =
     promo.state === "valid"
-      ? promo.message
+      ? giftCardPendingText({
+          paidSek: promo.paidSek,
+          valueSek: promo.valueSek,
+          promoCode: promo.code,
+          bonusPercent: promo.bonusPercent,
+        })
       : promo.state === "invalid"
         ? promo.message
         : promo.state === "unreachable"
@@ -183,7 +188,7 @@ export function GiftCardForm() {
 
   return (
     <div className="mx-auto max-w-xl">
-      {offerOpen ? (
+      {promoAvailable ? (
         <p className="mb-6 text-center text-sm text-hoa-ink-muted" data-testid="giftcard-offer">
           {GIFT_CARD_OFFER_LINE}
         </p>
@@ -239,7 +244,7 @@ export function GiftCardForm() {
 
         <Field label="Hälsning (valfri)" name="gc-msg" multiline value={message} onChange={setMessage} maxLength={GIFT_MESSAGE_MAX} />
 
-        {promoOpen ? (
+        {promoAvailable && promoOpen ? (
           <div className="space-y-2" id="gc-promo-panel">
             <Field label="Kampanjkod" name="gc-promo" autoComplete="off" value={promoCode} onChange={setPromoCode} maxLength={40} />
             {promoMessage ? (
@@ -261,7 +266,7 @@ export function GiftCardForm() {
               </p>
             ) : null}
           </div>
-        ) : (
+        ) : promoAvailable ? (
           <button
             type="button"
             className="inline-flex min-h-11 items-center text-sm text-hoa-ink-muted underline underline-offset-4 hover:text-hoa-ink"
@@ -271,7 +276,7 @@ export function GiftCardForm() {
           >
             Har du en kampanjkod?
           </button>
-        )}
+        ) : null}
 
         {error && <Notice tone="error">{error}</Notice>}
 

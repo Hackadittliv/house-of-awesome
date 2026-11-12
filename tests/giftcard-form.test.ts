@@ -60,7 +60,7 @@ function installFetch() {
             valueSek: value,
             endsAt: "2027-11-12 23:59:59",
             timeZone: "Europe/Stockholm",
-            message: `Du betalar ${formatSek(paid).replace(" kr", "")} kr. Presentkortet blir värt ${formatSek(value)}.`,
+            message: `Du betalar ${formatSek(paid)} \u2013 presentkortet blir värt ${formatSek(value)}`,
           });
         }
         return Response.json({ valid: false, reason: "unknown", message: "Koden stämmer inte." });
@@ -141,6 +141,27 @@ function checkoutCalls() {
   return calls.filter((call) => call.url.includes("create-checkout"));
 }
 
+function validateCalls() {
+  return calls.filter((call) => call.url.includes("validate-gift-card-promo"));
+}
+
+function expectPromoHidden(container: ParentNode) {
+  expect(container.querySelector("[data-testid=giftcard-offer]")).toBeNull();
+  expect(container.querySelector("#gc-promo")).toBeNull();
+  expect(container.textContent).not.toContain("Har du en kampanjkod?");
+}
+
+async function expectPurchaseWithoutPromo(container: HTMLElement) {
+  await fillBuyer(container);
+  await act(async () => {
+    container.querySelector<HTMLFormElement>("form")!.requestSubmit();
+  });
+  expect(validateCalls()).toHaveLength(0);
+  const checkout = checkoutCalls();
+  expect(checkout).toHaveLength(1);
+  expect(checkout[0]?.body).not.toHaveProperty("promoCode");
+}
+
 function nominalFree(body: Record<string, unknown>, paidSek: string) {
   const serialized = JSON.stringify(body);
   expect(serialized).not.toMatch(/valueSek|nominal|face|bonus/i);
@@ -163,30 +184,34 @@ describe("presentkortsformulärets kampanjkod", () => {
     act(() => {
       root?.unmount();
     });
+    installFetch();
     const closed = await renderForm();
-    expect(closed.querySelector("[data-testid=giftcard-offer]")).toBeNull();
-    expect(closed.textContent).toContain("Har du en kampanjkod?");
+    expectPromoHidden(closed);
+    await expectPurchaseWithoutPromo(closed);
   });
 
-  it("döljer erbjudanderaden när flaggan är av", async () => {
+  it("döljer kodfältet när flaggan är av och skickar ingen kod", async () => {
     vi.stubEnv("NEXT_PUBLIC_GIFT_PROMO_ENABLED", "false");
+    installFetch();
     const during = new Date("2026-11-12T12:00:00.000Z");
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(during);
     const container = await renderForm();
-    expect(container.querySelector("[data-testid=giftcard-offer]")).toBeNull();
+    expectPromoHidden(container);
     expect(container.textContent).not.toContain("20 %");
-    expect(container.textContent).toContain("Har du en kampanjkod?");
+    await expectPurchaseWithoutPromo(container);
   });
 
-  it("visar serverns meddelande för en giltig kod och uppdaterar det när beloppet ändras", async () => {
+  it("visar beloppen från svaret, utan serverns tankstreck, och uppdaterar när beloppet ändras", async () => {
+    vi.stubEnv("NEXT_PUBLIC_GIFT_PROMO_ENABLED", "true");
     installFetch();
     const container = await renderForm();
     await openPromo(container);
     await setField(container, "gc-promo", "  Awesome2027 ");
     await settlePreview();
     const valid = container.querySelector("[data-testid=giftcard-promo-valid]");
-    expect(valid?.textContent).toContain(formatSek(1200));
+    expect(valid?.textContent).toContain(`Du betalar ${formatSek(1000)}. Presentkortet blir värt ${formatSek(1200)}.`);
+    expect(valid?.textContent).not.toMatch(/\u2013|\u2014/);
     expect(valid?.querySelector("svg")).not.toBeNull();
 
     const preset = [...container.querySelectorAll("button")].find(
@@ -202,6 +227,7 @@ describe("presentkortsformulärets kampanjkod", () => {
   });
 
   it("visar ett lugnt meddelande för en ogiltig kod och köpet går igenom utan koden", async () => {
+    vi.stubEnv("NEXT_PUBLIC_GIFT_PROMO_ENABLED", "true");
     installFetch();
     const container = await renderForm();
     await openPromo(container);
@@ -221,6 +247,7 @@ describe("presentkortsformulärets kampanjkod", () => {
   });
 
   it("lovar ingen bonus när valideringen är nere och köpet utan kod fungerar", async () => {
+    vi.stubEnv("NEXT_PUBLIC_GIFT_PROMO_ENABLED", "true");
     endpointDown = true;
     installFetch();
     const container = await renderForm();
@@ -244,6 +271,7 @@ describe("presentkortsformulärets kampanjkod", () => {
   });
 
   it("skickar koden och det betalda beloppet när förhandsvisningen är giltig", async () => {
+    vi.stubEnv("NEXT_PUBLIC_GIFT_PROMO_ENABLED", "true");
     installFetch();
     const container = await renderForm();
     await openPromo(container);
@@ -259,13 +287,14 @@ describe("presentkortsformulärets kampanjkod", () => {
     nominalFree(checkout[0]!.body, "1000");
     expect(container.querySelector("[data-testid=giftcard-promo-note]")).toBeNull();
     const summary = container.querySelector("[data-testid=giftcard-pending-value]");
-    expect(summary?.textContent).toContain("betalar");
-    expect(summary?.textContent).not.toContain("betalade");
+    expect(summary?.textContent).toContain(`Du betalar ${formatSek(1000)}. Presentkortet blir värt ${formatSek(1200)}.`);
+    expect(summary?.textContent).not.toMatch(/\u2013|\u2014|betalade/);
     expect(summary?.textContent).toContain(formatSek(1200));
     expect(container.textContent).not.toContain("betalade");
   });
 
   it("släpper en hängande kodkontroll och köper utan kod", async () => {
+    vi.stubEnv("NEXT_PUBLIC_GIFT_PROMO_ENABLED", "true");
     hangValidate = true;
     installFetch();
     const container = await renderForm();

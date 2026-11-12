@@ -102,8 +102,9 @@ export function isGiftCardOfferOpen(now: Date = new Date()): boolean {
 }
 
 /**
- * Erbjudanderaden är av tills LIA:s kampanjfunktioner är deployade.
+ * Kampanjen är av tills LIA:s funktioner är deployade.
  * Sätt NEXT_PUBLIC_GIFT_PROMO_ENABLED=true i byggmiljön. Allt annat är av.
+ * Då döljs både raden och kodfältet, och klienten varken validerar eller skickar promoCode.
  */
 export function isGiftPromoEnabled(flag: string | undefined = process.env.NEXT_PUBLIC_GIFT_PROMO_ENABLED): boolean {
   return flag === "true";
@@ -271,10 +272,10 @@ export function readGiftCardReceipt(value: unknown): GiftCardReceipt | null {
   };
 }
 
-/** Före betalning. Imperfekt hör hemma på tacksidan. */
+/** Före betalning, från serverns belopp. Imperfekt hör hemma på tacksidan. */
 export function giftCardPendingText(receipt: GiftCardReceipt | null): string | null {
   if (!receipt || receipt.valueSek <= receipt.paidSek) return null;
-  return `Du betalar ${formatSek(receipt.paidSek)} \u2013 presentkortet blir värt ${formatSek(receipt.valueSek)}`;
+  return `Du betalar ${formatSek(receipt.paidSek)}. Presentkortet blir värt ${formatSek(receipt.valueSek)}.`;
 }
 
 export function giftCardThanksText(receipt: GiftCardReceipt | null): string | null {
