@@ -1,4 +1,5 @@
 import { BOOKING_SITE, PRIVACY_NOTICE_VERSION, liaSupabaseAnonKey, liaSupabaseUrl } from "@/lib/booking/config";
+import { giftCardCheckoutPayload, readGiftCardReceipt, type GiftCardReceipt } from "@/lib/giftcard/giftcard";
 
 export type EventTypeInfo = {
   slug: string;
@@ -253,14 +254,20 @@ export async function createGiftCardCheckout(args: {
   email: string;
   metadata: Record<string, string>;
   returnUrl: string;
-}): Promise<string> {
-  const data = await callFunction<{ clientSecret: string }>("create-checkout", {
-    priceId: "gift_card_custom",
-    customerEmail: args.email,
-    returnUrl: args.returnUrl,
-    quantity: 1,
-    requestId: crypto.randomUUID(),
-    metadata: args.metadata,
-  });
-  return data.clientSecret;
+  promoCode?: string;
+}): Promise<{ clientSecret: string; giftCard: GiftCardReceipt | null }> {
+  const data = await callFunction<{ clientSecret?: unknown; giftCard?: unknown }>(
+    "create-checkout",
+    giftCardCheckoutPayload({
+      email: args.email,
+      metadata: args.metadata,
+      returnUrl: args.returnUrl,
+      requestId: crypto.randomUUID(),
+      promoCode: args.promoCode,
+    }),
+  );
+  if (typeof data.clientSecret !== "string" || data.clientSecret.length === 0) {
+    throw new BookingApiError(502, "Saknar betalning");
+  }
+  return { clientSecret: data.clientSecret, giftCard: readGiftCardReceipt(data.giftCard) };
 }
