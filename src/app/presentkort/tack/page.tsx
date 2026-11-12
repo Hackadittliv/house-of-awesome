@@ -1,5 +1,6 @@
 import { Container } from "@/components/Container";
 import { CtaLink } from "@/components/CtaLink";
+import { GiftCardThanksValue } from "@/components/giftcard/GiftCardThanksValue";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -15,6 +16,7 @@ export default function GiftCardThanksPage() {
       <div className="mx-auto max-w-2xl space-y-6 text-center">
         <h1 className="hoa-h1 text-hoa-ink">Tack för ditt köp</h1>
         <p className="text-hoa-ink-muted">Presentkortet kommer via e-post inom några minuter.</p>
+        <GiftCardThanksValue />
         <CtaLink href="/butik" variant="ghost">
           Tillbaka till butiken
         </CtaLink>
