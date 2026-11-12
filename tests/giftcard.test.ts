@@ -5,13 +5,16 @@ import {
   GIFT_CARD_MAX_SEK,
   GIFT_CARD_MIN_SEK,
   GIFT_CARD_OFFER_LINE,
+  GIFT_CARD_PROMO_TIMEOUT_MS,
   GIFT_CARD_PROMO_UNREACHABLE,
   giftCardCheckoutPayload,
   giftCardMetadata,
+  giftCardPendingText,
   giftCardThanksText,
   isGiftCardOfferOpen,
   parseGiftCardPromoPreview,
   previewGiftCardPromo,
+  showGiftCardOffer,
   readGiftCardReceipt,
   validateGiftCard,
 } from "@/lib/giftcard/giftcard";
@@ -20,17 +23,19 @@ const base = { amountSek: 1000, buyerEmail: "a@b.se" };
 
 describe("presentkort", () => {
   it("följer LIA:s beloppsgränser", () => {
-    expect(validateGiftCard({ ...base, amountSek: GIFT_CARD_MIN_SEK })).toBeNull();
-    expect(validateGiftCard({ ...base, amountSek: GIFT_CARD_MAX_SEK })).toBeNull();
+    expect(validateGiftCard({ ...base, buyerName: "Ada", amountSek: GIFT_CARD_MIN_SEK })).toBeNull();
+    expect(validateGiftCard({ ...base, buyerName: "Ada", amountSek: GIFT_CARD_MAX_SEK })).toBeNull();
     expect(validateGiftCard({ ...base, amountSek: GIFT_CARD_MIN_SEK - 1 })).toBe("amount");
     expect(validateGiftCard({ ...base, amountSek: GIFT_CARD_MAX_SEK + 1 })).toBe("amount");
     expect(validateGiftCard({ ...base, amountSek: 250.5 })).toBe("amount");
   });
 
-  it("kräver köparens e-post och validerar mottagare", () => {
+  it("kräver köparens namn och e-post och validerar mottagare", () => {
     expect(validateGiftCard({ ...base, buyerEmail: "x" })).toBe("email");
-    expect(validateGiftCard({ ...base, recipientEmail: "nope" })).toBe("recipientEmail");
-    expect(validateGiftCard({ ...base, message: "x".repeat(401) })).toBe("tooLong");
+    expect(validateGiftCard(base)).toBe("name");
+    expect(validateGiftCard({ ...base, buyerName: "   " })).toBe("name");
+    expect(validateGiftCard({ ...base, buyerName: "Ada", recipientEmail: "nope" })).toBe("recipientEmail");
+    expect(validateGiftCard({ ...base, buyerName: "Ada", message: "x".repeat(401) })).toBe("tooLong");
   });
 
   it("skickar bara tillåtna metadatafält", () => {
@@ -56,6 +61,16 @@ describe("kampanjkodens klocka och texter", () => {
     expect(isGiftCardOfferOpen(new Date("2026-11-12T12:00:00.000Z"))).toBe(true);
   });
 
+  it("visar erbjudanderaden bara när flaggan är true och datumet gäller", () => {
+    const open = new Date("2026-11-12T12:00:00.000Z");
+    const closed = new Date("2027-11-12T23:00:00.000Z");
+    expect(showGiftCardOffer(open, undefined)).toBe(false);
+    expect(showGiftCardOffer(open, "")).toBe(false);
+    expect(showGiftCardOffer(open, "false")).toBe(false);
+    expect(showGiftCardOffer(open, "true")).toBe(true);
+    expect(showGiftCardOffer(closed, "true")).toBe(false);
+  });
+
   it("lovar inget med förbjudna ord", () => {
     for (const text of [GIFT_CARD_OFFER_LINE, GIFT_CARD_PROMO_UNREACHABLE]) {
       expect(findCopyViolations(text)).toEqual([]);
@@ -68,6 +83,7 @@ describe("kampanjkodens klocka och texter", () => {
 
 describe("förhandsvisning av kampanjkod", () => {
   afterEach(() => {
+    vi.useRealTimers();
     vi.unstubAllGlobals();
   });
 
@@ -130,6 +146,47 @@ describe("förhandsvisning av kampanjkod", () => {
       message: "Koden stämmer inte.",
     });
   });
+
+  it("släpper en hängande förhandsvisning vid tidsgränsen", async () => {
+    vi.useFakeTimers();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((_url: RequestInfo | URL, init?: RequestInit) => {
+        return new Promise((_resolve, reject) => {
+          const fail = () => reject(new DOMException("aborted", "AbortError"));
+          if (init?.signal?.aborted) {
+            fail();
+            return;
+          }
+          init?.signal?.addEventListener("abort", fail, { once: true });
+        });
+      }),
+    );
+    const pending = previewGiftCardPromo({ promoCode: "Awesome2027", amountSek: 1000 });
+    await vi.advanceTimersByTimeAsync(GIFT_CARD_PROMO_TIMEOUT_MS);
+    await expect(pending).resolves.toEqual({ state: "unreachable" });
+    vi.useRealTimers();
+  });
+
+  it("kastar när anroparen avbryter, så att en ny inmatning inte blir ett fel", async () => {
+    const controller = new AbortController();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((_url: RequestInfo | URL, init?: RequestInit) => {
+        return new Promise((_resolve, reject) => {
+          const fail = () => reject(new DOMException("aborted", "AbortError"));
+          if (init?.signal?.aborted) {
+            fail();
+            return;
+          }
+          init?.signal?.addEventListener("abort", fail, { once: true });
+        });
+      }),
+    );
+    const pending = previewGiftCardPromo({ promoCode: "Awesome2027", amountSek: 1000, signal: controller.signal });
+    controller.abort();
+    await expect(pending).rejects.toThrow();
+  });
 });
 
 describe("checkout utan nominellt värde", () => {
@@ -162,7 +219,15 @@ describe("checkout utan nominellt värde", () => {
       promoCode: "AWESOME2027",
       bonusPercent: 20,
     });
-    expect(giftCardThanksText(readGiftCardReceipt({ paidSek: 1000, valueSek: 1200, promoCode: "AWESOME2027", bonusPercent: 20 }))).toMatch(/1[\s\u00a0\u202f]?200 kr/);
+    const receipt = readGiftCardReceipt({ paidSek: 1000, valueSek: 1200, promoCode: "AWESOME2027", bonusPercent: 20 });
+    const pending = giftCardPendingText(receipt);
+    const thanks = giftCardThanksText(receipt);
+    expect(pending).toMatch(/betalar/);
+    expect(pending).not.toMatch(/betalade/);
+    expect(pending).toMatch(/1[\s\u00a0\u202f]?200 kr/);
+    expect(thanks).toMatch(/betalade/);
+    expect(thanks).not.toMatch(/betalar/);
+    expect(giftCardPendingText(readGiftCardReceipt({ paidSek: 1000, valueSek: 1000, promoCode: "AWESOME2027", bonusPercent: 0 }))).toBeNull();
     expect(giftCardThanksText(readGiftCardReceipt({ paidSek: 1000, valueSek: 1000, promoCode: "AWESOME2027", bonusPercent: 0 }))).toBeNull();
   });
 });

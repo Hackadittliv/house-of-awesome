@@ -19,6 +19,8 @@ export const GIFT_CARD_PROMO_UNREACHABLE =
   "Koden kunde inte kontrolleras just nu. Köpet går igenom utan kampanjkod.";
 export const GIFT_CARD_PROMO_CHECKING = "Kontrollerar koden.";
 export const GIFT_CARD_PROMO_DEBOUNCE_MS = 400;
+/** En hängande förhandsvisning får inte blockera köpet längre än så. */
+export const GIFT_CARD_PROMO_TIMEOUT_MS = 5_000;
 export const GIFT_CARD_RECEIPT_STORAGE_KEY = "hoa-gift-card-receipt";
 
 const GIFT_CARD_METADATA_KEYS = [
@@ -43,13 +45,14 @@ export type GiftCardInput = {
   message?: string;
 };
 
-export type GiftCardError = "amount" | "email" | "recipientEmail" | "tooLong";
+export type GiftCardError = "amount" | "email" | "name" | "recipientEmail" | "tooLong";
 
 export function validateGiftCard(input: GiftCardInput): GiftCardError | null {
   if (!Number.isInteger(input.amountSek) || input.amountSek < GIFT_CARD_MIN_SEK || input.amountSek > GIFT_CARD_MAX_SEK) {
     return "amount";
   }
   if (!EMAIL.test(input.buyerEmail.trim())) return "email";
+  if (!input.buyerName?.trim()) return "name";
   const recipientEmail = input.recipientEmail?.trim() ?? "";
   if (recipientEmail && !EMAIL.test(recipientEmail)) return "recipientEmail";
   if ((input.recipientName?.trim().length ?? 0) > RECIPIENT_NAME_MAX) return "tooLong";
@@ -96,6 +99,18 @@ export function stockholmDateTime(date: Date): string {
 
 export function isGiftCardOfferOpen(now: Date = new Date()): boolean {
   return stockholmDateTime(now) <= GIFT_CARD_OFFER_ENDS_AT;
+}
+
+/**
+ * Erbjudanderaden är av tills LIA:s kampanjfunktioner är deployade.
+ * Sätt NEXT_PUBLIC_GIFT_PROMO_ENABLED=true i byggmiljön. Allt annat är av.
+ */
+export function isGiftPromoEnabled(flag: string | undefined = process.env.NEXT_PUBLIC_GIFT_PROMO_ENABLED): boolean {
+  return flag === "true";
+}
+
+export function showGiftCardOffer(now: Date = new Date(), flag?: string): boolean {
+  return isGiftPromoEnabled(flag) && isGiftCardOfferOpen(now);
 }
 
 export type GiftCardPromoPreview =
@@ -146,18 +161,30 @@ export function parseGiftCardPromoPreview(data: unknown): GiftCardPromoPreview {
   return { state: "unreachable" };
 }
 
+function withTimeout(signal: AbortSignal | undefined, timeoutMs: number): { signal: AbortSignal; cancel: () => void } {
+  const timeout = new AbortController();
+  const timer = setTimeout(() => timeout.abort(), timeoutMs);
+  const combined = signal ? AbortSignal.any([signal, timeout.signal]) : timeout.signal;
+  return {
+    signal: combined,
+    cancel: () => clearTimeout(timer),
+  };
+}
+
 export async function previewGiftCardPromo(input: {
   promoCode: string;
   amountSek: number;
   priceId?: string;
   signal?: AbortSignal;
+  timeoutMs?: number;
 }): Promise<GiftCardPromoPreview> {
   const promoCode = input.promoCode.trim();
   if (!promoCode) return { state: "empty" };
+  const timed = withTimeout(input.signal, input.timeoutMs ?? GIFT_CARD_PROMO_TIMEOUT_MS);
   try {
     const response = await fetch(`${liaSupabaseUrl}/functions/v1/validate-gift-card-promo`, {
       method: "POST",
-      signal: input.signal,
+      signal: timed.signal,
       headers: {
         "Content-Type": "application/json",
         apikey: liaSupabaseAnonKey,
@@ -173,8 +200,10 @@ export async function previewGiftCardPromo(input: {
     const data: unknown = await response.json().catch(() => null);
     return parseGiftCardPromoPreview(data);
   } catch (error) {
-    if (input.signal?.aborted || (error instanceof DOMException && error.name === "AbortError")) throw error;
+    if (input.signal?.aborted) throw error;
     return { state: "unreachable" };
+  } finally {
+    timed.cancel();
   }
 }
 
@@ -240,6 +269,12 @@ export function readGiftCardReceipt(value: unknown): GiftCardReceipt | null {
     promoCode: body.promoCode,
     bonusPercent: body.bonusPercent,
   };
+}
+
+/** Före betalning. Imperfekt hör hemma på tacksidan. */
+export function giftCardPendingText(receipt: GiftCardReceipt | null): string | null {
+  if (!receipt || receipt.valueSek <= receipt.paidSek) return null;
+  return `Du betalar ${formatSek(receipt.paidSek)} \u2013 presentkortet blir värt ${formatSek(receipt.valueSek)}`;
 }
 
 export function giftCardThanksText(receipt: GiftCardReceipt | null): string | null {

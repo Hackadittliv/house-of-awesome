@@ -8,6 +8,7 @@ import { GiftCardThanksValue } from "@/components/giftcard/GiftCardThanksValue";
 import {
   GIFT_CARD_OFFER_LINE,
   GIFT_CARD_PROMO_DEBOUNCE_MS,
+  GIFT_CARD_PROMO_TIMEOUT_MS,
   GIFT_CARD_PROMO_UNREACHABLE,
   GIFT_CARD_RECEIPT_STORAGE_KEY,
   formatSek,
@@ -24,6 +25,8 @@ type Call = { url: string; body: Record<string, unknown> };
 let root: Root | undefined;
 let calls: Call[] = [];
 let endpointDown = false;
+let hangValidate = false;
+let checkoutStatus = 200;
 
 function installFetch() {
   calls = [];
@@ -33,6 +36,16 @@ function installFetch() {
       const body = init?.body ? (JSON.parse(String(init.body)) as Record<string, unknown>) : {};
       calls.push({ url: String(url), body });
       if (String(url).includes("validate-gift-card-promo")) {
+        if (hangValidate) {
+          return await new Promise((_resolve, reject) => {
+            const fail = () => reject(new DOMException("aborted", "AbortError"));
+            if (init?.signal?.aborted) {
+              fail();
+              return;
+            }
+            init?.signal?.addEventListener("abort", fail, { once: true });
+          });
+        }
         if (endpointDown) return new Response("missing", { status: 404 });
         const code = String(body.promoCode ?? "").trim().toUpperCase();
         if (code === "AWESOME2027") {
@@ -53,6 +66,12 @@ function installFetch() {
         return Response.json({ valid: false, reason: "unknown", message: "Koden stämmer inte." });
       }
       if (String(url).includes("create-checkout")) {
+        if (checkoutStatus >= 400) {
+          return new Response(JSON.stringify({ error: "purchaser_name is required" }), {
+            status: checkoutStatus,
+            headers: { "content-type": "application/json" },
+          });
+        }
         const paid = Number((body.metadata as { gift_card_amount_sek?: string } | undefined)?.gift_card_amount_sek);
         const giftCard = typeof body.promoCode === "string"
           ? { paidSek: paid, valueSek: Math.round(paid * 1.2), promoCode: "AWESOME2027", bonusPercent: 20 }
@@ -71,8 +90,11 @@ afterEach(() => {
   root = undefined;
   document.body.replaceChildren();
   endpointDown = false;
+  hangValidate = false;
+  checkoutStatus = 200;
   vi.useRealTimers();
   vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
 });
 
 async function renderForm() {
@@ -94,6 +116,11 @@ async function setField(container: ParentNode, id: string, value: string) {
     input!.dispatchEvent(new Event("input", { bubbles: true }));
     input!.dispatchEvent(new Event("change", { bubbles: true }));
   });
+}
+
+async function fillBuyer(container: ParentNode) {
+  await setField(container, "gc-bname", "Ada");
+  await setField(container, "gc-bemail", "a@b.se");
 }
 
 async function openPromo(container: ParentNode) {
@@ -123,6 +150,7 @@ function nominalFree(body: Record<string, unknown>, paidSek: string) {
 
 describe("presentkortsformulärets kampanjkod", () => {
   it("visar erbjudandet sista giltiga sekunden och döljer raden direkt efter", async () => {
+    vi.stubEnv("NEXT_PUBLIC_GIFT_PROMO_ENABLED", "true");
     installFetch();
     const lastSecond = new Date("2027-11-12T22:59:59.000Z");
     const afterDeadline = new Date("2027-11-12T23:00:00.000Z");
@@ -138,6 +166,17 @@ describe("presentkortsformulärets kampanjkod", () => {
     const closed = await renderForm();
     expect(closed.querySelector("[data-testid=giftcard-offer]")).toBeNull();
     expect(closed.textContent).toContain("Har du en kampanjkod?");
+  });
+
+  it("döljer erbjudanderaden när flaggan är av", async () => {
+    vi.stubEnv("NEXT_PUBLIC_GIFT_PROMO_ENABLED", "false");
+    const during = new Date("2026-11-12T12:00:00.000Z");
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(during);
+    const container = await renderForm();
+    expect(container.querySelector("[data-testid=giftcard-offer]")).toBeNull();
+    expect(container.textContent).not.toContain("20 %");
+    expect(container.textContent).toContain("Har du en kampanjkod?");
   });
 
   it("visar serverns meddelande för en giltig kod och uppdaterar det när beloppet ändras", async () => {
@@ -167,7 +206,7 @@ describe("presentkortsformulärets kampanjkod", () => {
     const container = await renderForm();
     await openPromo(container);
     await setField(container, "gc-promo", "NOPE");
-    await setField(container, "gc-bemail", "a@b.se");
+    await fillBuyer(container);
     await settlePreview();
     expect(container.querySelector("[data-testid=giftcard-promo-invalid]")?.textContent).toContain("Koden stämmer inte.");
 
@@ -187,7 +226,7 @@ describe("presentkortsformulärets kampanjkod", () => {
     const container = await renderForm();
     await openPromo(container);
     await setField(container, "gc-promo", "Awesome2027");
-    await setField(container, "gc-bemail", "a@b.se");
+    await fillBuyer(container);
     await settlePreview();
     const status = container.querySelector("[data-testid=giftcard-promo-unreachable]");
     expect(status?.textContent).toContain(GIFT_CARD_PROMO_UNREACHABLE);
@@ -209,7 +248,7 @@ describe("presentkortsformulärets kampanjkod", () => {
     const container = await renderForm();
     await openPromo(container);
     await setField(container, "gc-promo", "Awesome2027");
-    await setField(container, "gc-bemail", "a@b.se");
+    await fillBuyer(container);
     await settlePreview();
     await act(async () => {
       container.querySelector<HTMLFormElement>("form")!.requestSubmit();
@@ -219,8 +258,52 @@ describe("presentkortsformulärets kampanjkod", () => {
     expect(checkout[0]?.body.promoCode).toBe("Awesome2027");
     nominalFree(checkout[0]!.body, "1000");
     expect(container.querySelector("[data-testid=giftcard-promo-note]")).toBeNull();
-    expect(container.textContent).toContain(formatSek(1200));
-    expect(container.textContent).toContain(formatSek(1000));
+    const summary = container.querySelector("[data-testid=giftcard-pending-value]");
+    expect(summary?.textContent).toContain("betalar");
+    expect(summary?.textContent).not.toContain("betalade");
+    expect(summary?.textContent).toContain(formatSek(1200));
+    expect(container.textContent).not.toContain("betalade");
+  });
+
+  it("släpper en hängande kodkontroll och köper utan kod", async () => {
+    hangValidate = true;
+    installFetch();
+    const container = await renderForm();
+    await openPromo(container);
+    await setField(container, "gc-promo", "Awesome2027");
+    await fillBuyer(container);
+    vi.useFakeTimers();
+    await act(async () => {
+      container.querySelector<HTMLFormElement>("form")!.requestSubmit();
+      await vi.advanceTimersByTimeAsync(GIFT_CARD_PROMO_TIMEOUT_MS);
+    });
+    const checkout = checkoutCalls();
+    expect(checkout).toHaveLength(1);
+    expect(checkout[0]?.body.promoCode).toBeUndefined();
+    expect(container.textContent).toContain(GIFT_CARD_PROMO_UNREACHABLE);
+    expect(container.textContent).not.toMatch(/20\s*%/);
+  });
+
+  it("kräver namn och visar ett vänligt fel när kassan svarar 400", async () => {
+    installFetch();
+    const container = await renderForm();
+    expect(container.querySelector("label[for=gc-bname]")?.textContent).toContain("Ditt namn *");
+    expect(container.querySelector<HTMLInputElement>("#gc-bname")?.required).toBe(true);
+    await setField(container, "gc-bemail", "a@b.se");
+    await act(async () => {
+      container.querySelector<HTMLFormElement>("form")!.requestSubmit();
+    });
+    expect(container.textContent).toContain("Fyll i ditt namn.");
+    expect(checkoutCalls()).toHaveLength(0);
+
+    await fillBuyer(container);
+    checkoutStatus = 400;
+    await act(async () => {
+      container.querySelector<HTMLFormElement>("form")!.requestSubmit();
+    });
+    expect(container.textContent).toContain("Fyll i namn och e-post. Betalningen kunde inte startas.");
+    expect(container.textContent).not.toContain("purchaser_name");
+    expect(container.querySelector("[data-testid=giftcard-pending-value]")).toBeNull();
   });
 });
 
@@ -236,7 +319,9 @@ describe("tacksida", () => {
     await act(async () => {
       root!.render(createElement(GiftCardThanksValue));
     });
-    expect(container.querySelector("[data-testid=giftcard-thanks-value]")?.textContent).toContain(formatSek(1200));
-    expect(container.textContent).toContain(formatSek(1000));
+    const thanks = container.querySelector("[data-testid=giftcard-thanks-value]")?.textContent ?? "";
+    expect(thanks).toContain(formatSek(1200));
+    expect(thanks).toContain("betalade");
+    expect(thanks).not.toContain("betalar");
   });
 });

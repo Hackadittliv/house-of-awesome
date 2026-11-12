@@ -18,10 +18,10 @@ import {
   RECIPIENT_NAME_MAX,
   formatSek,
   giftCardMetadata,
-  giftCardThanksText,
-  isGiftCardOfferOpen,
+  giftCardPendingText,
   previewGiftCardPromo,
   rememberGiftCardReceipt,
+  showGiftCardOffer,
   validateGiftCard,
   type GiftCardError,
   type GiftCardPromoPreview,
@@ -32,6 +32,7 @@ import { paymentReceiverLine } from "@/lib/seller";
 const errors: Record<GiftCardError, string> = {
   amount: `Välj ett belopp mellan ${formatSek(GIFT_CARD_MIN_SEK)} och ${formatSek(GIFT_CARD_MAX_SEK)}.`,
   email: "Fyll i en giltig e-post.",
+  name: "Fyll i ditt namn.",
   recipientEmail: "Mottagarens e-post ser fel ut.",
   tooLong: "Texten är för lång.",
 };
@@ -65,7 +66,7 @@ export function GiftCardForm() {
   const [promoNote, setPromoNote] = useState<string | null>(null);
 
   const amountSek = custom ? Number(custom) : preset;
-  const offerOpen = isGiftCardOfferOpen();
+  const offerOpen = showGiftCardOffer();
   const trimmedPromo = promoCode.trim();
   const promoKey =
     trimmedPromo && Number.isInteger(amountSek) && amountSek >= GIFT_CARD_MIN_SEK && amountSek <= GIFT_CARD_MAX_SEK
@@ -130,14 +131,16 @@ export function GiftCardForm() {
       setPromoNote(result.giftCard ? null : droppedNote);
       setClientSecret(result.clientSecret);
     } catch (err) {
-      setError(err instanceof BookingApiError && err.status === 429 ? "För många försök. Vänta en stund." : "Betalningen gick inte att starta. Försök igen om en stund.");
+      if (err instanceof BookingApiError && err.status === 429) setError("För många försök. Vänta en stund.");
+      else if (err instanceof BookingApiError && err.status === 400) setError("Fyll i namn och e-post. Betalningen kunde inte startas.");
+      else setError("Betalningen gick inte att starta. Försök igen om en stund.");
     } finally {
       setBusy(false);
     }
   }
 
   if (clientSecret) {
-    const thanks = giftCardThanksText(receipt);
+    const pending = giftCardPendingText(receipt);
     return (
       <div className="space-y-4">
         {promoNote ? (
@@ -145,7 +148,9 @@ export function GiftCardForm() {
             {promoNote}
           </p>
         ) : null}
-        <p className="text-center text-sm text-hoa-ink-muted">{thanks ?? `Presentkort ${formatSek(amountSek)}`}</p>
+        <p className="text-center text-sm text-hoa-ink-muted" data-testid={pending ? "giftcard-pending-value" : undefined}>
+          {pending ?? `Presentkort ${formatSek(amountSek)}`}
+        </p>
         <p className="text-center text-xs text-hoa-ink-muted">{paymentReceiverLine}</p>
         <EmbeddedCheckout clientSecret={clientSecret} />
         <SellerNote className="text-center" />
@@ -216,7 +221,7 @@ export function GiftCardForm() {
         </fieldset>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Field label="Ditt namn" name="gc-bname" autoComplete="name" value={buyerName} onChange={setBuyerName} maxLength={120} />
+          <Field label="Ditt namn *" name="gc-bname" autoComplete="name" required value={buyerName} onChange={setBuyerName} maxLength={120} />
           <Field label="Din e-post *" name="gc-bemail" type="email" autoComplete="email" required value={buyerEmail} onChange={setBuyerEmail} />
         </div>
 
