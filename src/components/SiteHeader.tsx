@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 import { Container } from "@/components/Container";
 import { CtaLink } from "@/components/CtaLink";
-import { Logo } from "@/components/Logo";
+import { Logo, LogoMark } from "@/components/Logo";
 import type { MenuEntry, MenuGroup } from "@/lib/nav";
 
 function Plus({ open }: { open: boolean }) {
@@ -155,7 +155,7 @@ export function SiteHeader({ bookingHref, menu }: { bookingHref: string; menu: (
         // (också z-60, senare i DOM) hamnar då över Boka. Öppet sidhuvud lyfts till z-65.
         <div id="mobilmeny" role="dialog" aria-modal="true" aria-label="Meny" className="fixed inset-0 z-[65] flex flex-col bg-hoa-bg xl:hidden">
           <div className="flex h-20 shrink-0 items-center justify-between border-b border-hoa-line px-4 sm:px-6">
-            <p className="font-display text-sm font-bold tracking-[0.25em] text-hoa-ink">HOUSE OF AWESOME</p>
+            <LogoMark variant="svart" className="h-10" />
             <button type="button" onClick={close} className="inline-flex h-12 w-12 items-center justify-center text-3xl text-hoa-ink">
               <span aria-hidden>×</span>
               <span className="sr-only">Stäng meny</span>

@@ -68,4 +68,4 @@ Tokens och layout i [DESIGN.md](./DESIGN.md): samma värden som lifeisawesome.se
 
 ## Bilder
 
-Tills HOA har egna bilder används LIA:s logga och bilder (`public/images`, `src/app/icon.png`, `src/assets` för tjänsternas OG bilder). Fasaden är husets egen bild och används på startsidan och som OG bild för övriga sidor. Se PR:en för var egna HOA bilder skulle göra mest nytta.
+HOA:s logga är Lucas Eliassons (`public/images/hoa-logo-liggande-*.webp`, `public/images/hoa-uggla-*`, `src/app/icon.png`, `apple-icon.png`, `favicon.ico` och `src/assets/og-logo-liggande-guld.png` för tjänsternas OG bilder). Övriga bilder är fortfarande LIA:s tills HOA har egna. Fasaden är husets egen bild och används på startsidan och som OG bild för övriga sidor. Se PR:en för var egna HOA bilder skulle göra mest nytta.

@@ -87,7 +87,7 @@ export default function HomePage() {
       <section id="valkommen" aria-labelledby="valkommen-rubrik">
         <div className="px-4 pt-8 pb-10 text-center md:pt-12 md:pb-12">
           <div className="@container mx-auto max-w-3xl">
-            <Image src="/images/lia-uggla.webp" alt="" width={256} height={256} className="mx-auto h-14 w-14 md:h-20 md:w-20" />
+            <Image src="/images/hoa-uggla-guld.webp" alt="" width={256} height={256} className="mx-auto h-14 w-14 md:h-20 md:w-20" />
             <h1 id="valkommen-rubrik" className="mt-4 text-hoa-ink">
               {/* VÄLKOMMEN är 6,45 em; storleken krymper bara om ordet annars inte ryms, till exempel vid förstorad text. */}
               <span className="block text-[min(1.5rem,100cqi/6.6)] md:text-4xl">Välkommen till</span>{" "}
