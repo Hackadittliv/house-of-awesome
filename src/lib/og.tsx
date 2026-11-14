@@ -16,7 +16,7 @@ async function dataUrl(file: string, mime: string) {
 export async function renderOgImage({ eyebrow, title, subtitle }: { eyebrow: string; title: string; subtitle: string }) {
   const [background, logo, regular, bold] = await Promise.all([
     dataUrl("og-bakgrund.jpg", "image/jpeg"),
-    dataUrl("og-uggla.png", "image/png"),
+    dataUrl("og-logo-liggande-guld.png", "image/png"),
     readFile(join(fontDir, "plus-jakarta-sans-latin-400-normal.woff")),
     readFile(join(fontDir, "plus-jakarta-sans-latin-700-normal.woff")),
   ]);
@@ -49,10 +49,7 @@ export async function renderOgImage({ eyebrow, title, subtitle }: { eyebrow: str
         >
           <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={logo} alt="" width={88} height={88} />
-            <div style={{ display: "flex", fontSize: 38, fontWeight: 700, letterSpacing: -0.5 }}>
-              House of&nbsp;<span style={{ color: "#efc55d" }}>Awesome</span>
-            </div>
+            <img src={logo} alt="House of Awesome" width={434} height={88} />
           </div>
           <div style={{ display: "flex", flexDirection: "column", maxWidth: 980 }}>
             <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: 5.5, textTransform: "uppercase", color: "#efc55d" }}>

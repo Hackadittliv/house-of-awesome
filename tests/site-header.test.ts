@@ -33,7 +33,9 @@ describe("sidhuvudets ljusa yta", () => {
     expect(bookingLinks[0]).toContain(">Boka<");
     expect(bookingLinks[0]).toContain("bg-hoa-gold");
     expect(bookingLinks[0]).toContain("text-hoa-espresso");
-    expect(html).toContain("text-hoa-wordmark-accent");
+    // Lucas svarta liggande logga på den ljusa ytan, med alt-text.
+    expect(html).toContain("hoa-logo-liggande-svart.webp");
+    expect(html).toContain('alt="House of Awesome"');
     expect(html).not.toContain('id="mobilmeny"');
   });
 });

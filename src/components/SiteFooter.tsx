@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { Container } from "@/components/Container";
-import { Wordmark } from "@/components/Logo";
+import { LogoMark } from "@/components/Logo";
 import { CookieSettingsButton } from "@/components/consent/CookieSettingsButton";
 import { formatAddress, site } from "@/lib/content";
 import { b2bUrl, mailtoUrl, telUrl } from "@/lib/links";
@@ -21,7 +21,7 @@ export function SiteFooter() {
     <footer className="hoa-surface-dark mt-auto border-t border-hoa-line bg-hoa-bg">
       <Container className="grid grid-cols-1 gap-10 py-14 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
-          <Wordmark className="text-xl" />
+          <LogoMark variant="guld" className="h-12" />
           <p className="mt-3 text-sm text-hoa-ink-muted">Där vetenskap, själ och rörelse möts.</p>
           <p className="mt-1 text-xs text-hoa-ink-muted">{sellerLine}</p>
         </div>

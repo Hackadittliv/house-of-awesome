@@ -66,7 +66,7 @@ export function businessJsonLd() {
         description: site.description,
         url: `${site.url}/`,
         image: `${site.url}/images/house-of-awesome-fasad-2400.webp`,
-        logo: `${site.url}/images/lia-uggla.webp`,
+        logo: `${site.url}/images/hoa-uggla-svart-512.png`,
         telephone: contact.phone,
         email: contact.email,
         priceRange: "kr",
