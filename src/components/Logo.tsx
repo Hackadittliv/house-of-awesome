@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 // Lucas Eliassons HOA-logga. Liggande variant i sidhuvudet; vid mycket smal rad bara ugglan.
+// Länken bär namnet via aria-label, så bilderna i den har tom alt.
 // Svart på kräm (sidhuvudet är en ljus yta), guld på svart (sidfoten).
 export function Logo({ className = "" }: { className?: string }) {
   return (
@@ -12,14 +13,16 @@ export function Logo({ className = "" }: { className?: string }) {
     >
       <Image
         src="/images/hoa-logo-liggande-svart.webp"
-        alt="House of Awesome"
+        alt=""
         width={552}
         height={112}
+        loading="eager"
+        fetchPriority="high"
         className="h-11 w-auto sm:h-14 @max-[17.5rem]:hidden"
       />
       <Image
         src="/images/hoa-uggla-svart.webp"
-        alt="House of Awesome"
+        alt=""
         width={256}
         height={256}
         className="hidden h-10 w-10 @max-[17.5rem]:block"
