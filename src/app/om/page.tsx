@@ -53,7 +53,7 @@ export default function Page() {
         <Grid>
           {team.map(([role, name, text, portrait]) => (
             <Card key={name} label={role} title={name} text={text}>
-              {portrait ? <Avatar {...PORTRAITS[portrait]} /> : null}
+              {portrait ? <div className="mt-auto pt-2"><Avatar {...PORTRAITS[portrait]} /></div> : null}
             </Card>
           ))}
         </Grid>
