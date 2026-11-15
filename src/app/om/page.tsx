@@ -13,7 +13,7 @@ export const metadata = pageMetadata({
 
 const team: [string, string, string, keyof typeof PORTRAITS | null][] = [
   ["Medgrundare", "Patrik Nilsson", "Certifierad Wim Hof Method-instruktör och trebarnspappa. Byggde tidigare ett åkeri med 200 lastbilar. Leder utveckling och partnerskap.", "patrik"],
-  ["Medgrundare", "Alexandra Schneider", "Ansvarar för innehåll och drift. Medförfattare till boken Allt ligger i livsstilen.", null],
+  ["Medgrundare", "Alexandra Schneider", "Ansvarar för innehåll och drift. Medförfattare till boken Allt ligger i livsstilen.", "alexandra"],
   ["Coach", "Lucas Eliasson", "Coach och ansvarig för gymmet och Basläger. Bygger träningskonceptet och tar hand om medlemmarna.", "lucas"],
   ["Digitalt", "Christian Wederbrand", "Bygger den digitala plattformen: webb, bokning, medlemsportal och partnernätverket.", null],
   ["Delägare", "Per Berglund", "Delägare och investerare genom EB Invest. Bidrar med erfarenhet av att bygga bolag.", null],
