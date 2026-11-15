@@ -1,7 +1,7 @@
 // Patrik, Lucas och Rebecca: Lucas Eliasson (Picture Perfect), oktober 2026.
+// Alexandra: Lucas Eliasson (Picture Perfect), november 2026.
 // Anne: tillhandahållen referensbild, fotograf saknas i underlaget.
 // Sandra: webbversion i public/images/team.
-// Alexandra: bild från Christian, november 2026, fotograf saknas i underlaget.
 // Originalen ligger utanför repot. Annes webbversion ligger privat i src/assets;
 // övriga webbversioner finns i public/images/team.
 
