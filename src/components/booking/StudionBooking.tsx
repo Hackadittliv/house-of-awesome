@@ -1,8 +1,10 @@
 "use client";
 
-import { normalizeReferralCode, readReferralCode } from "@/lib/referral";
+import { useReferralCode } from "@/components/ReferralLink";
+import { programStatus, subscribeProgram } from "@/lib/reach-status";
+import { normalizeReferralCode } from "@/lib/referral";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
 import { ClientOnly } from "@/components/booking/ClientOnly";
 import { Notice, inputClass, primaryButtonClass, secondaryButtonClass } from "@/components/booking/fields";
@@ -72,7 +74,7 @@ function StudionInner() {
 
 function Login({ expired }: { expired: boolean }) {
   const [email, setEmail] = useState("");
-  const code = readReferralCode();
+  const code = useReferralCode();
   const [state, setState] = useState<"idle" | "sending" | "sent" | "unknown" | "error">("idle");
   return (
     <form
@@ -109,7 +111,10 @@ function Week({ session, onLogout, onExpired }: { session: Session; onLogout: ()
   const [picked, setPicked] = useState<Slot | null>(null);
   const [hours, setHours] = useState(1);
   const [note, setNote] = useState("");
-  const [referral, setReferral] = useState(() => readReferralCode() ?? "");
+  const reachStatus = useSyncExternalStore(subscribeProgram, programStatus, () => "loading" as const);
+  const suggested = useReferralCode();
+  const [edited, setReferral] = useState<string | null>(null);
+  const referral = reachStatus === "active" ? (edited ?? suggested ?? "") : "";
   const invalidReferral = referral.trim() !== "" && !normalizeReferralCode(referral);
   const [result, setResult] = useState<"idle" | "booking" | "booked" | "taken" | "error" | "forbidden">("idle");
 
@@ -252,12 +257,12 @@ function Week({ session, onLogout, onExpired }: { session: Session; onLogout: ()
             <span className="text-sm">{t.note}</span>
             <textarea className={inputClass} maxLength={500} value={note} onChange={(e) => setNote(e.target.value)} />
           </label>
-          <label className="block space-y-1">
+          {reachStatus === "active" && <label className="block space-y-1">
             <span className="text-sm">Tipskod från en ambassadör (valfritt)</span>
             <input className={inputClass} name="referral" autoComplete="off" autoCapitalize="characters" maxLength={10}
               aria-invalid={Boolean(invalidReferral)} aria-describedby={invalidReferral ? "studion-tipskod" : undefined}
               value={referral} onChange={(event) => setReferral(event.target.value)} />
-          </label>
+          </label>}
           {invalidReferral && <p id="studion-tipskod">Ange hela tipskoden från länken eller lämna fältet tomt.</p>}
           <button type="button" className={primaryButtonClass} disabled={result === "booking" || Boolean(invalidReferral)} onClick={book}>
             {result === "booking" ? t.booking : t.book}

@@ -44,7 +44,7 @@ describe("reservvägen när HOA:s bokningssystem saknas", () => {
     const result = fallbackBookingDestination("/boka/hbot-60", new URLSearchParams("ref=laabcdefgh&email=private%40example.invalid&notes=private&access_token=secret"));
     expect(result.origin + result.pathname).toBe("https://lifeisawesome.se/boka/hbot-60");
     expect(Object.fromEntries(result.searchParams)).toEqual({ utm_source: "houseofawesome", utm_medium: "referral",
-      utm_campaign: "hoa_site", utm_content: "redirect", ref: "LAABCDEFGH" });
+      utm_campaign: "hoa_site", utm_content: "redirect" });
   });
 
   it("behåller en avbokning separat från en tipslänk", () => {

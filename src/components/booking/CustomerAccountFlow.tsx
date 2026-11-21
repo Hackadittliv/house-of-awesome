@@ -4,7 +4,8 @@ import { Fragment, useEffect, useState, useSyncExternalStore, type ReactNode } f
 import { bookingEnabled } from "@/lib/booking/config";
 import { isCustomerAccountDocument, signInCustomer, type CustomerAccount } from "@/lib/booking/customer-account";
 import { inputClass, primaryButtonClass } from "./fields";
-import { referralFromSearch } from "@/lib/referral";
+import { programStatus, subscribeProgram } from "@/lib/reach-status";
+import { readReferralCode } from "@/lib/referral";
 
 const subscribe = () => () => undefined;
 const serverMode = () => false;
@@ -13,7 +14,7 @@ const selectedMode = () => isCustomerAccountDocument() && new URLSearchParams(wi
 function navigateAccountMode(enabled: boolean) {
   const here = new URL(window.location.href);
   const target = new URL(here.pathname, here.origin);
-  const code = referralFromSearch(here.search);
+  const code = readReferralCode();
   if (code) target.searchParams.set("ref", code);
   const service = here.searchParams.get("tjanst");
   if (service && /^[a-z0-9-]{1,100}$/.test(service)) target.searchParams.set("tjanst", service);
@@ -24,6 +25,7 @@ function navigateAccountMode(enabled: boolean) {
 }
 
 export function CustomerAccountFlow({ children }: { children: (account: CustomerAccount | null) => ReactNode }) {
+  const status = useSyncExternalStore(subscribeProgram, programStatus, () => "loading" as const);
   const secure = useSyncExternalStore(subscribe, selectedMode, serverMode);
   const [account, setAccount] = useState<CustomerAccount | null>(null);
   const [busy, setBusy] = useState(false);
@@ -33,8 +35,9 @@ export function CustomerAccountFlow({ children }: { children: (account: Customer
     const timeout = window.setTimeout(() => setAccount({ ...account, accessToken: "" }), Math.max(account.expiresAt - Date.now(), 0));
     return () => window.clearTimeout(timeout);
   }, [account]);
-  if (!bookingEnabled) return <>{children(null)}</>;
-  if (secure && !account) return (
+  const enabled = bookingEnabled && status === "active";
+  if (secure && status === "loading") return <p role="status">Kontrollerar kundinloggningen…</p>;
+  if (enabled && secure && !account) return (
     <form className="space-y-4 rounded-lia-md border border-hoa-line p-4" onSubmit={async event => {
       event.preventDefault();
       const form = event.currentTarget;
@@ -56,8 +59,8 @@ export function CustomerAccountFlow({ children }: { children: (account: Customer
     </form>
   );
   return <div className="space-y-4">
-    {account ? <p className="text-sm">{account.accessToken ? `Inloggad som ${account.email}.` : "Din inloggning har gått ut."} <button type="button" className="underline" onClick={() => setAccount(null)}>{account.accessToken ? "Byt konto" : "Logga in igen"}</button></p>
-      : <button type="button" className="min-h-11 text-sm underline" onClick={() => navigateAccountMode(true)}>Har du ett LIA-konto? Logga in</button>}
-    <Fragment key={account?.userId ?? "guest"}>{children(account)}</Fragment>
+    {enabled && (account ? <p className="text-sm">{account.accessToken ? `Inloggad som ${account.email}.` : "Din inloggning har gått ut."} <button type="button" className="underline" onClick={() => setAccount(null)}>{account.accessToken ? "Byt konto" : "Logga in igen"}</button></p>
+      : <button type="button" className="min-h-11 text-sm underline" onClick={() => navigateAccountMode(true)}>Har du ett LIA-konto? Logga in</button>)}
+    <Fragment key={enabled && account ? account.userId : "guest"}>{children(enabled ? account : null)}</Fragment>
   </div>;
 }

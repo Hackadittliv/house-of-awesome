@@ -21,7 +21,7 @@ import { saveConfirmation } from "@/lib/booking/confirmation";
 import { stripePublishableKey } from "@/lib/booking/config";
 import { CustomerAccountFlow } from "@/components/booking/CustomerAccountFlow";
 import type { CustomerAccount } from "@/lib/booking/customer-account";
-import { readReferralCode } from "@/lib/referral";
+import { useReferralChoice } from "@/components/booking/ReferralChoice";
 import { formatPriceLabel } from "@/lib/content";
 
 const DAYS_PER_PAGE = 7;
@@ -47,6 +47,7 @@ export function BookingFlow(props: Props) {
 }
 
 function BookingFields({ slug, serviceName, healthDeclaration, account }: Props & { account: CustomerAccount | null }) {
+  const reach = useReferralChoice();
   const [fromDate, setFromDate] = useState(() => stockholmDate(new Date()));
   const [loaded, setLoaded] = useState<{ key: string; result: AvailabilityResult | "error" } | null>(null);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
@@ -124,7 +125,7 @@ function BookingFields({ slug, serviceName, healthDeclaration, account }: Props 
       // annars blockerar den egna hållningen tiden.
       const reusable =
         pendingPayment && pendingPayment.startAt === slot.start && pendingPayment.email === guestEmail ? pendingPayment : null;
-      const ambassadorCode = reusable ? reusable.ambassadorCode : readReferralCode();
+      const ambassadorCode = reusable ? reusable.ambassadorCode : reach.accepted;
       let bookingId: string;
       let priceId: string | null;
       if (reusable) {
@@ -318,6 +319,7 @@ function BookingFields({ slug, serviceName, healthDeclaration, account }: Props 
           />
           <Field label={t.notes} name="notes" multiline maxLength={2000} value={notes} onChange={setNotes} />
           <PrivacyText text={t.bookingPrivacy} linkLabel={t.privacyLink} />
+          {reach.field}
           <button type="submit" className={primaryButtonClass} disabled={submitting}>
             {submitting ? t.submitting : eventType.requires_payment ? t.bookPaid : t.bookFree}
           </button>

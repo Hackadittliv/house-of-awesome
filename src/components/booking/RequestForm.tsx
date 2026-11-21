@@ -2,7 +2,7 @@
 
 import { CustomerAccountFlow } from "@/components/booking/CustomerAccountFlow";
 import type { CustomerAccount } from "@/lib/booking/customer-account";
-import { readReferralCode } from "@/lib/referral";
+import { useReferralChoice } from "@/components/booking/ReferralChoice";
 
 import { useState } from "react";
 
@@ -25,6 +25,7 @@ export function RequestForm(props: Props) {
 }
 
 export function RequestFields({ serviceSlug, serviceName, route, options, account }: Props & { account: CustomerAccount | null }) {
+  const reach = useReferralChoice();
   const [option, setOption] = useState(options?.[0] ?? "");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -47,7 +48,7 @@ export function RequestFields({ serviceSlug, serviceName, route, options, accoun
         phone: phone.trim(),
         interestType: interestFor(serviceSlug),
         message: [serviceName ? `${t.requestService}: ${serviceName}` : null, option ? `${t.requestOption}: ${option}` : null, message.trim() || null].filter(Boolean).join("\n\n"),
-        ambassadorCode: readReferralCode(),
+        ambassadorCode: reach.accepted,
         sourceSlug: serviceSlug ? `hoa:${serviceSlug}` : "hoa",
         honeypot,
         utm: utmFrom(window.location.search),
@@ -111,6 +112,7 @@ export function RequestFields({ serviceSlug, serviceName, route, options, accoun
       </label>
       {state === "error" ? <Notice tone="error">{t.requestError}</Notice> : null}
       {state === "limited" ? <Notice tone="error">{t.tooMany}</Notice> : null}
+      {reach.field}
       <button type="submit" className={primaryButtonClass} disabled={state === "sending" || !acknowledged}>
         {state === "sending" ? t.submitting : t.sendRequest}
       </button>

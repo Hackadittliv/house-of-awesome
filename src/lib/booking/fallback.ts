@@ -1,4 +1,4 @@
-import { LIA_ORIGIN, referralFromSearch } from "@/lib/referral";
+import { LIA_ORIGIN } from "@/lib/referral";
 
 /** Preserve the booking fallback without copying a visitor's arbitrary query into another origin. */
 export function fallbackBookingDestination(pathname: string, query: URLSearchParams): URL {
@@ -24,7 +24,6 @@ export function fallbackBookingDestination(pathname: string, query: URLSearchPar
     const values = query.getAll(key);
     if (values.length === 1 && pattern.test(values[0])) url.searchParams.set(key, values[0]);
   }
-  const code = referralFromSearch(query.toString());
-  if (code) url.searchParams.set("ref", code);
+  // This fallback runs when booking is unconfigured and cannot verify the referral program.
   return url;
 }

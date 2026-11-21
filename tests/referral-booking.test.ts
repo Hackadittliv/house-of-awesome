@@ -28,6 +28,7 @@ const bodies: { endpoint: string; body: Record<string, unknown> }[] = [];
 let root: Root;
 let container: HTMLDivElement;
 let failCheckout: boolean;
+let statusReply: () => Response;
 
 beforeEach(() => {
   window.localStorage.clear();
@@ -36,6 +37,7 @@ beforeEach(() => {
   window.history.replaceState({}, "", "/?ref=laabcdefgh&email=private&access_token=private");
   bodies.length = 0;
   failCheckout = false;
+  statusReply = () => Response.json({ enabled: true });
   (window as unknown as { happyDOM: { settings: { disableIframePageLoading: boolean } } }).happyDOM.settings.disableIframePageLoading = true;
   stripe.mount.mockClear(); stripe.destroy.mockClear();
   stripe.create.mockReset().mockImplementation(async ({ fetchClientSecret }: { fetchClientSecret: () => Promise<string> }) => {
@@ -48,6 +50,13 @@ beforeEach(() => {
     reportError(...args);
   });
   vi.stubGlobal("fetch", vi.fn(async (url: string, init?: RequestInit) => {
+    if (url.endsWith("/rest/v1/rpc/amb_reach_public_status")) {
+      expect(init?.referrerPolicy).toBe("no-referrer");
+      expect(init?.credentials).toBe("omit");
+      expect(init?.body).toBe("{}");
+      expect(new Headers(init?.headers).get("Authorization")).toBe("Bearer public-synthetic-key");
+      return statusReply();
+    }
     expect(url.startsWith("https://backend.example.invalid/functions/v1/")).toBe(true);
     const endpoint = url.split("/").at(-1)!;
     const body = JSON.parse(String(init?.body)) as Record<string, unknown>;
@@ -93,7 +102,7 @@ async function message(iframe: HTMLIFrameElement, data: Record<string, unknown>,
 }
 async function openAssessment() {
   await route(window.location.pathname + window.location.search);
-  expect(container.textContent).toContain("Koppla tipset till ditt konto");
+  expect(container.textContent).toContain("Se vilka tjänster du kan använda tipskoden för");
   await route("/tjanster?ref=LAABCDEFGH");
   const entry = [...container.querySelectorAll("a")].find((a) => a.textContent === "Behovsanalys");
   expect(entry?.getAttribute("href")).toBe("/behovsanalys?ref=LAABCDEFGH");
@@ -121,6 +130,8 @@ async function fillFields(values: Record<string, string>) {
   }
 }
 async function submitBooking() {
+  const choice = container.querySelector<HTMLInputElement>('input[name="confirm-referral"]');
+  if (choice && !choice.checked) await act(async () => choice.click());
   await act(async () => container.querySelector("form")!.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true })));
 }
 
@@ -232,5 +243,32 @@ describe("HOA till LIA-form och bokningskassa", () => {
     await fillBooking();
     await submitBooking();
     expect(bodies.filter(({ endpoint }) => ["create-booking", "create-checkout"].includes(endpoint)).map(({ body }) => body.ambassadorCode)).toEqual([undefined, undefined]);
+  });
+});
+
+describe("programmets offentliga status", () => {
+  it.each(["paused","missing","invalid"] as const)("bevarar vanlig gästförfrågan utan tips- eller kontouppgifter vid %s", async mode => {
+    statusReply = () => mode === "missing" ? new Response("", {status:404}) : Response.json({ enabled: mode === "paused" ? false : "true" });
+    await route("/boka/forfragan?ref=LAABCDEFGH", createElement(RequestForm, { serviceSlug: "synthetic", serviceName: "Syntetisk", route: "rebecca" }));
+    await act(async () => { window.dispatchEvent(new Event("focus")); });
+    expect(readReferralCode()).toBeNull();
+    expect(container.textContent).not.toContain("Har du ett LIA-konto");
+    expect(container.querySelector('input[name="confirm-referral"]')).toBeNull();
+    expect(container.querySelector('a[href*="LAABCDEFGH"]')).toBeNull();
+    await fillFields({ first_name:"Test",last_name:"Person",email:"synthetic@example.invalid",phone:"000000000" });
+    await act(async () => container.querySelector<HTMLInputElement>('input[type="checkbox"]')!.click());
+    await submitBooking();
+    const recorded = bodies.find(call => call.endpoint === "request-consultation");
+    expect(recorded).toBeTruthy(); expect(recorded!.body).not.toHaveProperty("ambassadorCode");
+  });
+  it("låter samma gäst avstå en föreslagen tipskod medan programmet är aktivt", async () => {
+    await route("/boka/forfragan?ref=LAABCDEFGH", createElement(RequestForm, { serviceSlug: "synthetic", serviceName: "Syntetisk", route: "rebecca" }));
+    await act(async () => { window.dispatchEvent(new Event("focus")); });
+    const checkbox=container.querySelector<HTMLInputElement>('input[name="confirm-referral"]');
+    expect(checkbox?.checked).toBe(false);
+    await fillFields({ first_name:"Test",last_name:"Person",email:"synthetic@example.invalid",phone:"000000000" });
+    await act(async () => container.querySelector<HTMLInputElement>('input[required][type="checkbox"]')!.click());
+    await act(async () => container.querySelector("form")!.dispatchEvent(new Event("submit",{bubbles:true,cancelable:true})));
+    expect(bodies[0].body).not.toHaveProperty("ambassadorCode");
   });
 });

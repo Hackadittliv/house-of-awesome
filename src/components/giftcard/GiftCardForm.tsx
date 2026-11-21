@@ -2,7 +2,7 @@
 
 import { CustomerAccountFlow } from "@/components/booking/CustomerAccountFlow";
 import type { CustomerAccount } from "@/lib/booking/customer-account";
-import { readReferralCode } from "@/lib/referral";
+import { useReferralChoice } from "@/components/booking/ReferralChoice";
 
 import { useEffect, useState } from "react";
 
@@ -56,6 +56,7 @@ export function GiftCardForm() {
 }
 
 function GiftCardFields({ account }: { account: CustomerAccount | null }) {
+  const reach = useReferralChoice();
   const [preset, setPreset] = useState<number>(1000);
   const [custom, setCustom] = useState("");
   const [buyerName, setBuyerName] = useState("");
@@ -133,7 +134,7 @@ function GiftCardFields({ account }: { account: CustomerAccount | null }) {
         email: buyerEmail.trim().toLowerCase(),
         metadata: giftCardMetadata(input),
         returnUrl: `${window.location.origin}/presentkort/tack?session_id={CHECKOUT_SESSION_ID}`,
-        ambassadorCode: readReferralCode(),
+        ambassadorCode: reach.accepted,
         promoCode: promoCodeForCheckout,
       });
       rememberGiftCardReceipt(result.giftCard);
@@ -291,6 +292,7 @@ function GiftCardFields({ account }: { account: CustomerAccount | null }) {
         {error && <Notice tone="error">{error}</Notice>}
 
         <div className="text-center">
+          {reach.field}
           <button type="submit" disabled={busy} className={primaryButtonClass}>
             {busy ? "Öppnar betalning..." : `Köp presentkort ${Number.isFinite(amountSek) && amountSek > 0 ? formatSek(amountSek) : ""}`.trim()}
           </button>

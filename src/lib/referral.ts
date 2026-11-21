@@ -1,3 +1,4 @@
+import { programEnabled, subscribeProgram } from "./reach-status";
 // The public code is a candidate. Only LIA can bind it to a customer or a purchase.
 export const LIA_ORIGIN = "https://lifeisawesome.se";
 const LIVE_CODE = /^LA[A-HJ-NP-Z2-9]{8}$/;
@@ -23,12 +24,12 @@ export function referralFromSearch(search: string): string | null {
 
 /** The visit carries only the public code in first-party links. No browser storage is needed. */
 export function readReferralCode(): string | null {
-  return typeof window === "undefined" ? null : referralFromSearch(window.location.search);
+  return typeof window === "undefined" || !programEnabled() ? null : referralFromSearch(window.location.search);
 }
 
 /** Apply an explicit choice acknowledged by the current embedded form. */
 export function setReferralCode(code: string | null): void {
-  if (code !== null && normalizeReferralCode(code) !== code) return;
+  if (code !== null && (!programEnabled() || normalizeReferralCode(code) !== code)) return;
   const url = new URL(window.location.href);
   if (code) {
     (window as Window & { __hoaReferralDocument?: boolean }).__hoaReferralDocument = true;
@@ -40,9 +41,11 @@ export function setReferralCode(code: string | null): void {
 }
 
 export function subscribeReferral(notify: () => void): () => void {
+  const unsubscribe = referralFromSearch(window.location.search) ? subscribeProgram(notify) : null;
   window.addEventListener(REFERRAL_CHANGE, notify);
   window.addEventListener("popstate", notify);
   return () => {
+    unsubscribe?.();
     window.removeEventListener(REFERRAL_CHANGE, notify);
     window.removeEventListener("popstate", notify);
   };
