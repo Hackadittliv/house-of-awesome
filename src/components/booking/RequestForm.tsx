@@ -1,5 +1,7 @@
 "use client";
 
+import { CustomerAccountFlow } from "@/components/booking/CustomerAccountFlow";
+import type { CustomerAccount } from "@/lib/booking/customer-account";
 import { readReferralCode } from "@/lib/referral";
 
 import { useState } from "react";
@@ -18,11 +20,15 @@ type Props = {
   options?: string[];
 };
 
-export function RequestForm({ serviceSlug, serviceName, route, options }: Props) {
+export function RequestForm(props: Props) {
+  return <CustomerAccountFlow>{account => <RequestFields {...props} account={account} />}</CustomerAccountFlow>;
+}
+
+export function RequestFields({ serviceSlug, serviceName, route, options, account }: Props & { account: CustomerAccount | null }) {
   const [option, setOption] = useState(options?.[0] ?? "");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(account?.email ?? "");
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [honeypot, setHoneypot] = useState("");
@@ -34,6 +40,7 @@ export function RequestForm({ serviceSlug, serviceName, route, options }: Props)
     setState("sending");
     try {
       await requestConsultation({
+        account,
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         email: email.trim(),
@@ -82,7 +89,7 @@ export function RequestForm({ serviceSlug, serviceName, route, options }: Props)
         <Field label={t.firstName} name="first_name" required autoComplete="given-name" maxLength={80} value={firstName} onChange={setFirstName} />
         <Field label={t.lastName} name="last_name" required autoComplete="family-name" maxLength={80} value={lastName} onChange={setLastName} />
       </div>
-      <Field label={t.email} name="email" type="email" required autoComplete="email" maxLength={255} value={email} onChange={setEmail} />
+      <Field label={t.email} name="email" readOnly={!!account} type="email" required autoComplete="email" maxLength={255} value={email} onChange={setEmail} />
       <Field label={t.phone} name="phone" type="tel" required autoComplete="tel" maxLength={40} value={phone} onChange={setPhone} />
       <Field label={t.message} name="message" multiline maxLength={1800} value={message} onChange={setMessage} />
       <div aria-hidden="true" className="hidden">

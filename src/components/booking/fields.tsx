@@ -14,6 +14,7 @@ type FieldProps = {
   name: string;
   type?: string;
   required?: boolean;
+  readOnly?: boolean;
   autoComplete?: string;
   value: string;
   onChange: (value: string) => void;
@@ -21,7 +22,7 @@ type FieldProps = {
   multiline?: boolean;
 };
 
-export function Field({ label, name, type = "text", required, autoComplete, value, onChange, maxLength, multiline }: FieldProps) {
+export function Field({ label, name, type = "text", required, readOnly, autoComplete, value, onChange, maxLength, multiline }: FieldProps) {
   return (
     <label className="block text-sm text-hoa-ink-muted" htmlFor={name}>
       {label}
@@ -41,6 +42,7 @@ export function Field({ label, name, type = "text", required, autoComplete, valu
           name={name}
           type={type}
           required={required}
+          readOnly={readOnly}
           autoComplete={autoComplete}
           maxLength={maxLength}
           value={value}

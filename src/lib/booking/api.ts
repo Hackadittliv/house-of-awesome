@@ -1,3 +1,4 @@
+import { customerToken, type CustomerAccount } from "@/lib/booking/customer-account";
 import { BOOKING_SITE, PRIVACY_NOTICE_VERSION, liaSupabaseAnonKey, liaSupabaseUrl } from "@/lib/booking/config";
 import { referralBody } from "@/lib/referral";
 import { giftCardCheckoutPayload, readGiftCardReceipt, type GiftCardReceipt } from "@/lib/giftcard/giftcard";
@@ -69,6 +70,7 @@ export async function getAvailability(slug: string, fromDate: string, toDate: st
 }
 
 export type BookingInput = {
+  account?: CustomerAccount | null;
   eventTypeSlug: string;
   startAt: string;
   name: string;
@@ -102,10 +104,11 @@ export function createBooking(input: BookingInput): Promise<BookingResult> {
     site: BOOKING_SITE,
     ...input.utm,
     ...referralBody(input.ambassadorCode),
-  });
+  }, customerToken(input.account, input.email));
 }
 
 export async function createCheckout(args: {
+  account?: CustomerAccount | null;
   bookingId: string;
   priceId: string;
   email: string;
@@ -120,7 +123,7 @@ export async function createCheckout(args: {
     requestId: crypto.randomUUID(),
     metadata: { booking_id: args.bookingId },
     ...referralBody(args.ambassadorCode),
-  });
+  }, customerToken(args.account, args.email));
   return data.clientSecret;
 }
 
@@ -173,6 +176,7 @@ export type InterestType = "free_10min" | "paid_60min" | "hbot" | "celloxy" | "c
 export type RequestRoute = "rebecca";
 
 export type RequestInput = {
+  account?: CustomerAccount | null;
   firstName: string;
   lastName: string;
   email: string;
@@ -204,7 +208,7 @@ export function requestConsultation(input: RequestInput): Promise<{ ok: true }> 
     ...(input.route ? { route: input.route } : {}),
     ...input.utm,
     ...referralBody(input.ambassadorCode),
-  });
+  }, customerToken(input.account, input.email));
 }
 
 /** Studion: rumshyra för godkända instruktörer. Kräver inloggning mot LIA. */
@@ -260,6 +264,7 @@ export async function sendStudionLoginLink(email: string, redirectTo: string): P
 }
 
 export async function createGiftCardCheckout(args: {
+  account?: CustomerAccount | null;
   email: string;
   metadata: Record<string, string>;
   returnUrl: string;
@@ -276,6 +281,7 @@ export async function createGiftCardCheckout(args: {
       promoCode: args.promoCode,
       ambassadorCode: args.ambassadorCode,
     }),
+    customerToken(args.account, args.email),
   );
   if (typeof data.clientSecret !== "string" || data.clientSecret.length === 0) {
     throw new BookingApiError(502, "Saknar betalning");
