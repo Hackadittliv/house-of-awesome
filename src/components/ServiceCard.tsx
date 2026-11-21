@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ReferralAnchor, ReferralLink as Link } from "@/components/ReferralLink";
 
 import { HeadingText } from "@/components/HeadingText";
 import { cardClass } from "@/components/v2/ui";
@@ -33,13 +33,13 @@ export function ServiceCard({ service, placement }: { service: Service; placemen
         </div>
       </dl>
       <div className="mt-auto flex flex-wrap items-center gap-3 pt-5">
-        <a
+        <ReferralAnchor
           href={service.bookable ? bookingUrl(service.slug, placement) : inquiryUrl(service.slug, placement)}
           className="inline-flex min-h-11 items-center justify-center rounded-lia-md bg-hoa-gold px-4 py-2 font-display text-sm font-medium text-hoa-espresso no-underline transition-colors hover:bg-hoa-gold/90"
         >
           {service.bookable ? "Boka" : "Gör en förfrågan"}
           <span className="sr-only">: {service.name}</span>
-        </a>
+        </ReferralAnchor>
         <Link
           href={`/tjanster/${service.slug}`}
           className="inline-flex min-h-11 items-center justify-center rounded-lia-md border border-hoa-gold/40 px-4 py-2 font-display text-sm font-medium text-hoa-ink no-underline transition-colors hover:bg-hoa-hover"

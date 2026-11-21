@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { ReferralLink as Link } from "@/components/ReferralLink";
 
 // Lucas Eliassons HOA-logga. Liggande variant i sidhuvudet; vid mycket smal rad bara ugglan.
 // Länken bär namnet via aria-label, så bilderna i den har tom alt.

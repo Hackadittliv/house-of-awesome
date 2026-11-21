@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ReferralAnchor, ReferralLink as Link } from "@/components/ReferralLink";
 
 import { Container } from "@/components/Container";
 import { LogoMark } from "@/components/Logo";
@@ -38,12 +38,12 @@ export function SiteFooter() {
         <nav aria-label="Utforska">
           <p className={head}>Utforska</p>
           <ul className="mt-2">
-            <li><a href="/behovsanalys" className={linkClass}>Behovsanalys</a></li>
-            <li><a href={site.operator.url} className={linkClass}>Börja här</a></li>
-            <li><a href={site.operator.url} className={linkClass}>Recept</a></li>
-            <li><a href={site.operator.url} className={linkClass}>Podcasts</a></li>
-            <li><a href={site.operator.url} className={linkClass}>Parasitkollen</a></li>
-            <li><a href={b2bUrl("footer")} className={linkClass}>För verksamheter</a></li>
+            <li><ReferralAnchor href="/behovsanalys" className={linkClass}>Behovsanalys</ReferralAnchor></li>
+            <li><ReferralAnchor href={site.operator.url} className={linkClass}>Börja här</ReferralAnchor></li>
+            <li><ReferralAnchor href={site.operator.url} className={linkClass}>Recept</ReferralAnchor></li>
+            <li><ReferralAnchor href={site.operator.url} className={linkClass}>Podcasts</ReferralAnchor></li>
+            <li><ReferralAnchor href={site.operator.url} className={linkClass}>Parasitkollen</ReferralAnchor></li>
+            <li><ReferralAnchor href={b2bUrl("footer")} className={linkClass}>För verksamheter</ReferralAnchor></li>
           </ul>
         </nav>
         <div>

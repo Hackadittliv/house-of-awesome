@@ -13,7 +13,6 @@ const liaSupabaseOrigin = (() => {
     return "";
   }
 })();
-const bookingEnabled = Boolean(liaSupabaseOrigin && process.env.NEXT_PUBLIC_LIA_SUPABASE_ANON_KEY);
 const stripeFrames = "https://js.stripe.com https://checkout.stripe.com https://*.stripe.com";
 
 // Ingen tredjepartskod laddas förrän besökaren har samtyckt. CSP:n tillåter bara de
@@ -41,8 +40,6 @@ const securityHeaders = [
   { key: "Permissions-Policy", value: 'camera=(), microphone=(), geolocation=(), payment=(self "https://js.stripe.com" "https://checkout.stripe.com")' },
 ];
 
-const utm = "utm_source=houseofawesome&utm_medium=referral&utm_campaign=hoa_site&utm_content=redirect";
-
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   outputFileTracingIncludes: {
@@ -69,12 +66,6 @@ const nextConfig: NextConfig = {
       // Manuella behandlingar är dolda sedan oktober 2026.
       { source: "/tjanster/manuella-behandlingar", destination: "/behandlingar-och-samtal", statusCode: 301 },
       { source: "/boka/manuella-behandlingar", destination: "/behandlingar-och-samtal", statusCode: 301 },
-      ...(bookingEnabled
-        ? []
-        : [
-            { source: "/boka", destination: `https://lifeisawesome.se/boka?${utm}`, permanent: false },
-            { source: "/boka/:slug", destination: `https://lifeisawesome.se/boka/:slug?${utm}`, permanent: false },
-          ]),
     ];
   },
 };

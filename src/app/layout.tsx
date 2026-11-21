@@ -6,6 +6,7 @@ import { ConsentedTrackers } from "@/components/consent/ConsentedTrackers";
 import { ConsentProvider } from "@/components/consent/ConsentProvider";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ReferralAccountLink } from "@/components/ReferralLink";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SharedBottom } from "@/components/v2/SharedBottom";
 import { scrubSensitiveParamsScript } from "@/lib/booking/sensitive-url";
@@ -75,6 +76,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             Hoppa till innehåll
           </a>
           <SiteHeader bookingHref={bookingUrl(null, "header")} menu={mainMenu} />
+          <ReferralAccountLink />
           <main id="innehall" className="flex-1 bg-hoa-bg">
             {children}
           </main>

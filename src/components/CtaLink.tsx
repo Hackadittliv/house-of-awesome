@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { ReferralAnchor, ReferralLink as Link } from "@/components/ReferralLink";
+
 
 type CtaLinkProps = {
   href: string;
@@ -41,9 +42,9 @@ export function CtaLink({
   // En hel sidladdning håller redan laddade spårare borta från behovsanalysen.
   if (/^(https?:|mailto:|tel:)/.test(href) || /^\/behovsanalys(?:[/?#]|$)/.test(href)) {
     return (
-      <a href={href} className={classes} onClick={onClick}>
+      <ReferralAnchor href={href} className={classes} onClick={onClick}>
         {children}
-      </a>
+      </ReferralAnchor>
     );
   }
 

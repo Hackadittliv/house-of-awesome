@@ -12,12 +12,14 @@ import {
   requiresAssessmentReload,
   type AssessmentFlow,
 } from "@/lib/assessment";
+import { readReferralCode, setReferralCode, subscribeReferral } from "@/lib/referral";
 
-type Session = { flow: AssessmentFlow; channel: string; parentOrigin: string; origin: string };
+type Session = { flow: AssessmentFlow; channel: string; parentOrigin: string; origin: string; referral: string | null };
 type AssessmentWindow = Window & { __hoaDocumentPath?: unknown; gtag?: unknown; fbq?: unknown };
 
 const subscribeToDocument = () => () => undefined;
 const serverDocumentIsClean = () => false;
+const serverReferral = () => null;
 
 function browserDocumentIsClean() {
   const currentWindow = window as AssessmentWindow;
@@ -58,6 +60,7 @@ function FlowChoices({ onChoose }: { onChoose: (flow: AssessmentFlow) => void })
 }
 
 function AssessmentFrame({ session, onRetry }: { session: Session; onRetry: () => void }) {
+  const referral = useSyncExternalStore(subscribeReferral, readReferralCode, serverReferral);
   const frame = useRef<HTMLIFrameElement>(null);
   const container = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "failed">("loading");
@@ -74,6 +77,9 @@ function AssessmentFrame({ session, onRetry }: { session: Session; onRetry: () =
         flow: session.flow,
       });
       if (!accepted) return;
+      if (accepted.event === "complete" && accepted.acceptedReferralCode !== undefined) {
+        setReferralCode(accepted.acceptedReferralCode);
+      }
       if (accepted.height !== undefined) setHeight(accepted.height);
       if (accepted.event === "ready" || accepted.event === "resize" || accepted.event === "complete") {
         window.clearTimeout(timeout);
@@ -96,7 +102,7 @@ function AssessmentFrame({ session, onRetry }: { session: Session; onRetry: () =
         <div role="status" className="rounded-2xl border border-hoa-light-line/45 bg-hoa-light-card p-6 text-hoa-light-ink">
           <p className="font-semibold">Formuläret kunde inte visas här just nu.</p>
           <p className="mt-2 text-hoa-light-muted">Du kan fortsätta med samma behovsanalys direkt hos Life Is Awesome.</p>
-          <a className="mt-5 inline-flex min-h-11 items-center gap-3 font-semibold underline underline-offset-4" href={assessmentFallbackUrl(session.flow)} referrerPolicy="no-referrer">
+          <a className="mt-5 inline-flex min-h-11 items-center gap-3 font-semibold underline underline-offset-4" href={assessmentFallbackUrl(session.flow, referral)} referrerPolicy="no-referrer">
             Öppna formuläret hos Life Is Awesome <Arrow />
           </a>
           <div className="mt-5">
@@ -119,7 +125,7 @@ function AssessmentFrame({ session, onRetry }: { session: Session; onRetry: () =
           <iframe
             ref={frame}
             title={copy.iframeTitle}
-            src={assessmentEmbedUrl(session.flow, session.parentOrigin, session.channel, session.origin)}
+            src={assessmentEmbedUrl(session.flow, session.parentOrigin, session.channel, session.origin, session.referral)}
             referrerPolicy="no-referrer"
             sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
             className={`block w-full border-0 ${status === "loading" ? "pointer-events-none opacity-0" : ""}`}
@@ -157,7 +163,7 @@ export function AssessmentExperience() {
 
   function choose(flow: AssessmentFlow) {
     if (session?.flow !== flow) {
-      setSession({ flow, channel: crypto.randomUUID(), parentOrigin: window.location.origin, origin: getAssessmentOrigin() });
+      setSession({ flow, channel: crypto.randomUUID(), parentOrigin: window.location.origin, origin: getAssessmentOrigin(), referral: readReferralCode() });
     }
     setChoosing(false);
   }
@@ -191,7 +197,7 @@ export function AssessmentExperience() {
               Byt inriktning
             </button>
           </div>
-          <AssessmentFrame key={session.channel} session={session} onRetry={() => setSession({ ...session, channel: crypto.randomUUID() })} />
+          <AssessmentFrame key={session.channel} session={session} onRetry={() => setSession({ ...session, channel: crypto.randomUUID(), referral: readReferralCode() })} />
         </div>
       ) : null}
     </div>

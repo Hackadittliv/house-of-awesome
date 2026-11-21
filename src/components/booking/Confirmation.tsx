@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { ReferralLink as Link } from "@/components/ReferralLink";
 import { useEffect, useState } from "react";
 
 import { ClientOnly } from "@/components/booking/ClientOnly";

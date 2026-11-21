@@ -1,4 +1,6 @@
-export const ASSESSMENT_ORIGIN = "https://lifeisawesome.se";
+import { LIA_ORIGIN, normalizeReferralCode } from "./referral";
+
+export const ASSESSMENT_ORIGIN = LIA_ORIGIN;
 export const ASSESSMENT_REVIEW_ORIGIN = "https://hoa-review--lia-professional-pr1-preview-20260829.netlify.app";
 export const ASSESSMENT_MESSAGE_TYPE = "lia:assessment";
 export const ASSESSMENT_MESSAGE_VERSION = 1;
@@ -49,16 +51,22 @@ export function assessmentEmbedUrl(
   parentOrigin: string,
   channel: string,
   origin = getAssessmentOrigin(),
+  referral: string | null = null,
 ): string {
   const url = new URL(ASSESSMENT_FLOWS[flow].embedPath, origin);
   url.searchParams.set("parentOrigin", new URL(parentOrigin).origin);
   url.searchParams.set("channel", channel);
   url.searchParams.set("source", "houseofawesome");
+  const code = normalizeReferralCode(referral);
+  if (code) url.searchParams.set("ref", code);
   return url.href;
 }
 
-export function assessmentFallbackUrl(flow: AssessmentFlow): string {
-  return new URL(ASSESSMENT_FLOWS[flow].fallbackPath, getAssessmentOrigin()).href;
+export function assessmentFallbackUrl(flow: AssessmentFlow, referral: string | null = null): string {
+  const url = new URL(ASSESSMENT_FLOWS[flow].fallbackPath, getAssessmentOrigin());
+  const code = normalizeReferralCode(referral);
+  if (code) url.searchParams.set("ref", code);
+  return url.href;
 }
 
 export type AssessmentMessage = {
@@ -68,6 +76,7 @@ export type AssessmentMessage = {
   flow: AssessmentFlow;
   channel: string;
   height?: number;
+  acceptedReferralCode?: string | null;
 };
 
 type MessageEnvelope = Pick<MessageEvent<unknown>, "origin" | "source" | "data">;
@@ -95,12 +104,15 @@ export function parseAssessmentMessage(
   if (value.height !== undefined && (
     typeof value.height !== "number" || !Number.isFinite(value.height) || value.height < 160 || value.height > 6000
   )) return null;
+  const code = value.acceptedReferralCode;
+  const accepted = value.event === "complete" && (code === null || (typeof code === "string" && normalizeReferralCode(code) === code));
   return {
     type: ASSESSMENT_MESSAGE_TYPE,
     version: ASSESSMENT_MESSAGE_VERSION,
     event: value.event as AssessmentMessage["event"],
     flow: expected.flow,
     channel: expected.channel,
+    ...(accepted ? { acceptedReferralCode: code } : {}),
     ...(value.height === undefined ? {} : { height: value.height as number }),
   };
 }

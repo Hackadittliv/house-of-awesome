@@ -17,6 +17,8 @@ export function isTrackingFreePath(pathname: string | null | undefined): boolean
 // Fristående skript utan beroenden, eftersom det körs innan Next.js har laddats.
 export const scrubSensitiveParamsScript = `(function(){try{
 var w=window,l=w.location,u=new URL(l.href),q=u.searchParams,c=q.get("avboka"),s=q.get("session_id");
+if(q.has("ref"))w.__hoaReferralDocument=true;
+if(q.get("kundkonto")==="1")w.__hoaCustomerAccountDocument=true;
 if(typeof w.__hoaDocumentPath!=="string")w.__hoaDocumentPath=u.pathname;
 if(c===null&&s===null)return;
 function keep(k,v){try{if(v)w.sessionStorage.setItem(k,v);}catch(e){}}

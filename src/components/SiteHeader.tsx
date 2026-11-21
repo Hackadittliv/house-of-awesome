@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { ReferralAnchor, ReferralLink as Link } from "@/components/ReferralLink";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -21,7 +21,7 @@ function MobileEntry({ entry, onNavigate }: { entry: MenuEntry; onNavigate: () =
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   // Behovsanalysen behöver ett nytt dokument utan spårare från föregående sida.
-  const EntryLink = entry.href === "/behovsanalys" ? "a" : Link;
+  const EntryLink = entry.href === "/behovsanalys" ? ReferralAnchor : Link;
   return (
     <li>
       <div className="flex items-center justify-between gap-3">
@@ -100,7 +100,7 @@ export function SiteHeader({ bookingHref, menu }: { bookingHref: string; menu: (
 
         <nav aria-label="Huvudmeny" className="hidden items-center gap-3 xl:flex 2xl:gap-6">
           {menu.map((entry) => {
-            const EntryLink = "href" in entry && entry.href === "/behovsanalys" ? "a" : Link;
+            const EntryLink = "href" in entry && entry.href === "/behovsanalys" ? ReferralAnchor : Link;
             return "items" in entry ? (
               <div key={entry.label} className="group relative">
                 <button type="button" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-hoa-ink hover:underline underline-offset-4">

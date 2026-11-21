@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { EmbeddedCheckout } from "@/components/booking/EmbeddedCheckout";
-import { RequestForm } from "@/components/booking/RequestForm";
+import { RequestFields } from "@/components/booking/RequestForm";
 import { SellerNote } from "@/components/SellerNote";
 import { Field, Notice, PrivacyText, primaryButtonClass, secondaryButtonClass } from "@/components/booking/fields";
 import {
@@ -19,6 +19,9 @@ import { bookingCopy as t } from "@/lib/booking/copy";
 import { addDays, formatDateTime, formatDayLabel, formatTime, groupSlotsByDay, stockholmDate, utmFrom } from "@/lib/booking/format";
 import { saveConfirmation } from "@/lib/booking/confirmation";
 import { stripePublishableKey } from "@/lib/booking/config";
+import { CustomerAccountFlow } from "@/components/booking/CustomerAccountFlow";
+import type { CustomerAccount } from "@/lib/booking/customer-account";
+import { useReferralChoice } from "@/components/booking/ReferralChoice";
 import { formatPriceLabel } from "@/lib/content";
 
 const DAYS_PER_PAGE = 7;
@@ -31,7 +34,7 @@ type Props = {
 
 type Step = "pick" | "form" | "pay";
 
-type PendingPayment = { bookingId: string; priceId: string | null; startAt: string; email: string };
+type PendingPayment = { bookingId: string; priceId: string | null; startAt: string; email: string; ambassadorCode: string | null };
 
 export function locationLabel(type: EventTypeInfo["location_type"]): string {
   if (type === "in_person") return t.locationInPerson;
@@ -39,14 +42,19 @@ export function locationLabel(type: EventTypeInfo["location_type"]): string {
   return t.locationMeet;
 }
 
-export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
+export function BookingFlow(props: Props) {
+  return <CustomerAccountFlow>{account => <BookingFields {...props} account={account} />}</CustomerAccountFlow>;
+}
+
+function BookingFields({ slug, serviceName, healthDeclaration, account }: Props & { account: CustomerAccount | null }) {
+  const reach = useReferralChoice();
   const [fromDate, setFromDate] = useState(() => stockholmDate(new Date()));
   const [loaded, setLoaded] = useState<{ key: string; result: AvailabilityResult | "error" } | null>(null);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [slot, setSlot] = useState<Slot | null>(null);
   const [step, setStep] = useState<Step>("pick");
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(account?.email ?? "");
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -86,7 +94,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
           <h2 className="text-2xl text-hoa-ink">{t.requestOnlyTitle}</h2>
           <p className="text-hoa-ink-muted">{t.requestOnlyLead}</p>
         </div>
-        <RequestForm serviceSlug={slug} serviceName={serviceName} />
+        <RequestFields account={account} serviceSlug={slug} serviceName={serviceName} />
       </div>
     );
   }
@@ -96,7 +104,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
     return (
       <div className="space-y-6">
         <Notice>{t.paymentNeedsRequest}</Notice>
-        <RequestForm serviceSlug={slug} serviceName={serviceName} />
+        <RequestFields account={account} serviceSlug={slug} serviceName={serviceName} />
       </div>
     );
   }
@@ -117,6 +125,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
       // annars blockerar den egna hållningen tiden.
       const reusable =
         pendingPayment && pendingPayment.startAt === slot.start && pendingPayment.email === guestEmail ? pendingPayment : null;
+      const ambassadorCode = reusable ? reusable.ambassadorCode : reach.accepted;
       let bookingId: string;
       let priceId: string | null;
       if (reusable) {
@@ -124,6 +133,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
         priceId = reusable.priceId;
       } else {
         const booking = await createBooking({
+          account,
           eventTypeSlug: eventType.slug,
           startAt: slot.start,
           name: name.trim(),
@@ -132,6 +142,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
           notes: notes.trim(),
           locationType: eventType.location_type,
           utm: utmFrom(window.location.search),
+          ambassadorCode,
         });
         const requiresPayment = Boolean(booking.requires_payment && booking.price_id);
         saveConfirmation({
@@ -151,13 +162,15 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
         }
         bookingId = booking.booking_id;
         priceId = booking.price_id ?? null;
-        setPendingPayment({ bookingId, priceId, startAt: slot.start, email: guestEmail });
+        setPendingPayment({ bookingId, priceId, startAt: slot.start, email: guestEmail, ambassadorCode });
       }
       if (!priceId) throw new Error("price missing");
       phase = "checkout";
       const secret = await createCheckout({
+        account,
         bookingId,
         priceId,
+        ambassadorCode,
         email: guestEmail,
         returnUrl: `${window.location.origin}/boka/tack?session_id={CHECKOUT_SESSION_ID}`,
       });
@@ -293,7 +306,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
             {t.formTitle}
           </h2>
           <Field label={t.name} name="name" required autoComplete="name" maxLength={120} value={name} onChange={setName} />
-          <Field label={t.email} name="email" type="email" required autoComplete="email" maxLength={255} value={email} onChange={setEmail} />
+          <Field label={t.email} name="email" readOnly={!!account} type="email" required autoComplete="email" maxLength={255} value={email} onChange={setEmail} />
           <Field
             label={eventType.phone_required || eventType.location_type === "phone" ? t.phone : t.phoneOptional}
             name="phone"
@@ -306,6 +319,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
           />
           <Field label={t.notes} name="notes" multiline maxLength={2000} value={notes} onChange={setNotes} />
           <PrivacyText text={t.bookingPrivacy} linkLabel={t.privacyLink} />
+          {reach.field}
           <button type="submit" className={primaryButtonClass} disabled={submitting}>
             {submitting ? t.submitting : eventType.requires_payment ? t.bookPaid : t.bookFree}
           </button>

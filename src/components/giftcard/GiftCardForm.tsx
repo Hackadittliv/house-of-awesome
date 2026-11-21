@@ -1,5 +1,9 @@
 "use client";
 
+import { CustomerAccountFlow } from "@/components/booking/CustomerAccountFlow";
+import type { CustomerAccount } from "@/lib/booking/customer-account";
+import { useReferralChoice } from "@/components/booking/ReferralChoice";
+
 import { useEffect, useState } from "react";
 
 import { EmbeddedCheckout } from "@/components/booking/EmbeddedCheckout";
@@ -48,10 +52,15 @@ function Check() {
 }
 
 export function GiftCardForm() {
+  return <CustomerAccountFlow>{account => <GiftCardFields account={account} />}</CustomerAccountFlow>;
+}
+
+function GiftCardFields({ account }: { account: CustomerAccount | null }) {
+  const reach = useReferralChoice();
   const [preset, setPreset] = useState<number>(1000);
   const [custom, setCustom] = useState("");
   const [buyerName, setBuyerName] = useState("");
-  const [buyerEmail, setBuyerEmail] = useState("");
+  const [buyerEmail, setBuyerEmail] = useState(account?.email ?? "");
   const [gift, setGift] = useState(false);
   const [recipientName, setRecipientName] = useState("");
   const [recipientEmail, setRecipientEmail] = useState("");
@@ -121,9 +130,11 @@ export function GiftCardForm() {
         else if (preview.state === "invalid") droppedNote = preview.message;
       }
       const result = await createGiftCardCheckout({
+        account,
         email: buyerEmail.trim().toLowerCase(),
         metadata: giftCardMetadata(input),
         returnUrl: `${window.location.origin}/presentkort/tack?session_id={CHECKOUT_SESSION_ID}`,
+        ambassadorCode: reach.accepted,
         promoCode: promoCodeForCheckout,
       });
       rememberGiftCardReceipt(result.giftCard);
@@ -227,7 +238,7 @@ export function GiftCardForm() {
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Field label="Ditt namn *" name="gc-bname" autoComplete="name" required value={buyerName} onChange={setBuyerName} maxLength={120} />
-          <Field label="Din e-post *" name="gc-bemail" type="email" autoComplete="email" required value={buyerEmail} onChange={setBuyerEmail} />
+          <Field label="Din e-post *" name="gc-bemail" readOnly={!!account} type="email" autoComplete="email" required value={buyerEmail} onChange={setBuyerEmail} />
         </div>
 
         <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm text-hoa-ink">
@@ -281,6 +292,7 @@ export function GiftCardForm() {
         {error && <Notice tone="error">{error}</Notice>}
 
         <div className="text-center">
+          {reach.field}
           <button type="submit" disabled={busy} className={primaryButtonClass}>
             {busy ? "Öppnar betalning..." : `Köp presentkort ${Number.isFinite(amountSek) && amountSek > 0 ? formatSek(amountSek) : ""}`.trim()}
           </button>

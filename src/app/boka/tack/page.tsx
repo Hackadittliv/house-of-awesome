@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ReferralLink as Link } from "@/components/ReferralLink";
 
 import { Container } from "@/components/Container";
 import { Confirmation } from "@/components/booking/Confirmation";
