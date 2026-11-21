@@ -1,5 +1,7 @@
 "use client";
 
+import { normalizeReferralCode, readReferralCode } from "@/lib/referral";
+
 import { useEffect, useMemo, useState } from "react";
 
 import { ClientOnly } from "@/components/booking/ClientOnly";
@@ -70,6 +72,7 @@ function StudionInner() {
 
 function Login({ expired }: { expired: boolean }) {
   const [email, setEmail] = useState("");
+  const code = readReferralCode();
   const [state, setState] = useState<"idle" | "sending" | "sent" | "unknown" | "error">("idle");
   return (
     <form
@@ -92,6 +95,7 @@ function Login({ expired }: { expired: boolean }) {
       <input type="email" required autoComplete="email" className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} />
       <button type="submit" className={primaryButtonClass} disabled={state === "sending"}>{t.loginButton}</button>
       {state === "sent" && <Notice>{t.loginSent}</Notice>}
+      {state === "sent" && code && <p>Ange tipskoden {code} när du bokar efter inloggningen.</p>}
       {state === "unknown" && <Notice tone="error">{t.notApproved}</Notice>}
       {state === "error" && <Notice tone="error">{t.loginError}</Notice>}
     </form>
@@ -105,6 +109,8 @@ function Week({ session, onLogout, onExpired }: { session: Session; onLogout: ()
   const [picked, setPicked] = useState<Slot | null>(null);
   const [hours, setHours] = useState(1);
   const [note, setNote] = useState("");
+  const [referral, setReferral] = useState(() => readReferralCode() ?? "");
+  const invalidReferral = referral.trim() !== "" && !normalizeReferralCode(referral);
   const [result, setResult] = useState<"idle" | "booking" | "booked" | "taken" | "error" | "forbidden">("idle");
 
   const [refresh, setRefresh] = useState(0);
@@ -145,7 +151,7 @@ function Week({ session, onLogout, onExpired }: { session: Session; onLogout: ()
   const maxHours = picked && slots ? maxConsecutiveHours(slots, picked.start) : 1;
 
   async function book() {
-    if (!picked) return;
+    if (!picked || invalidReferral) return;
     setResult("booking");
     try {
       await createStudionBooking({
@@ -154,6 +160,7 @@ function Week({ session, onLogout, onExpired }: { session: Session; onLogout: ()
         name: session.email,
         email: session.email,
         notes: note,
+        ambassadorCode: normalizeReferralCode(referral),
         accessToken: session.accessToken,
       });
       setResult("booked");
@@ -245,7 +252,14 @@ function Week({ session, onLogout, onExpired }: { session: Session; onLogout: ()
             <span className="text-sm">{t.note}</span>
             <textarea className={inputClass} maxLength={500} value={note} onChange={(e) => setNote(e.target.value)} />
           </label>
-          <button type="button" className={primaryButtonClass} disabled={result === "booking"} onClick={book}>
+          <label className="block space-y-1">
+            <span className="text-sm">Tipskod från en ambassadör (valfritt)</span>
+            <input className={inputClass} name="referral" autoComplete="off" autoCapitalize="characters" maxLength={10}
+              aria-invalid={Boolean(invalidReferral)} aria-describedby={invalidReferral ? "studion-tipskod" : undefined}
+              value={referral} onChange={(event) => setReferral(event.target.value)} />
+          </label>
+          {invalidReferral && <p id="studion-tipskod">Ange hela tipskoden från länken eller lämna fältet tomt.</p>}
+          <button type="button" className={primaryButtonClass} disabled={result === "booking" || Boolean(invalidReferral)} onClick={book}>
             {result === "booking" ? t.booking : t.book}
           </button>
         </div>

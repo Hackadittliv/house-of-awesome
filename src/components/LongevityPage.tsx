@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ReferralLink as Link } from "@/components/ReferralLink";
 
 import { CtaLink } from "@/components/CtaLink";
 import { Disclaimer } from "@/components/Disclaimer";

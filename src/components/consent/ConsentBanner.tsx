@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { ReferralLink as Link } from "@/components/ReferralLink";
 import { useId, useState } from "react";
 
 import { useConsent } from "@/components/consent/ConsentProvider";

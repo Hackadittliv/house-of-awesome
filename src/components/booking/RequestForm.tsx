@@ -1,5 +1,7 @@
 "use client";
 
+import { readReferralCode } from "@/lib/referral";
+
 import { useState } from "react";
 
 import { Field, Notice, PrivacyText, inputClass, primaryButtonClass } from "@/components/booking/fields";
@@ -38,6 +40,7 @@ export function RequestForm({ serviceSlug, serviceName, route, options }: Props)
         phone: phone.trim(),
         interestType: interestFor(serviceSlug),
         message: [serviceName ? `${t.requestService}: ${serviceName}` : null, option ? `${t.requestOption}: ${option}` : null, message.trim() || null].filter(Boolean).join("\n\n"),
+        ambassadorCode: readReferralCode(),
         sourceSlug: serviceSlug ? `hoa:${serviceSlug}` : "hoa",
         honeypot,
         utm: utmFrom(window.location.search),

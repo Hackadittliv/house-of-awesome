@@ -19,6 +19,7 @@ import { bookingCopy as t } from "@/lib/booking/copy";
 import { addDays, formatDateTime, formatDayLabel, formatTime, groupSlotsByDay, stockholmDate, utmFrom } from "@/lib/booking/format";
 import { saveConfirmation } from "@/lib/booking/confirmation";
 import { stripePublishableKey } from "@/lib/booking/config";
+import { readReferralCode } from "@/lib/referral";
 import { formatPriceLabel } from "@/lib/content";
 
 const DAYS_PER_PAGE = 7;
@@ -31,7 +32,7 @@ type Props = {
 
 type Step = "pick" | "form" | "pay";
 
-type PendingPayment = { bookingId: string; priceId: string | null; startAt: string; email: string };
+type PendingPayment = { bookingId: string; priceId: string | null; startAt: string; email: string; ambassadorCode: string | null };
 
 export function locationLabel(type: EventTypeInfo["location_type"]): string {
   if (type === "in_person") return t.locationInPerson;
@@ -117,6 +118,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
       // annars blockerar den egna hållningen tiden.
       const reusable =
         pendingPayment && pendingPayment.startAt === slot.start && pendingPayment.email === guestEmail ? pendingPayment : null;
+      const ambassadorCode = reusable ? reusable.ambassadorCode : readReferralCode();
       let bookingId: string;
       let priceId: string | null;
       if (reusable) {
@@ -132,6 +134,7 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
           notes: notes.trim(),
           locationType: eventType.location_type,
           utm: utmFrom(window.location.search),
+          ambassadorCode,
         });
         const requiresPayment = Boolean(booking.requires_payment && booking.price_id);
         saveConfirmation({
@@ -151,13 +154,14 @@ export function BookingFlow({ slug, serviceName, healthDeclaration }: Props) {
         }
         bookingId = booking.booking_id;
         priceId = booking.price_id ?? null;
-        setPendingPayment({ bookingId, priceId, startAt: slot.start, email: guestEmail });
+        setPendingPayment({ bookingId, priceId, startAt: slot.start, email: guestEmail, ambassadorCode });
       }
       if (!priceId) throw new Error("price missing");
       phase = "checkout";
       const secret = await createCheckout({
         bookingId,
         priceId,
+        ambassadorCode,
         email: guestEmail,
         returnUrl: `${window.location.origin}/boka/tack?session_id={CHECKOUT_SESSION_ID}`,
       });

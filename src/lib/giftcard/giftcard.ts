@@ -1,6 +1,7 @@
 // Presentkort säljs via LIA:s create-checkout (priceId "gift_card_custom").
 // Gränserna speglar GIFT_CARD_MIN_SEK / GIFT_CARD_MAX_SEK i LIA:s edge function.
 // Kampanjvärdet räknas på servern. Klienten visar svaret och skickar bara det betalda beloppet.
+import { referralBody } from "@/lib/referral";
 import { liaSupabaseAnonKey, liaSupabaseUrl } from "@/lib/booking/config";
 
 export const GIFT_CARD_PRICE_ID = "gift_card_custom";
@@ -226,6 +227,7 @@ export function giftCardCheckoutPayload(args: {
   metadata: Record<string, string>;
   returnUrl: string;
   requestId: string;
+  ambassadorCode?: string | null;
   promoCode?: string;
 }): Record<string, unknown> {
   const metadata: Record<string, string> = {};
@@ -239,6 +241,7 @@ export function giftCardCheckoutPayload(args: {
     returnUrl: args.returnUrl,
     quantity: 1,
     requestId: args.requestId,
+    ...referralBody(args.ambassadorCode),
     metadata,
   };
   const promoCode = args.promoCode?.trim() ?? "";

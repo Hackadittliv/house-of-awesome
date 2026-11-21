@@ -1,4 +1,5 @@
 import { BOOKING_SITE, PRIVACY_NOTICE_VERSION, liaSupabaseAnonKey, liaSupabaseUrl } from "@/lib/booking/config";
+import { referralBody } from "@/lib/referral";
 import { giftCardCheckoutPayload, readGiftCardReceipt, type GiftCardReceipt } from "@/lib/giftcard/giftcard";
 
 export type EventTypeInfo = {
@@ -76,6 +77,7 @@ export type BookingInput = {
   notes: string;
   locationType: EventTypeInfo["location_type"];
   utm: Record<string, string>;
+  ambassadorCode?: string | null;
 };
 
 export type BookingResult = {
@@ -99,6 +101,7 @@ export function createBooking(input: BookingInput): Promise<BookingResult> {
     location_type: input.locationType,
     site: BOOKING_SITE,
     ...input.utm,
+    ...referralBody(input.ambassadorCode),
   });
 }
 
@@ -107,6 +110,7 @@ export async function createCheckout(args: {
   priceId: string;
   email: string;
   returnUrl: string;
+  ambassadorCode?: string | null;
 }): Promise<string> {
   const data = await callFunction<{ clientSecret: string }>("create-checkout", {
     priceId: args.priceId,
@@ -115,6 +119,7 @@ export async function createCheckout(args: {
     quantity: 1,
     requestId: crypto.randomUUID(),
     metadata: { booking_id: args.bookingId },
+    ...referralBody(args.ambassadorCode),
   });
   return data.clientSecret;
 }
@@ -177,6 +182,7 @@ export type RequestInput = {
   sourceSlug: string | null;
   honeypot: string;
   utm: Record<string, string>;
+  ambassadorCode?: string | null;
   route?: RequestRoute;
 };
 
@@ -197,6 +203,7 @@ export function requestConsultation(input: RequestInput): Promise<{ ok: true }> 
     site: BOOKING_SITE,
     ...(input.route ? { route: input.route } : {}),
     ...input.utm,
+    ...referralBody(input.ambassadorCode),
   });
 }
 
@@ -219,6 +226,7 @@ export function createStudionBooking(args: {
   email: string;
   notes: string;
   accessToken: string;
+  ambassadorCode?: string | null;
 }): Promise<BookingResult> {
   return callFunction<BookingResult>(
     "create-booking",
@@ -231,6 +239,7 @@ export function createStudionBooking(args: {
       guest_notes: args.notes || null,
       location_type: "in_person",
       site: BOOKING_SITE,
+      ...referralBody(args.ambassadorCode),
     },
     args.accessToken,
   );
@@ -254,6 +263,7 @@ export async function createGiftCardCheckout(args: {
   email: string;
   metadata: Record<string, string>;
   returnUrl: string;
+  ambassadorCode?: string | null;
   promoCode?: string;
 }): Promise<{ clientSecret: string; giftCard: GiftCardReceipt | null }> {
   const data = await callFunction<{ clientSecret?: unknown; giftCard?: unknown }>(
@@ -264,6 +274,7 @@ export async function createGiftCardCheckout(args: {
       returnUrl: args.returnUrl,
       requestId: crypto.randomUUID(),
       promoCode: args.promoCode,
+      ambassadorCode: args.ambassadorCode,
     }),
   );
   if (typeof data.clientSecret !== "string" || data.clientSecret.length === 0) {

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { ReferralLink as Link } from "@/components/ReferralLink";
 
 import { CtaLink } from "@/components/CtaLink";
 import { FacadeImage } from "@/components/FacadeImage";

@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 
 import { useConsent } from "@/components/consent/ConsentProvider";
 import { isTrackingFreePath } from "@/lib/booking/sensitive-url";
+import { isReferralDocument } from "@/lib/referral";
 import { trackers } from "@/lib/consent";
 
 type TrackingWindow = Window & {
@@ -20,7 +21,7 @@ export function ConsentedTrackers() {
 
   // Avboknings och tacksidorna hanterar bokningskoder och laddar aldrig spårarna.
   // Bokningsflödet går dit med en hel sidladdning, så inga spårare följer med.
-  const trackingFree = isTrackingFreePath(pathname);
+  const trackingFree = isTrackingFreePath(pathname) || isReferralDocument();
   const loadAnalytics = Boolean(!trackingFree && choice?.analytics && trackers.gaMeasurementId);
   const loadMarketing = Boolean(!trackingFree && choice?.marketing && trackers.metaPixelId);
 

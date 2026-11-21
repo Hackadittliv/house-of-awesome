@@ -1,5 +1,7 @@
 "use client";
 
+import { readReferralCode } from "@/lib/referral";
+
 import { useEffect, useState } from "react";
 
 import { EmbeddedCheckout } from "@/components/booking/EmbeddedCheckout";
@@ -124,6 +126,7 @@ export function GiftCardForm() {
         email: buyerEmail.trim().toLowerCase(),
         metadata: giftCardMetadata(input),
         returnUrl: `${window.location.origin}/presentkort/tack?session_id={CHECKOUT_SESSION_ID}`,
+        ambassadorCode: readReferralCode(),
         promoCode: promoCodeForCheckout,
       });
       rememberGiftCardReceipt(result.giftCard);

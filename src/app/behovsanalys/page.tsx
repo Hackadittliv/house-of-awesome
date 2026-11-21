@@ -1,3 +1,4 @@
+import { ReferralAnchor } from "@/components/ReferralLink";
 import { AssessmentExperience } from "@/components/assessment/AssessmentExperience";
 import { Container } from "@/components/Container";
 import { PageHeader } from "@/components/PageHeader";
@@ -25,7 +26,7 @@ export default function AssessmentPage() {
           <noscript>
             <div className="mx-auto max-w-2xl space-y-4">
               <p>Du behöver aktivera JavaScript för att fylla i behovsanalysen här. Du kan också kontakta oss för personlig hjälp.</p>
-              <a href="/besok" className="inline-flex min-h-11 items-center">Kontakta oss</a>
+              <ReferralAnchor href="/besok" className="inline-flex min-h-11 items-center">Kontakta oss</ReferralAnchor>
             </div>
           </noscript>
         </Container>

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { ReferralLink as Link } from "@/components/ReferralLink";
 
 export const inputClass =
   "mt-1 block w-full rounded-lia-md border border-hoa-line bg-hoa-card px-3 py-3 text-base text-hoa-ink placeholder:text-hoa-ink-muted/60 focus:border-hoa-gold focus:outline-none";

@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { ReferralAnchor, ReferralLink as Link } from "@/components/ReferralLink";
+
 
 import { Container } from "@/components/Container";
 import { PageHeader } from "@/components/PageHeader";
@@ -55,6 +56,9 @@ export default function IntegritetspolicyPage() {
               en säker och fungerande sajt. Loggarna sparas under en begränsad tid.
             </li>
             <li>
+              <strong>Tips från en ambassadör.</strong> Om du kommer via en tipslänk följer tipskoden med till Life Is Awesome när du bokar, köper eller skickar en förfrågan.
+            </li>
+            <li>
               <strong>Ditt cookieval.</strong> Vi sparar ditt val om cookies i din webbläsare så
               att vi inte behöver fråga igen. Det är nödvändigt för att valet ska gälla.
             </li>
@@ -73,7 +77,7 @@ export default function IntegritetspolicyPage() {
             </li>
           </ul>
           <p>
-            På sidan <a href="/behovsanalys">Behovsanalys</a> kan du fylla i ett formulär för personlig
+            På sidan <ReferralAnchor href="/behovsanalys">Behovsanalys</ReferralAnchor> kan du fylla i ett formulär för personlig
             uppföljning eller hjälp med utrustning. Formulären tillhandahålls av {operator.legalName}
             och visas inbäddade från lifeisawesome.se. Svaren skickas direkt till verksamhetens
             gemensamma system och används för att hantera din förfrågan. Läs informationen vid
