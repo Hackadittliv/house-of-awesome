@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 import { getAssessmentOrigin } from "./src/lib/assessment";
 
+import { getEventsSourceUrl } from "./src/lib/event-source";
+
+const eventImageOrigin = getEventsSourceUrl()?.origin;
 const isProduction = process.env.NODE_ENV === "production";
 // Netlify lägger in sitt granskningsverktyg som iframe på förhandsversioner, aldrig i produktion.
 const isNetlifyPreview = ["deploy-preview", "branch-deploy"].includes(process.env.CONTEXT ?? "");
@@ -20,7 +23,7 @@ const stripeFrames = "https://js.stripe.com https://checkout.stripe.com https://
 const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isProduction ? "" : " 'unsafe-eval'"} https://www.googletagmanager.com https://connect.facebook.net https://js.stripe.com`,
-  "img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com https://www.facebook.com https://*.stripe.com",
+  `img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com https://www.facebook.com https://*.stripe.com${eventImageOrigin ? ` ${eventImageOrigin}` : ""}`,
   `connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.facebook.com https://connect.facebook.net https://api.stripe.com https://*.stripe.com${liaSupabaseOrigin ? ` ${liaSupabaseOrigin}` : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",

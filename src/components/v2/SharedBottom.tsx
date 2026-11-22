@@ -11,7 +11,7 @@ const title = "Osäker på vad som passar dig?";
 /** Delat CTA-band och nyhetsbrev, döljs i bokningsflödet. */
 export function SharedBottom({ bookHref, adviceHref }: { bookHref: string; adviceHref: string }) {
   const pathname = usePathname();
-  if (pathname.startsWith("/boka") || pathname.startsWith("/avbok") || /^\/behovsanalys(?:\/|$)/.test(pathname)) return null;
+  if (pathname.startsWith("/boka") || pathname.startsWith("/avbok") || /^\/(?:behovsanalys|event)(?:\/|$)/.test(pathname)) return null;
   return (
     <div data-shared-bottom>
       <section className="hoa-bottom-cta py-14 text-center md:py-16">
