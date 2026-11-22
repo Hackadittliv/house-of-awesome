@@ -1,3 +1,5 @@
+import { EventCard } from "@/components/events/EventDetail";
+import { HOA_EVENT_SLUG, readEventCatalog } from "@/lib/events";
 import { CtaLink } from "@/components/CtaLink";
 import { Card, Grid, Hero, Section, Soon } from "@/components/v2/ui";
 import { inquiryUrl } from "@/lib/links";
@@ -9,13 +11,16 @@ export const metadata = pageMetadata({
   path: "/event-och-lokaler",
 });
 
-export default function Page() {
+export default async function Page() {
   const inquiry = inquiryUrl("event", "event_page");
+  const catalog = await readEventCatalog();
+  const event = catalog.events?.find((row) => row.slug === HOA_EVENT_SLUG && row.status === "interest");
   return (
     <>
       <Hero eyebrow="Event · Workshops · Föreläsningar" title="Ett hus att samlas i" lead="Egna föreläsningar och workshops, och ett hus du kan hyra för dina." />
       <Section eyebrow="Kommande i huset" title="Kalendern">
         <Grid>
+          {event && <EventCard event={event} sourceOrigin={catalog.sourceOrigin} />}
           <Card label="Inspirationsdag" title="Cirkeln" text="Flera av våra partners delar scenen. Föreläsningar, provsessioner och samtal."><Soon>Datum kommer snart</Soon></Card>
           <Card label="Workshop" title="Andning & kyla" text="Andning, fokus och kallexponering med certifierad Wim Hof Method-instruktör."><Soon>Datum kommer snart</Soon></Card>
           <Card label="Föreläsning" title="Allt ligger i livsstilen" text="Patrik och Alexandra om grunden för ett långt och friskt liv."><Soon>Datum kommer snart</Soon></Card>

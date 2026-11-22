@@ -31,6 +31,11 @@ vi.mock("@/lib/booking/config", async (importOriginal) => ({
   },
 }));
 
+vi.mock("@/lib/events", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/events")>()),
+  readEventCatalog: async () => ({ sourceOrigin: "https://lifeisawesome.se", events: null }),
+}));
+
 (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 function files(dir: string): string[] {
@@ -55,8 +60,8 @@ beforeEach(() => {
 });
 
 describe("förfrågningsknappar går till formuläret", () => {
-  it("event, longevity-resa och behandlingsrum bär med sig tjänsten", () => {
-    const event = render(EventPage);
+  it("event, longevity-resa och behandlingsrum bär med sig tjänsten", async () => {
+    const event = renderToStaticMarkup(await EventPage());
     const trip = render(LongevityResorPage);
     const treatments = render(BehandlingarPage);
 
@@ -99,9 +104,9 @@ describe("förfrågningsknappar går till formuläret", () => {
     expect(bookableHtml).not.toContain("mailto:");
   });
 
-  it("använder Life Is Awesome som reserv när bokningen är av, inte mailto", () => {
+  it("använder Life Is Awesome som reserv när bokningen är av, inte mailto", async () => {
     config.enabled = false;
-    const html = render(EventPage) + render(LongevityResorPage) + render(BehandlingarPage);
+    const html = renderToStaticMarkup(await EventPage()) + render(LongevityResorPage) + render(BehandlingarPage);
     expect(html).not.toContain("mailto:");
     expect(html).toContain("https://lifeisawesome.se/boka/forsta-halsosamtal");
     expect(html).toContain("utm_content=event_page_event");
