@@ -246,7 +246,7 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <section aria-labelledby="forfragan" className="px-4 pb-14 text-center md:pb-20">
+      <section aria-labelledby="forfragan" className="px-4 py-14 text-center md:py-20">
         <div className="mx-auto max-w-2xl space-y-4">
           <h2 id="forfragan" className="text-2xl text-hoa-ink">Healing och massage efter förfrågan</h2>
           <p className="text-hoa-ink-muted">Healing hos Rebecca och massage hos Sandra Bengts bokas efter förfrågan.</p>
