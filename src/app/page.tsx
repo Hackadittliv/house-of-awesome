@@ -136,7 +136,7 @@ export default function HomePage() {
                   alt={PORTRAITS[founder.portrait].alt}
                   fill
                   sizes="(min-width: 960px) 28rem, (min-width: 640px) 47vw, 95vw"
-                  className="object-cover object-[center_30%]"
+                  className="object-cover object-[center_10%]"
                 />
               </div>
               <div className="flex flex-1 flex-col items-start p-6">
