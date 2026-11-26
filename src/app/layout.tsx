@@ -11,7 +11,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SharedBottom } from "@/components/v2/SharedBottom";
 import { scrubSensitiveParamsScript } from "@/lib/booking/sensitive-url";
 import { site } from "@/lib/content";
-import { SHORT_CALL_SLUG, bookingUrl } from "@/lib/links";
+import { bookingUrl } from "@/lib/links";
 import { mainMenu } from "@/lib/nav";
 import { businessJsonLd, siteUrl } from "@/lib/seo";
 
@@ -80,7 +80,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <main id="innehall" className="flex-1 bg-hoa-bg">
             {children}
           </main>
-          <SharedBottom bookHref={bookingUrl(null, "cta_band")} adviceHref={bookingUrl(SHORT_CALL_SLUG, "cta_band")} />
+          <SharedBottom bookHref={bookingUrl(null, "cta_band")} />
           <SiteFooter />
           <ConsentBanner />
           <ConsentedTrackers />

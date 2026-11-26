@@ -24,6 +24,12 @@ export function bookingUrl(slug: string | null, placement: string, enabled = boo
   return liaBookingUrl(slug, placement);
 }
 
+export function founderConversationUrl(founder: "alexandra" | "patrik", placement: "home" | "om"): string {
+  const source = `${placement}_${founder}`;
+  if (founder === "patrik") return bookingUrl(SHORT_CALL_SLUG, source);
+  return withUtm(new URL("/anmal-samtal", site.operator.url).href, source, { flow: "first_step_alexandra" });
+}
+
 export function inquiryUrl(serviceSlug: string, placement: string, enabled = bookingEnabled): string {
   if (enabled) return `/boka/forfragan?tjanst=${encodeURIComponent(serviceSlug)}`;
   return liaBookingUrl(SHORT_CALL_SLUG, `${placement}_${serviceSlug}`);

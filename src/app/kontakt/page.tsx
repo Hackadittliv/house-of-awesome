@@ -1,6 +1,6 @@
 import { CtaLink } from "@/components/CtaLink";
 import { Card, Grid, Hero, Section, TwoWays } from "@/components/v2/ui";
-import { SHORT_CALL_SLUG, bookingUrl, mailtoUrl, mapsUrl, telUrl } from "@/lib/links";
+import { bookingUrl, mailtoUrl, mapsUrl, telUrl } from "@/lib/links";
 import { pageMetadata } from "@/lib/seo";
 
 import { site } from "@/lib/content";
@@ -21,7 +21,7 @@ export default function Page() {
     <>
       <Hero eyebrow="Boka & kontakt" title="Hur vill du börja?" lead="Brålandsvägen 29 i Stora Höga, 30 minuter norr om Göteborg." />
       <Section>
-        <TwoWays bookHref={bookingUrl(null, "kontakt")} adviceHref={bookingUrl(SHORT_CALL_SLUG, "kontakt")} />
+        <TwoWays bookHref={bookingUrl(null, "kontakt")} adviceHref="/#grundarna" />
       </Section>
       <Section band>
         <Grid cols={4}>
