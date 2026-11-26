@@ -32,7 +32,7 @@ export class BookingApiError extends Error {
   }
 }
 
-async function callFunction<T>(name: string, body: Record<string, unknown>, accessToken?: string): Promise<T> {
+async function callFunction<T>(name: string, body: Record<string, unknown>, accessToken?: string, signal?: AbortSignal): Promise<T> {
   const response = await fetch(`${liaSupabaseUrl}/functions/v1/${name}`, {
     method: "POST",
     headers: {
@@ -42,6 +42,7 @@ async function callFunction<T>(name: string, body: Record<string, unknown>, acce
       Authorization: `Bearer ${accessToken ?? liaSupabaseAnonKey}`,
     },
     body: JSON.stringify(body),
+    signal,
   });
   const data = (await response.json().catch(() => ({}))) as Record<string, unknown>;
   if (!response.ok) {
@@ -107,6 +108,19 @@ export function createBooking(input: BookingInput): Promise<BookingResult> {
   }, customerToken(input.account, input.email));
 }
 
+export type AwesomeCreditQuote = { priceOre: number; availableOre: number; appliedOre: number; remainingOre: number; currency: "sek" };
+
+export async function getAwesomeCreditQuote(account: CustomerAccount, eventTypeSlug: string, signal: AbortSignal): Promise<AwesomeCreditQuote | null> {
+  // HOA:s enskilda behandlingar använder samma klinikkalender som get-availability och create-booking.
+  const quote = await callFunction<(AwesomeCreditQuote & { eligible?: true }) | { eligible: false }>("awesome-credit-quote", { clinicSlug: "lia", eventTypeSlug }, customerToken(account, account.email), signal);
+  if (quote?.eligible === false) return null;
+  if (!quote || quote.currency !== "sek" || ![quote.priceOre, quote.availableOre, quote.appliedOre, quote.remainingOre].every(amount => Number.isSafeInteger(amount) && amount >= 0) ||
+      quote.priceOre <= 0 || quote.appliedOre > Math.min(quote.priceOre, quote.availableOre) || quote.remainingOre !== quote.priceOre - quote.appliedOre) {
+    throw new BookingApiError(502, "Kreditbeloppen kunde inte bekräftas.");
+  }
+  return quote;
+}
+
 export async function createCheckout(args: {
   account?: CustomerAccount | null;
   bookingId: string;
@@ -114,8 +128,11 @@ export async function createCheckout(args: {
   email: string;
   returnUrl: string;
   ambassadorCode?: string | null;
+  credit?: AwesomeCreditQuote;
 }): Promise<string> {
-  const data = await callFunction<{ clientSecret: string }>("create-checkout", {
+  const { credit } = args;
+  if (credit && (!args.account || credit.appliedOre <= 0)) throw new Error("Kreditvalet kräver ett inloggat konto och ett positivt belopp.");
+  const data = await callFunction<{ clientSecret?: string; awesomeCredit?: { appliedOre: number; remainingOre: number } }>("create-checkout", {
     priceId: args.priceId,
     customerEmail: args.email,
     returnUrl: args.returnUrl,
@@ -123,7 +140,13 @@ export async function createCheckout(args: {
     requestId: crypto.randomUUID(),
     metadata: { booking_id: args.bookingId },
     ...referralBody(args.ambassadorCode),
+    ...(credit && { useAwesomeCredit: true, expectedAwesomeCreditOre: credit.appliedOre, expectedBookingPriceOre: credit.priceOre }),
   }, customerToken(args.account, args.email));
+  if (credit && (data.awesomeCredit?.appliedOre !== credit.appliedOre || data.awesomeCredit.remainingOre !== credit.remainingOre)) {
+    throw new BookingApiError(409, "Kreditbeloppen har ändrats.");
+  }
+  if (!credit && data.awesomeCredit && data.awesomeCredit.appliedOre > 0) throw new BookingApiError(409, "Kreditavdraget har inte valts.");
+  if (!data.clientSecret || typeof data.clientSecret !== "string") throw new BookingApiError(502, "Betalningen kunde inte öppnas.");
   return data.clientSecret;
 }
 
