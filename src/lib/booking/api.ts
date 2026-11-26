@@ -127,10 +127,51 @@ export async function createCheckout(args: {
   return data.clientSecret;
 }
 
-export type CancelResult = { ok: true; already: boolean; late: boolean };
+export type CancellationTerms =
+  | { house247: false }
+  | { house247: true; kind: "card" | "voucher" | "included"; amount_ore: number; voucher_uses: number; quota_uses?: number };
 
-export function cancelBooking(cancelToken: string): Promise<CancelResult> {
-  return callFunction<CancelResult>("cancel-booking", { cancel_token: cancelToken });
+export type CancelResult = {
+  ok: true;
+  already: boolean;
+  late: boolean;
+  house247_amount_ore?: number;
+  house247_refund?: "pending" | "succeeded" | "manual_review" | "not_due";
+  house247_voucher_uses?: number;
+  house247_quota_uses?: number;
+  customer_notification_pending?: boolean;
+  customer_notification_manual_review?: boolean;
+};
+
+export async function previewCancellation(token: string): Promise<CancellationTerms> {
+  // Older workers cannot cancel a booking with only the preview token.
+  const data = await callFunction<CancellationTerms>("cancel-booking", { preview: true, preview_token: token });
+  if (data?.house247 === false) return data;
+
+  if (data?.house247 === true && Number.isSafeInteger(data.amount_ore) && data.amount_ore >= 0) {
+    switch (data.kind) {
+      case "card":
+        if (data.voucher_uses === 0 && !data.quota_uses) return data;
+        break;
+      case "voucher":
+        if (data.amount_ore === 0 && [0, 1].includes(data.voucher_uses) && !data.quota_uses) return data;
+        break;
+      case "included":
+        if (data.amount_ore === 0 && data.voucher_uses === 0 && (data.quota_uses === 0 || data.quota_uses === 1)) return data;
+        break;
+    }
+  }
+  throw new BookingApiError(503, "Avbokningsvillkoren kunde inte bekräftas.");
+}
+
+export function cancelBooking(cancelToken: string, terms: CancellationTerms): Promise<CancelResult> {
+  const body: Record<string, unknown> = { cancel_token: cancelToken };
+  if (terms.house247) {
+    body.expected_refund_ore = terms.amount_ore;
+    if (terms.kind !== "card") body.expected_voucher_uses = terms.voucher_uses;
+    if (terms.kind === "included") body.expected_quota_uses = terms.quota_uses;
+  }
+  return callFunction<CancelResult>("cancel-booking", body);
 }
 
 /** Hämtar kalenderfilen. 409 betyder att betalningen ännu inte är bekräftad. */

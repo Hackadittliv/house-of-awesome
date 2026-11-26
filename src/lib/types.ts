@@ -91,7 +91,6 @@ export type Membership = {
   tagline: string;
   items: string[];
   featured: boolean;
-  spots: number | null;
 };
 
 export type FaqItem = {

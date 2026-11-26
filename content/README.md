@@ -7,7 +7,7 @@ Allt innehåll ligger som JSON här. Typerna finns i `src/lib/types.ts`.
 | `site.json` | Namn, bolag, kontakt, adress, öppettider, länkar till LIA | För hand |
 | `services.snapshot.json` | LIA:s publika tjänster: slug, titel, längd, pris, plats | `npm run sync:services` |
 | `services.json` | HOA:s texter per tjänst | För hand |
-| `memberships.json` | De fyra HOA medlemskapen och deras Stripe pris i LIA | För hand |
+| `memberships.json` | Husets två medlemskap och respektive planval hos LIA | För hand |
 | `faq.json` | Vanliga frågor | För hand |
 | `longevity.json` | Anne Wevers, blodanalys och hälsostrategi för företag, typ `LongevityPageContent` | För hand |
 

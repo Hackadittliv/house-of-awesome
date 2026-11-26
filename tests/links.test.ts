@@ -31,11 +31,11 @@ describe("bokningslänkar", () => {
     },
   );
 
-  it("medlemskap går till /medlem med rätt plan", () => {
-    const url = new URL(membershipUrl("hoa_gym_monthly", "membership_page"));
+  it.each(["hoa_247_member_monthly", "hoa_247_all_inclusive_monthly"])("länkar till rätt plan %s hos LIA", (plan) => {
+    const url = new URL(membershipUrl(plan, "membership_page"));
     expect(url.origin).toBe("https://lifeisawesome.se");
     expect(url.pathname).toBe("/medlem");
-    expect(url.searchParams.get("plan")).toBe("hoa_gym_monthly");
+    expect(url.searchParams.get("plan")).toBe(plan);
     expect(url.searchParams.get("utm_source")).toBe("houseofawesome");
   });
 });
