@@ -35,7 +35,7 @@ export default function Page() {
             <CtaLink href={bookingUrl("hbot-60", "longevity_hbot")} size="sm" className="mt-auto w-fit">Boka</CtaLink>
           </Card>
           <Card id="rodljus-pemf" label="3 · Ljus och puls" title="Rödljus + PEMF" image={{ src: "/images/rodljus.webp", alt: "En person ligger avslappnad under rödljuspanelen i House of Awesome" }} text={<p>Rött ljus på 660 nm kombinerat med PEMF. Du ligger bekvämt och slappnar av i en lugn och behaglig behandling.</p>}>
-            <Bullets items={["Ett skönt avslut efter träningen", "Särskilt uppskattat under de mörka årstiderna", "Ingår i alla gymmedlemskap"]} />
+            <Bullets items={["Ett skönt avslut efter träningen", "Särskilt uppskattat under de mörka årstiderna", "Medlemspris 155 kr per pass. Obegränsat med All inclusive"]} />
             <CtaLink href={bookingUrl("redlight-20", "longevity_redlight")} size="sm" className="mt-auto w-fit">Boka</CtaLink>
           </Card>
           <Card id="ewot" label="4 · Syre" title="EWOT" text={<p>Intervallträning med högkoncentrerat syre via mask. Kort, intensivt och tidseffektivt. Hjärtat i The Awesome Protocol.</p>}>

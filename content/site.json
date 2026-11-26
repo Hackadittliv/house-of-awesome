@@ -28,7 +28,7 @@
     "countryName": "Sverige"
   },
   "hours": {
-    "members": "Medlemmar har tillgång till huset dygnet runt, alla dagar.",
+    "members": "Medlemmar med aktiv digital nyckel har tillgång till huset dygnet runt efter godkänd grundintroduktion.",
     "staffed": "Lediga tider för behandlingar och samtal ser du i bokningen."
   },
   "booking": {

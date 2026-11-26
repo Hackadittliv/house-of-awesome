@@ -30,7 +30,7 @@ export default function Page() {
           </Card>
           <Card title="E-post" text={<a href={mailtoUrl()} className={emailLink}>{site.contact.email}</a>} />
           <Card title="Telefon" text={<a href={telUrl()} className={phoneLink}>073-349 08 36</a>} />
-          <Card title="Öppettider" text="Gym 24/7 för medlemmar. Bemannat enligt bokning." />
+          <Card title="Öppettider" text="Medlemmar med aktiv digital nyckel har tillträde dygnet runt. Kettlebellrummet ingår vid bokning av utrustning. Bemannat enligt bokning." />
         </Grid>
       </Section>
     </>

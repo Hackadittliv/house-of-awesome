@@ -2,7 +2,7 @@
   {
     "id": "vad-ar-hoa",
     "question": "Vad är House of Awesome?",
-    "answer": "House of Awesome är vårt hus i Stora Höga för träning, återhämtning och longevity. Här finns tryckkammare, Celloxy IHHT, EWOT, rödljus, ett gym som är öppet dygnet runt för medlemmar och personlig coachning."
+    "answer": "House of Awesome är vårt hus i Stora Höga för träning, återhämtning och longevity. Här finns tryckkammare, Celloxy IHHT, EWOT, rödljus, ett kettlebellrum som ingår när medlemmar bokar utrustning och personlig coachning."
   },
   {
     "id": "vem-driver",
@@ -17,17 +17,17 @@
   {
     "id": "hur-bokar-jag",
     "question": "Hur bokar jag en tid?",
-    "answer": "Välj en tjänst här på sajten och tryck på Boka. Du kommer då direkt till rätt tjänst i bokningen hos Life Is Awesome, där vi har en gemensam kalender för båda verksamheterna."
+    "answer": "Välj en tjänst och tryck på Boka för att se bemannade tider i den ordinarie kalendern. Som medlem bokar du obemannade pass genom att logga in hos Life Is Awesome. Där ser du vilka tider som finns och vilken introduktion du behöver."
   },
   {
     "id": "priser",
     "question": "Vad kostar det?",
-    "answer": "Aktuellt pris står vid varje tjänst och i bokningen. Klippkort ger ett lägre pris per gång. Medlemskapen kostar från 599 kr per månad."
+    "answer": "Aktuellt pris står vid varje tjänst och i bokningen. Klippkort ger ett lägre pris per gång. Medlemskap kostar 111 kr per månad och All inclusive kostar 1 444 kr per månad. Båda har sex månaders bindningstid."
   },
   {
     "id": "medlemskap",
     "question": "Hur fungerar medlemskapen?",
-    "answer": "Alla medlemskap ger tillgång till gymmet dygnet runt, en introduktion och en träningsplan. Skillnaden är hur mycket rödljus och hur många pass med The Awesome Protocol som ingår. Bindningstiden är 12 månader."
+    "answer": "Medlemskap ger medlemspriser och en digital nyckel som kan aktiveras efter registrerad betalning och godkänd grundintroduktion. All inclusive omfattar dessutom två EWOT-pass per kalendervecka och obegränsat rödljus/PEMF. Kettlebellrummet ingår när du bokar utrustning. Celloxy kräver ett eget körkort och betalas separat."
   },
   {
     "id": "halsodeklaration",
