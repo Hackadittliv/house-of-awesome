@@ -69,7 +69,7 @@ export function referralHref(href: string, value: unknown): string {
     return href;
   }
   if (url.username || url.password || url.origin !== (internal ? "https://houseofawesome.se" : LIA_ORIGIN)) return href;
-  if (/^\/(?:avboka|boka\/tack|presentkort\/tack|auth|admin|villkor|integritetspolicy)(?:\/|$)/.test(url.pathname)) return href;
+  if (/^\/(?:avboka|boka\/tack|presentkort\/tack|auth|admin|villkor|integritetspolicy|halsoambassador)(?:\/|$)/.test(url.pathname)) return href;
   // Preserve destinations which already have an explicit referral, including legacy codes.
   if (url.searchParams.has("ref") || url.searchParams.has("amb")) return href;
   url.searchParams.set("ref", code);
