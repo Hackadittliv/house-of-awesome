@@ -7,8 +7,8 @@ import { FaqList } from "@/components/FaqList";
 import { Wordmark } from "@/components/Logo";
 import { Avatar, Card, Grid, Section, cardClass, gridGap } from "@/components/v2/ui";
 import { getFaqItems, getService, site } from "@/lib/content";
-import { SHORT_CALL_SLUG, bookingUrl } from "@/lib/links";
-import { PORTRAITS } from "@/lib/people";
+import { bookingUrl, founderConversationUrl } from "@/lib/links";
+import { founders, PORTRAITS } from "@/lib/people";
 import { REBECCA } from "@/lib/rebecca";
 import { SANDRA } from "@/lib/sandra";
 import { pageMetadata } from "@/lib/seo";
@@ -57,6 +57,7 @@ const moreInHouse = [
 
 // Korta texter från /om och /behandlingar-och-samtal.
 const people: { portrait: keyof typeof PORTRAITS; role: string; name: string; text: string }[] = [
+  ...founders,
   {
     portrait: "lucas",
     role: "Coach",
@@ -68,12 +69,6 @@ const people: { portrait: keyof typeof PORTRAITS; role: string; name: string; te
     role: "Healing",
     name: "Rebecca Gustafsson",
     text: "Energimedicinsk healingterapi (EMHT). På plats i huset eller på distans.",
-  },
-  {
-    portrait: "patrik",
-    role: "Medgrundare",
-    name: "Patrik Nilsson",
-    text: "Certifierad Wim Hof Method-instruktör och trebarnspappa. Byggde tidigare ett åkeri med 200 lastbilar. Leder utveckling och partnerskap.",
   },
 ];
 
@@ -103,7 +98,7 @@ export default function HomePage() {
               För hälsa, inspiration, utveckling och gemenskap, 30 minuter norr om Göteborg.
             </p>
             <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <CtaLink href={bookingUrl(SHORT_CALL_SLUG, "home_hero")}>Boka kostnadsfritt samtal med Patrik</CtaLink>
+              <CtaLink href="#grundarna">Välj ett kostnadsfritt samtal</CtaLink>
               <CtaLink href={bookingUrl(null, "home_hero")} variant="secondary">Boka behandling</CtaLink>
             </div>
             <div className="mt-5 flex flex-col items-center justify-center gap-1 text-sm sm:flex-row sm:gap-3">
@@ -122,28 +117,36 @@ export default function HomePage() {
         </p>
       </section>
 
-      <Section id="mote-med-patrik" eyebrow="Möte med Patrik" title="Hälsa har blivit för krångligt. Vi gör det enkelt igen." band>
-        <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-2 md:gap-12">
-          <div className="space-y-4">
-            <p className="font-display text-xl font-bold leading-snug text-hoa-ink md:text-2xl">
-              Vi börjar med grunden: din livsstil och din vardag. Sedan bygger vi vidare därifrån.
-            </p>
-            <p className="text-lg leading-relaxed text-hoa-ink md:text-xl">Vi hjälper dig att förstå vad som är viktigast att fokusera på först.</p>
-            <p className="leading-relaxed text-hoa-ink-muted">Mätning och optimering använder vi när det faktiskt tillför värde.</p>
-            <p className="leading-relaxed text-hoa-ink-muted">Vi bygger hälsa och en livsstil som håller över tid.</p>
-          </div>
-          <div className="relative aspect-[4/5] w-full max-w-sm justify-self-center overflow-hidden rounded-2xl md:row-span-2 md:max-w-md">
-            <Image
-              src={PORTRAITS.patrik.src}
-              alt={PORTRAITS.patrik.alt}
-              fill
-              sizes="(min-width: 768px) 28rem, (min-width: 448px) 24rem, 90vw"
-              className="object-cover object-top"
-            />
-          </div>
-          <Card label="Kostnadsfritt samtal på 10 minuter med" title="Patrik Nilsson" text="Medgrundare av Life Is Awesome" featured>
-            <CtaLink href={bookingUrl(SHORT_CALL_SLUG, "home_patrik")} className="mt-2 w-full sm:w-fit">Boka samtal med Patrik</CtaLink>
-          </Card>
+      <Section
+        id="grundarna"
+        title="Möt Alexandra och Patrik"
+        lead="Vad vill du börja med? Välj vem du vill prata med. Det första samtalet är kostnadsfritt och tar tio minuter."
+        band
+      >
+        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2">
+          {founders.map((founder) => (
+            <article
+              key={founder.portrait}
+              id={`mote-med-${founder.portrait}`}
+              className="hoa-surface-dark flex scroll-mt-28 flex-col overflow-hidden rounded-2xl"
+            >
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image
+                  src={PORTRAITS[founder.portrait].src}
+                  alt={PORTRAITS[founder.portrait].alt}
+                  fill
+                  sizes="(min-width: 960px) 28rem, (min-width: 640px) 47vw, 95vw"
+                  className="object-cover object-[center_10%]"
+                />
+              </div>
+              <div className="flex flex-1 flex-col items-start p-6">
+                <p className="text-sm text-hoa-gold">{founder.role}</p>
+                <h3 className="mt-1 text-2xl text-hoa-ink">{founder.name}</h3>
+                <p className="mt-3 mb-5 leading-relaxed text-hoa-ink-muted">{founder.conversation}</p>
+                <CtaLink href={founderConversationUrl(founder.portrait, "home")} className="mt-auto">{founder.action}</CtaLink>
+              </div>
+            </article>
+          ))}
         </div>
       </Section>
 
@@ -226,7 +229,7 @@ export default function HomePage() {
 
 
       <Section id="personerna" eyebrow="Personerna" title="Människorna i huset" band>
-        <ul className={`grid grid-cols-1 ${gridGap} md:grid-cols-3`}>
+        <ul className={`grid grid-cols-1 ${gridGap} sm:grid-cols-2 lg:grid-cols-4`}>
           {people.map((p) => (
             <li key={p.name} className={`${cardClass} flex flex-col items-center gap-3 text-center`}>
               <Avatar {...PORTRAITS[p.portrait]} size="lg" />

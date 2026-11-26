@@ -1,6 +1,7 @@
 import { CtaLink } from "@/components/CtaLink";
 import { Avatar, Card, Grid, Hero, Section } from "@/components/v2/ui";
-import { PORTRAITS } from "@/lib/people";
+import { founderConversationUrl } from "@/lib/links";
+import { founders, PORTRAITS } from "@/lib/people";
 import { pageMetadata } from "@/lib/seo";
 
 import { site } from "@/lib/content";
@@ -12,8 +13,6 @@ export const metadata = pageMetadata({
 });
 
 const team: [string, string, string, keyof typeof PORTRAITS | null][] = [
-  ["Medgrundare", "Patrik Nilsson", "Certifierad Wim Hof Method-instruktör och trebarnspappa. Byggde tidigare ett åkeri med 200 lastbilar. Leder utveckling och partnerskap.", "patrik"],
-  ["Medgrundare", "Alexandra Schneider", "Ansvarar för innehåll och drift. Medförfattare till boken Allt ligger i livsstilen.", "alexandra"],
   ["Coach", "Lucas Eliasson", "Coach och ansvarig för gymmet och Basläger. Bygger träningskonceptet och tar hand om medlemmarna.", "lucas"],
   ["Digitalt", "Christian Wederbrand", "Bygger den digitala plattformen: webb, bokning, medlemsportal och partnernätverket.", null],
   ["Delägare", "Per Berglund", "Delägare och investerare genom EB Invest. Bidrar med erfarenhet av att bygga bolag.", null],
@@ -51,6 +50,14 @@ export default function Page() {
       </Section>
       <Section eyebrow="Teamet" title="Människorna bakom huset" band>
         <Grid>
+          {founders.map((founder) => (
+            <Card key={founder.portrait} label={founder.role} title={founder.name} text={founder.text}>
+              <div className="mt-auto space-y-3 pt-2">
+                <Avatar {...PORTRAITS[founder.portrait]} />
+                <CtaLink href={founderConversationUrl(founder.portrait, "om")} variant="ghost">{founder.action}</CtaLink>
+              </div>
+            </Card>
+          ))}
           {team.map(([role, name, text, portrait]) => (
             <Card key={name} label={role} title={name} text={text}>
               {portrait ? <div className="mt-auto pt-2"><Avatar {...PORTRAITS[portrait]} /></div> : null}

@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 
 import { findCopyViolations } from "../scripts/copy-rules.mjs";
 import faq from "../content/faq.json";
+import AboutPage from "@/app/om/page";
 import HomePage, { metadata } from "@/app/page";
 import { FACADE_SRC_SET, FACADE_WIDTHS } from "@/components/FacadeImage";
 import { getService, getServices } from "@/lib/content";
@@ -47,6 +48,34 @@ function anchors(markup: string) {
 
 const text = textOf(html);
 const links = anchors(html);
+const founders = [
+  { name: "Alexandra Schneider", portrait: PORTRAITS.alexandra },
+  { name: "Patrik Nilsson", portrait: PORTRAITS.patrik },
+];
+
+function expectFounderCards(cards: string[], placement: "home" | "om") {
+  for (const { name, portrait } of founders) {
+    const matches = cards.filter((item) => textOf(item).includes(name));
+    expect(matches, name).toHaveLength(1);
+    const [card] = matches;
+    expect(card).toContain(`alt="${portrait.alt}"`);
+    expect(card).toContain(basename(portrait.src));
+    expect(textOf(card)).toContain("Medgrundare");
+    const ctas = anchors(card);
+    expect(ctas).toHaveLength(1);
+    const [cta] = ctas;
+    if (name === "Patrik Nilsson") {
+      expect(cta).toEqual({ href: bookingUrl(SHORT_CALL_SLUG, `${placement}_patrik`), text: "Boka samtal med Patrik" });
+    } else {
+      expect(cta.text).toBe("Fråga efter en tid med Alexandra");
+      const url = new URL(cta.href);
+      expect(url.origin + url.pathname).toBe("https://lifeisawesome.se/anmal-samtal");
+      expect(url.searchParams.get("flow")).toBe("first_step_alexandra");
+      expect(url.searchParams.get("utm_source")).toBe("houseofawesome");
+      expect(url.searchParams.get("utm_content")).toBe(`${placement}_alexandra`);
+    }
+  }
+}
 
 describe("startsidan", () => {
   it("har en enda h1 som välkomnar till huset", () => {
@@ -57,24 +86,21 @@ describe("startsidan", () => {
 
   it("har sektionerna i Lucas ordning", () => {
     const ids = [...html.matchAll(/<section\b[^>]*\sid="([^"]+)"/g)].map((m) => m[1]);
-    expect(ids).toEqual(["valkommen", "mote-med-patrik", "om-huset", "utbud", "personerna", "event", "vanliga-fragor"]);
+    expect(ids).toEqual(["valkommen", "grundarna", "om-huset", "utbud", "personerna", "event", "vanliga-fragor"]);
   });
 
-  it("samlar Patrik och huset på ljust med ett mörkt samtalskort", () => {
-    for (const id of ["mote-med-patrik", "om-huset", "personerna", "vanliga-fragor"]) {
+  it("samlar grundarna och huset på ljust", () => {
+    for (const id of ["grundarna", "om-huset", "personerna", "vanliga-fragor"]) {
       expect(section(id).match(/^<section\b[^>]*>/)?.[0]).toContain("hoa-surface-light");
     }
     for (const id of ["utbud", "event"]) {
       expect(section(id).match(/^<section\b[^>]*>/)?.[0]).toContain("hoa-surface-dark");
     }
-    expect(section("mote-med-patrik").match(/<article\b[^>]*>/)?.[0]).toContain("hoa-surface-dark");
   });
 
-  it("har den primära knappen i hero till det korta samtalet med Patrik", () => {
+  it("leder besökaren från första knappen till valet av samtal", () => {
     const [primary, secondary] = anchors(section("valkommen"));
-    expect(primary.href).toBe(bookingUrl(SHORT_CALL_SLUG, "home_hero"));
-    expect(new URL(primary.href, "https://houseofawesome.se").pathname).toBe(`/boka/${SHORT_CALL_SLUG}`);
-    expect(primary.text).toContain("Patrik");
+    expect(primary).toEqual({ href: "#grundarna", text: "Välj ett kostnadsfritt samtal" });
     expect(secondary).toEqual({ href: bookingUrl(null, "home_hero"), text: "Boka behandling" });
   });
 
@@ -100,12 +126,15 @@ describe("startsidan", () => {
     expect(preloads, "bara fasaden förladdas").toHaveLength(1);
   });
 
-  it("har Möte med Patrik med porträtt och ett kort som bokar samtalet", () => {
-    const part = section("mote-med-patrik");
-    expect(textOf(part)).toContain("Hälsa har blivit för krångligt. Vi gör det enkelt igen.");
-    expect(textOf(part)).toContain("Kostnadsfritt samtal på 10 minuter med Patrik Nilsson Medgrundare av Life Is Awesome");
-    expect(part).toContain(`alt="${PORTRAITS.patrik.alt}"`);
-    expect(anchors(part)).toContainEqual({ href: bookingUrl(SHORT_CALL_SLUG, "home_patrik"), text: "Boka samtal med Patrik" });
+  it("ger varje grundare ett eget kort med namn, roll, porträtt och rätt samtalslänk", () => {
+    const part = section("grundarna");
+    expect(textOf(part)).toMatch(/kostnadsfritt och tar tio minuter/i);
+    const cards = part.match(/<article\b[^>]*>[\s\S]*?<\/article>/g) ?? [];
+    expect(cards).toHaveLength(2);
+    for (const card of cards) expect(card.match(/^<article\b[^>]*>/)?.[0]).toContain("hoa-surface-dark");
+    const patrik = cards.find((card) => textOf(card).includes("Patrik Nilsson"));
+    expect(patrik).toMatch(/^<article\b[^>]*\sid="mote-med-patrik"/);
+    expectFounderCards(cards, "home");
   });
 
   it("har Om House of Awesome med knappen till /om och en länk till event och lokaler", () => {
@@ -127,10 +156,10 @@ describe("startsidan", () => {
     expect(anchors(part)).toContainEqual({ href: "/behandlingar-och-samtal", text: "Behandlingar och samtal" });
   });
 
-  it("visar Lucas, Rebecca och Patrik med porträtt", () => {
+  it("visar Lucas, Rebecca och båda grundarna med porträtt bland personerna i huset", () => {
     const part = section("personerna");
-    for (const key of ["lucas", "rebecca", "patrik"] as const) expect(part).toContain(`alt="${PORTRAITS[key].alt}"`);
-    expect(textOf(part)).not.toContain("Alexandra");
+    for (const key of ["lucas", "rebecca", "patrik", "alexandra"] as const) expect(part).toContain(`alt="${PORTRAITS[key].alt}"`);
+    for (const { name } of founders) expect(textOf(part)).toContain(name);
   });
 
   it("länkar till event och lokaler från event-sektionen", () => {
@@ -187,6 +216,14 @@ describe("startsidan", () => {
     ];
     for (const pattern of banned) expect(text).not.toMatch(pattern);
     expect((text.match(/(?<!\p{L})inte(?!\p{L})/giu) ?? []).length).toBeLessThanOrEqual(1);
+  });
+});
+
+describe("om huset", () => {
+  it("visar båda grundarna med porträtt och personliga samtalslänkar", () => {
+    const about = renderToStaticMarkup(createElement(AboutPage));
+    const cards = about.match(/<article\b[^>]*>[\s\S]*?<\/article>/g) ?? [];
+    expectFounderCards(cards, "om");
   });
 });
 

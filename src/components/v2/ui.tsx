@@ -181,7 +181,7 @@ export function TwoWays({ bookHref, adviceHref }: { bookHref: string; adviceHref
         <CtaLink href={bookHref} className="mt-2 w-full sm:w-fit">Boka behandling</CtaLink>
       </Card>
       <Card label="Jag känner mig osäker" title="Kostnadsfri rådgivning" text="10 minuter där vi lyssnar och föreslår rätt nästa steg. Inget köpkrav." featured>
-        <CtaLink href={adviceHref} className="mt-2 w-full sm:w-fit">Boka rådgivning</CtaLink>
+        <CtaLink href={adviceHref} className="mt-2 w-full sm:w-fit">Välj ett kostnadsfritt samtal</CtaLink>
       </Card>
     </div>
   );

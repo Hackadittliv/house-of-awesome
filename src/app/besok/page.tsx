@@ -3,7 +3,7 @@ import { CtaLink } from "@/components/CtaLink";
 import { PageHeader } from "@/components/PageHeader";
 import { Section, cardClass } from "@/components/v2/ui";
 import { site } from "@/lib/content";
-import { SHORT_CALL_SLUG, bookingUrl, mailtoUrl, mapsUrl, telUrl } from "@/lib/links";
+import { bookingUrl, mailtoUrl, mapsUrl, telUrl } from "@/lib/links";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -97,8 +97,8 @@ export default function BesokPage() {
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <CtaLink href={bookingUrl(null, "visit_page")}>Boka tid</CtaLink>
-              <CtaLink href={bookingUrl(SHORT_CALL_SLUG, "visit_page")} variant="secondary">
-                Boka ett kort samtal
+              <CtaLink href="/#grundarna" variant="secondary">
+                Välj ett kostnadsfritt samtal
               </CtaLink>
             </div>
           </section>

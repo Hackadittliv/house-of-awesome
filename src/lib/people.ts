@@ -15,3 +15,22 @@ export const PORTRAITS = {
   rebecca: { src: "/images/team/rebecca-gustafsson.webp", alt: "Porträtt av Rebecca Gustafsson, healingterapeut i House of Awesome" },
   sandra: { src: "/images/team/sandra-bengts.webp", alt: "Sandra Bengts, friskvårdsmassör" },
 } satisfies Record<string, AvatarImage>;
+
+export const founders = [
+  {
+    portrait: "alexandra",
+    name: "Alexandra Schneider",
+    role: "Medgrundare",
+    text: "Ansvarar för innehåll och drift. Medförfattare till boken Allt ligger i livsstilen.",
+    conversation: "Prata med Alexandra om stress, återhämtning och vanor som får plats i din vardag.",
+    action: "Fråga efter en tid med Alexandra",
+  },
+  {
+    portrait: "patrik",
+    name: "Patrik Nilsson",
+    role: "Medgrundare",
+    text: "Certifierad Wim Hof Method-instruktör och trebarnspappa. Byggde tidigare ett åkeri med 200 lastbilar. Leder utveckling och partnerskap.",
+    conversation: "Prata med Patrik om andning, kyla och vilka behandlingar du är nyfiken på att prova i huset.",
+    action: "Boka samtal med Patrik",
+  },
+] as const;

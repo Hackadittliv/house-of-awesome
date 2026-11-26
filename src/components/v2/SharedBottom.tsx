@@ -9,7 +9,7 @@ import { fitStyle } from "@/lib/heading";
 const title = "Osäker på vad som passar dig?";
 
 /** Delat CTA-band och nyhetsbrev, döljs i bokningsflödet. */
-export function SharedBottom({ bookHref, adviceHref }: { bookHref: string; adviceHref: string }) {
+export function SharedBottom({ bookHref }: { bookHref: string }) {
   const pathname = usePathname();
   if (pathname.startsWith("/boka") || pathname.startsWith("/avbok") || /^\/(?:behovsanalys|event)(?:\/|$)/.test(pathname)) return null;
   return (
@@ -22,7 +22,7 @@ export function SharedBottom({ bookHref, adviceHref }: { bookHref: string; advic
           <p className="text-hoa-ink-muted">Börja med några frågor om vad du behöver. Vi återkommer personligen och hjälper dig vidare.</p>
           <div className="flex flex-col items-center justify-center gap-3 pt-2 sm:flex-row">
             <CtaLink href="/behovsanalys">Gör en behovsanalys</CtaLink>
-            <CtaLink href={adviceHref} variant="secondary">Boka kostnadsfri rådgivning</CtaLink>
+            <CtaLink href="/#grundarna" variant="secondary">Välj ett kostnadsfritt samtal</CtaLink>
           </div>
           <CtaLink href={bookHref} variant="ghost">Boka behandling direkt</CtaLink>
         </div>
