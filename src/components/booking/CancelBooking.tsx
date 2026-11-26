@@ -17,7 +17,7 @@ function consequence(terms: CancellationTerms) {
     case "voucher":
       return terms.voucher_uses
         ? "Om du avbokar nu får du tillbaka ett pass på ditt klippkort."
-        : "Om du avbokar nu förbrukas ett pass på ditt klippkort.";
+        : "Om du avbokar nu återförs inget pass till ditt klippkort.";
     case "included":
       return terms.quota_uses
         ? "Om du avbokar nu får du tillbaka ett EWOT-pass i veckokvoten."
@@ -33,7 +33,7 @@ function outcome(result: CancelResult) {
   if (result.house247_voucher_uses !== undefined) {
     return result.house247_voucher_uses
       ? "Ett pass har återförts till ditt klippkort."
-      : "Passet har förbrukats på ditt klippkort.";
+      : "Inget pass har återförts till ditt klippkort.";
   }
   if (result.house247_quota_uses !== undefined) {
     return result.house247_quota_uses

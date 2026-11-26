@@ -51,7 +51,8 @@ describe("Avbokning från husets mejllänk", () => {
     { terms: card, expected: { expected_refund_ore: 55500 }, before: "555", result: { house247_refund: "pending", house247_amount_ore: 55500 }, after: "behandlas" },
     { terms: { ...card, amount_ore: 0 }, expected: { expected_refund_ore: 0 }, before: "ingen återbetalning", result: { house247_refund: "not_due" }, after: "ingen återbetalning" },
     { terms: voucher, expected: { expected_refund_ore: 0, expected_voucher_uses: 1 }, before: "tillbaka ett pass", result: { house247_voucher_uses: 1 }, after: "återförts till ditt klippkort" },
-    { terms: { ...voucher, voucher_uses: 0 }, expected: { expected_refund_ore: 0, expected_voucher_uses: 0 }, before: "förbrukas ett pass", result: { house247_voucher_uses: 0 }, after: "förbrukats på ditt klippkort" },
+    { terms: { ...voucher, voucher_uses: 0 }, expected: { expected_refund_ore: 0, expected_voucher_uses: 0 }, before: "återförs inget pass", result: { house247_voucher_uses: 0 }, after: "Inget pass har återförts" },
+    { terms: { ...voucher, eligible: true, voucher_uses: 0 }, expected: { expected_refund_ore: 0, expected_voucher_uses: 0 }, before: "återförs inget pass", result: { house247_voucher_uses: 0 }, after: "Inget pass har återförts" },
     { terms: included, expected: { expected_refund_ore: 0, expected_voucher_uses: 0, expected_quota_uses: 1 }, before: "tillbaka ett EWOT-pass", result: { house247_quota_uses: 1 }, after: "återförts till din veckokvot" },
     { terms: { ...included, quota_uses: 0 }, expected: { expected_refund_ore: 0, expected_voucher_uses: 0, expected_quota_uses: 0 }, before: "fortfarande mot veckokvoten", result: { house247_quota_uses: 0 }, after: "räknas mot din veckokvot" },
   ])("bekräftar först efter granskning av $before", async ({ terms, expected, before, result, after }) => {
@@ -75,7 +76,7 @@ describe("Avbokning från husets mejllänk", () => {
     await click(container, copy.cancelConfirm);
     expect(requests).toEqual([preview, { cancel_token: token, expected_refund_ore: 0, expected_voucher_uses: 1 }, preview]);
     expect(container.textContent).toContain("Villkoren har ändrats");
-    expect(container.textContent).toContain("förbrukas ett pass");
+    expect(container.textContent).toContain("återförs inget pass");
     await click(container, copy.cancelConfirm);
     expect(requests.at(-1)).toEqual({ cancel_token: token, expected_refund_ore: 0, expected_voucher_uses: 0 });
     expect(container.textContent).toContain("Bekräftelsemejlet har ännu inte kunnat bekräftas");
