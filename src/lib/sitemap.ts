@@ -10,11 +10,12 @@ const CONTENT_UPDATED = new Date("2026-10-11");
 const LONGEVITY_UPDATED = new Date("2026-11-05");
 
 export function getSitemap(published: boolean = LONGEVITY_PUBLISHED): MetadataRoute.Sitemap {
-  const pages: { path: string; priority: number }[] = [
+  const pages: { path: string; priority: number; lastModified?: Date }[] = [
     { path: "/", priority: 1 },
     { path: "/tjanster", priority: 0.9 },
     { path: "/medlemskap", priority: 0.9 },
     { path: "/om", priority: 0.7 },
+    { path: "/halsoambassador", priority: 0.7, lastModified: new Date("2026-11-26") },
     { path: "/kontakt", priority: 0.8 },
     { path: "/longevity-behandlingar", priority: 0.9 },
     { path: "/funktionsmedicin", priority: 0.8 },
@@ -26,7 +27,7 @@ export function getSitemap(published: boolean = LONGEVITY_PUBLISHED): MetadataRo
     { path: "/butik", priority: 0.6 },
     { path: "/zazen-scalar", priority: 0.6 },
     { path: "/besok", priority: 0.8 },
-    { path: "/behovsanalys", priority: 0.8 },
+    { path: "/behovsanalys", priority: 0.8, lastModified: new Date("2026-11-08") },
     { path: "/faq", priority: 0.6 },
     { path: "/integritetspolicy", priority: 0.2 },
     { path: "/cookies", priority: 0.2 },
@@ -40,9 +41,9 @@ export function getSitemap(published: boolean = LONGEVITY_PUBLISHED): MetadataRo
       lastModified: LONGEVITY_UPDATED,
       priority: 0.8,
     })),
-    ...pages.map(({ path, priority }) => ({
+    ...pages.map(({ path, priority, lastModified }) => ({
       url: absoluteUrl(path),
-      lastModified: path === "/behovsanalys" ? new Date("2026-11-08") : CONTENT_UPDATED,
+      lastModified: lastModified ?? CONTENT_UPDATED,
       priority,
     })),
     ...getServices().map((service) => ({

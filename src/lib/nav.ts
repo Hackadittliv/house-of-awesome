@@ -69,6 +69,7 @@ export function getOfferGroup(published: boolean = LONGEVITY_PUBLISHED): MenuGro
         ],
       },
       { href: "/event-och-lokaler", label: "Event, föreläsningar & lokaler" },
+      { href: "/halsoambassador", label: "Bli hälsoambassadör" },
     ],
   };
 }
@@ -123,6 +124,7 @@ export const primaryNav: NavItem[] = [
 export function getAboutNav(published: boolean = LONGEVITY_PUBLISHED): NavItem[] {
   return [
     { href: "/om", label: "Om oss" },
+    { href: "/halsoambassador", label: "Bli hälsoambassadör" },
     ...(published ? [{ href: "/anne-wevers", label: "Anne Wevers" }] : []),
     { href: "/kontakt", label: "Boka & kontakt" },
     { href: "/zazen-scalar", label: "Zazen Scalar" },
