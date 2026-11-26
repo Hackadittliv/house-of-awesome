@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { EmbeddedCheckout } from "@/components/booking/EmbeddedCheckout";
+import { AwesomeCreditChoice } from "@/components/booking/AwesomeCreditChoice";
 import { RequestFields } from "@/components/booking/RequestForm";
 import { SellerNote } from "@/components/SellerNote";
 import { Field, Notice, PrivacyText, primaryButtonClass, secondaryButtonClass } from "@/components/booking/fields";
@@ -11,6 +12,8 @@ import {
   createBooking,
   createCheckout,
   getAvailability,
+  getAwesomeCreditQuote,
+  type AwesomeCreditQuote,
   type AvailabilityResult,
   type EventTypeInfo,
   type Slot,
@@ -62,6 +65,9 @@ function BookingFields({ slug, serviceName, healthDeclaration, account }: Props 
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
   const [pendingPayment, setPendingPayment] = useState<PendingPayment | null>(null);
+  const [useCredit, setUseCredit] = useState(false);
+  const [creditRefresh, setCreditRefresh] = useState(0);
+  const [creditResult, setCreditResult] = useState<{ key: string; quote: AwesomeCreditQuote | null; failed?: boolean } | null>(null);
 
   const today = useMemo(() => stockholmDate(new Date()), []);
   const toDate = addDays(fromDate, DAYS_PER_PAGE - 1);
@@ -84,6 +90,26 @@ function BookingFields({ slug, serviceName, healthDeclaration, account }: Props 
   }, [slug, fromDate, toDate, requestKey]);
 
   const availability = loaded?.key === requestKey ? loaded.result : null;
+  const creditKey = account?.accessToken && step === "form" && slot && availability && availability !== "error" &&
+    availability.kind === "slots" && availability.eventType.requires_payment && availability.eventType.price_id
+    ? `${account.userId}|${slug}|${slot.start}|${creditRefresh}` : null;
+  useEffect(() => {
+    if (!account || !creditKey) return;
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => {
+      controller.abort();
+      setCreditResult({ key: creditKey, quote: null, failed: true });
+    }, 7000);
+    getAwesomeCreditQuote(account, slug, controller.signal).then(quote => {
+      if (!controller.signal.aborted) setCreditResult({ key: creditKey, quote: quote && quote.appliedOre > 0 ? quote : null });
+    }).catch(() => {
+      if (!controller.signal.aborted) setCreditResult({ key: creditKey, quote: null, failed: true });
+    }).finally(() => window.clearTimeout(timer));
+    return () => { window.clearTimeout(timer); controller.abort(); };
+  }, [account, creditKey, slug]);
+
+  const checkingCredit = creditKey !== null && creditResult?.key !== creditKey;
+  const quote = creditKey !== null && creditResult?.key === creditKey ? creditResult.quote : null;
   if (availability === "error") return <Notice tone="error">{t.availabilityError}</Notice>;
   if (!availability) return <Notice>{t.loadingTimes}</Notice>;
 
@@ -115,7 +141,7 @@ function BookingFields({ slug, serviceName, healthDeclaration, account }: Props 
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (!slot) return;
+    if (!slot || submitting || checkingCredit || (useCredit && !quote)) return;
     setSubmitting(true);
     setSubmitError(null);
     let phase: "booking" | "checkout" = "booking";
@@ -173,11 +199,15 @@ function BookingFields({ slug, serviceName, healthDeclaration, account }: Props 
         ambassadorCode,
         email: guestEmail,
         returnUrl: `${window.location.origin}/boka/tack?session_id={CHECKOUT_SESSION_ID}`,
+        credit: useCredit && quote ? quote : undefined,
       });
       setClientSecret(secret);
       setStep("pay");
     } catch (error) {
-      if (phase === "checkout") {
+      if (phase === "checkout" && useCredit) {
+        setSubmitError("Betalningen med Awesome-kredit kunde inte öppnas. Kontrollera de aktuella beloppen och bekräfta ditt val igen.");
+        setCreditRefresh(value => value + 1);
+      } else if (phase === "checkout") {
         setSubmitError(t.paymentUnavailable);
       } else if (error instanceof BookingApiError && error.status === 409) {
         setSubmitError(t.slotTaken);
@@ -275,6 +305,8 @@ function BookingFields({ slug, serviceName, healthDeclaration, account }: Props 
                         data-testid="slot"
                         onClick={() => {
                           setSlot(candidate);
+                          setUseCredit(false);
+                          setCreditRefresh(value => value + 1);
                           setSubmitError(null);
                           setStep("form");
                         }}
@@ -298,7 +330,7 @@ function BookingFields({ slug, serviceName, healthDeclaration, account }: Props 
               <span className="text-sm text-hoa-ink-muted">{t.selected}: </span>
               <span className="inline-block first-letter:uppercase">{formatDateTime(slot.start)}</span>
             </p>
-            <button type="button" className="text-sm text-hoa-gold underline-offset-4 hover:underline" onClick={() => setStep("pick")}>
+            <button type="button" disabled={submitting} className="text-sm text-hoa-gold underline-offset-4 hover:underline" onClick={() => setStep("pick")}>
               {t.change}
             </button>
           </div>
@@ -320,8 +352,17 @@ function BookingFields({ slug, serviceName, healthDeclaration, account }: Props 
           <Field label={t.notes} name="notes" multiline maxLength={2000} value={notes} onChange={setNotes} />
           <PrivacyText text={t.bookingPrivacy} linkLabel={t.privacyLink} />
           {reach.field}
-          <button type="submit" className={primaryButtonClass} disabled={submitting}>
-            {submitting ? t.submitting : eventType.requires_payment ? t.bookPaid : t.bookFree}
+          {checkingCredit && <p role="status" className="text-sm text-hoa-ink-muted">Kontrollerar Awesome-kredit…</p>}
+          {quote && <AwesomeCreditChoice quote={quote} selected={useCredit} disabled={submitting} onChange={setUseCredit} />}
+          {useCredit && !checkingCredit && !quote && <div className="space-y-2">
+            <p role="status">{creditResult?.failed ? "Kreditbeloppet kan inte bekräftas just nu." : "Det finns ingen Awesome-kredit att använda för den här bokningen."}</p>
+            <div className="flex flex-wrap gap-2">
+              {creditKey && creditResult?.failed && <button type="button" className={secondaryButtonClass} onClick={() => setCreditRefresh(value => value + 1)}>Kontrollera saldot igen</button>}
+              <button type="button" className={secondaryButtonClass} onClick={() => setUseCredit(false)}>Välj ordinarie pris utan kredit</button>
+            </div>
+          </div>}
+          <button type="submit" className={primaryButtonClass} disabled={submitting || checkingCredit || (useCredit && !quote)}>
+            {submitting ? t.submitting : useCredit && quote?.remainingOre === 0 ? "Fortsätt med Awesome-kredit" : eventType.requires_payment ? t.bookPaid : t.bookFree}
           </button>
         </form>
       ) : null}
