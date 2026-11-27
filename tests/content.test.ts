@@ -37,15 +37,11 @@ describe("tjänster", () => {
     }
   });
 
-  it("har de fyra medlemskapen med pris", () => {
-    const plans = getMemberships();
-    expect(plans.map((plan) => plan.priceId)).toEqual([
-      "hoa_gym_monthly",
-      "hoa_longevity_monthly",
-      "hoa_longevity_plus_monthly",
-      "hoa_longevity_max_monthly",
+  it("visar husets två månadspriser och respektive val hos LIA", () => {
+    expect(getMemberships().map(({ priceId, name, pricePerMonth }) => [priceId, name, pricePerMonth])).toEqual([
+      ["hoa_247_member_monthly", "Medlemskap", 111],
+      ["hoa_247_all_inclusive_monthly", "All inclusive", 1444],
     ]);
-    for (const plan of plans) expect(plan.pricePerMonth).toBeGreaterThan(0);
   });
 });
 

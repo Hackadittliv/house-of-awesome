@@ -39,7 +39,7 @@ export function GET() {
 
 > ${site.description}
 
-${site.name} är ett hus för träning, återhämtning och longevity på ${formatAddress()}, i Stenungsunds kommun. Huset drivs av ${site.operator.legalName} (org.nr ${site.operator.orgNr}), som också driver ${site.operator.url}. Tidigare namn: ${site.formerName}. Bokning och betalning sker via Life Is Awesome, i en gemensam kalender.
+${site.name} är ett hus för träning, återhämtning och longevity på ${formatAddress()}, i Stenungsunds kommun. Huset drivs av ${site.operator.legalName} (org.nr ${site.operator.orgNr}), som också driver ${site.operator.url}. Tidigare namn: ${site.formerName}. Bokning och betalning sker via Life Is Awesome. Den ordinarie kalendern gäller bemannade tider. Medlemskalendern för obemannade pass öppnar senare.
 
 ## Kontakt
 
@@ -58,7 +58,9 @@ ${inquiry}
 
 ${practitionerInquiries}
 
-## Medlemskap (12 månaders bindningstid)
+## Medlemskap (6 månaders bindningstid, automatisk månadsbetalning inklusive 25 % moms)
+
+Försäljningen har ännu inte öppnat. Du kan göra en kostnadsfri intresseanmälan via ${absoluteUrl("/medlemskap")}.
 
 ${memberships}
 

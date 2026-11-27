@@ -30,7 +30,7 @@ npm run check:copy   # språkkontroll av de byggda sidorna, kör efter build
 | `/` | Startsida |
 | `/tjanster` | Alla tjänster, bokningsbara och efter förfrågan |
 | `/tjanster/[slug]` | En sida per tjänst, med längd, pris och bokningsknapp |
-| `/medlemskap` | De fyra HOA medlemskapen, länkar till `lifeisawesome.se/medlem?plan=...` |
+| `/medlemskap` | Husets två kommande medlemskap. Intresseanmälan går via vald plan på `lifeisawesome.se/medlem?plan=...` |
 | `/om` | Om huset, platsen i Stora Höga och showroom för företag |
 | `/besok` | Adress, kontakt, öppettider och bokning |
 | `/faq` | Vanliga frågor (med FAQPage JSON-LD) |

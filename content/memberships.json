@@ -1,46 +1,29 @@
 [
   {
-    "priceId": "hoa_gym_monthly",
-    "name": "Gym",
-    "pricePerMonth": 599,
-    "tagline": "Ett starkt fundament för hela livet.",
-    "items": ["Gym dygnet runt", "4 rödljusbehandlingar per månad"],
-    "featured": false,
-    "spots": null
-  },
-  {
-    "priceId": "hoa_longevity_monthly",
-    "name": "Longevity",
-    "pricePerMonth": 899,
-    "tagline": "Träning och återhämtning i balans.",
-    "items": ["Gym dygnet runt", "8 rödljusbehandlingar per månad"],
-    "featured": false,
-    "spots": null
-  },
-  {
-    "priceId": "hoa_longevity_plus_monthly",
-    "name": "Longevity Plus",
-    "pricePerMonth": 1495,
-    "tagline": "Kraft, syre och ljus varje vecka.",
+    "priceId": "hoa_247_member_monthly",
+    "name": "Medlemskap",
+    "pricePerMonth": 111,
+    "tagline": "Boka själv och betala medlemspris för de pass du väljer.",
     "items": [
-      "Gym dygnet runt",
-      "4 pass The Awesome Protocol per månad, med kraft, EWOT och rödljus"
+      "Digital nyckel efter registrerad betalning och godkänd grundintroduktion",
+      "Medlemskalender för obemannade pass dygnet runt",
+      "Medlemspris på EWOT, rödljus/PEMF och Celloxy IHHT",
+      "10 % rabatt på husets övriga utbud, till exempel tryckkammare, C-vitamindropp, coachning, PT och massage. Celloxy och andra produkter med medlemspris är undantagna."
     ],
-    "featured": true,
-    "spots": null
+    "featured": false
   },
   {
-    "priceId": "hoa_longevity_max_monthly",
-    "name": "Longevity Max",
-    "pricePerMonth": 2495,
-    "tagline": "För dig som vill satsa fullt ut.",
+    "priceId": "hoa_247_all_inclusive_monthly",
+    "name": "All inclusive",
+    "pricePerMonth": 1444,
+    "tagline": "För dig som vill boka EWOT och rödljus/PEMF regelbundet.",
     "items": [
-      "Gym dygnet runt",
-      "8 pass The Awesome Protocol per månad, med kraft, EWOT och rödljus",
-      "Mätning med InBody varje kvartal",
-      "Personlig longevityplan som vi följer upp tillsammans"
+      "Allt i Medlemskap",
+      "Två EWOT-pass per kalendervecka, måndag till söndag. Ytterligare pass kostar 333 kr",
+      "Obegränsat antal pass med rödljus/PEMF",
+      "Kettlebellrummet ingår vid bokning av utrustning",
+      "Celloxy bokas och betalas separat till medlemspris"
     ],
-    "featured": false,
-    "spots": 20
+    "featured": true
   }
 ]
