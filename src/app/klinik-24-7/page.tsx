@@ -1,16 +1,19 @@
+import { CtaLink } from "@/components/CtaLink";
 import { Card, Grid, Hero, Section, Soon, Steps } from "@/components/v2/ui";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "24/7-klinik",
-  description: "Obemannad longevity-klinik med rödljus, Scalar-fält och bokning i mobilen.",
+  description: "Läs om våra planer för obemannade kliniker med rödljus och Zazen Scalar.",
   path: "/klinik-24-7",
 });
 
 export default function Page() {
   return (
     <>
-      <Hero eyebrow="Obemannad longevity-klinik" title="Longevity dygnet runt" lead="En kompakt version av huset. Kom klockan fem på morgonen eller elva på kvällen." />
+      <Hero eyebrow="Obemannad longevity-klinik" title="Longevity dygnet runt" lead="Vi planerar mindre, obemannade kliniker med rödljus och Zazen Scalar. Här kan du läsa om konceptet.">
+        <CtaLink href="/medlemskap">Se medlemskapen för huset i Stora Höga</CtaLink>
+      </Hero>
       <Section>
         <Grid>
           <Card label="Återhämtning" title="Rödljussäng" text="15 minuter helkroppsljus." />
@@ -18,7 +21,7 @@ export default function Page() {
           <Card label="Påfyllning" title="Kaffe & hälsoprodukter" text="Vårt eget longevity-kaffe för 30 kr och ett utvalt sortiment i automaten." />
         </Grid>
       </Section>
-      <Section eyebrow="Så fungerar det" title="Tre steg till din första session" band>
+      <Section eyebrow="Så fungerar det" title="Så planeras ett besök på en framtida klinik" band>
         <Steps steps={[
           { label: "Körkort", text: "En introduktion i House of Awesome eller digitalt." },
           { label: "Boka", text: "Välj tid i appen. Dörren öppnas med mobilen." },

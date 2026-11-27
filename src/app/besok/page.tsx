@@ -92,11 +92,12 @@ export default function BesokPage() {
               Boka
             </h2>
             <p className="mt-3 text-sm leading-6 text-hoa-ink-muted">
-              Du bokar hos Life Is Awesome, där vi har en gemensam kalender för båda verksamheterna.
+              Du bokar bemannade tider i den ordinarie kalendern. För obemannade pass tar vi emot intresseanmälningar inför medlemsstarten.
               Osäker på vad som passar? Börja med ett kostnadsfritt kort samtal.
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <CtaLink href={bookingUrl(null, "visit_page")}>Boka tid</CtaLink>
+              <CtaLink href="/medlemskap" variant="secondary">Se medlemskapen</CtaLink>
               <CtaLink href="/#grundarna" variant="secondary">
                 Välj ett kostnadsfritt samtal
               </CtaLink>

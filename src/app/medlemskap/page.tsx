@@ -1,49 +1,66 @@
 import { CtaLink } from "@/components/CtaLink";
 import { Bullets, Card, Grid, Hero, Section } from "@/components/v2/ui";
-import { membershipUrl } from "@/lib/links";
+import { formatSek, getMemberships } from "@/lib/content";
+import { bookingUrl, membershipUrl } from "@/lib/links";
 import { pageMetadata } from "@/lib/seo";
 
-import { getMemberships, formatSek } from "@/lib/content";
-
 export const metadata = pageMetadata({
-  title: "Gym & medlemskap",
-  description: "Longevity-gym dygnet runt i Stora Höga, från 599 kr/mån.",
+  title: "Medlemskap i House of Awesome",
+  description: "Anmäl intresse för Medlemskap för 111 kr eller All inclusive för 1 444 kr per månad i Stora Höga. Anmälan är kostnadsfri och utan bindning.",
   path: "/medlemskap",
 });
 
-const values: Record<string, string> = {
-  Gym: "Värde: rödljus 4 × 250 kr = 1 000 kr/mån + gym",
-  Longevity: "Värde: rödljus 8 × 250 kr = 2 000 kr/mån + gym",
-  "Longevity Plus": "Värde: 4 × Awesome Protocol = 2 980 kr/mån + gym",
-  "Longevity Max": "Värde: 8 × Awesome Protocol = 5 960 kr/mån + gym, InBody, plan",
-};
+const memberPrices = [
+  ["EWOT", "333 kr per pass"],
+  ["Rödljus/PEMF", "155 kr per pass"],
+  ["Celloxy IHHT", "555 kr per pass"],
+  ["Celloxy IHHT, 10 pass", "4 444 kr, giltigt i 6 månader från köp"],
+  ["Grundintroduktion", "Kostnadsfri"],
+  ["Celloxy-körkort", "999 kr inklusive en behandling med terapeut"],
+];
 
 export default function Page() {
-  const plans = getMemberships();
   return (
     <>
-      <Hero eyebrow="Gym & medlemskap" title="Longevity-gym dygnet runt" lead="Från 599 kr/mån.">
-        <CtaLink href="#medlemskap">Se medlemskapen</CtaLink>
+      <Hero eyebrow="House of Awesome i Stora Höga" title="Medlemskap i huset" lead="Vi förbereder två medlemskap för dig som vill boka utrustning på egen hand i Stora Höga. Hos Life Is Awesome kan du redan nu anmäla intresse, kostnadsfritt och utan bindning.">
+        <CtaLink href="#medlemskap">Jämför medlemskapen</CtaLink>
+        <CtaLink href="#medlemspriser" variant="secondary">Se medlemspriser</CtaLink>
       </Hero>
-      <Section id="gymmet">
-        <Grid cols={4}>
-          <Card label="Kraft" title="Gymmet" text="Styrka för hela kroppen, anpassad efter din nivå." />
-          <Card label="Syre" title="EWOT" text="Intervallträning med högkoncentrerat syre." />
-          <Card label="Återhämtning" title="Rödljus" text="Ingår i alla medlemskap." />
-          <Card id="baslager" label="Coachat" title="Basläger" text={'Funktionell träning med kettlebells och vikter, ledd av coach Lucas "Raw" Eliasson.'} />
-        </Grid>
-      </Section>
-      <Section id="medlemskap" eyebrow="Medlemskap" title="Din hälsa, på dina villkor" lead="Alla medlemskap ger dig gymmet dygnet runt och en egen träningsplan." band>
-        <Grid cols={4}>
-          {plans.map((plan, i) => (
-            <Card key={plan.priceId} label={`Medlemskap ${i + 1}`} title={plan.name} price={`${formatSek(plan.pricePerMonth)}/mån`} text={plan.tagline} featured={plan.featured}>
+      <Section id="medlemskap" title="Vilket medlemskap är du intresserad av?" lead="Försäljningen har ännu inte öppnat. När du senare tecknar ett medlemskap gäller sex månaders bindningstid och automatisk månadsbetalning. Alla priser inkluderar 25 % moms." band>
+        <Grid cols={2}>
+          {getMemberships().map((plan) => (
+            <Card key={plan.priceId} title={plan.name} price={`${formatSek(plan.pricePerMonth)}/mån`} text={plan.tagline} featured={plan.featured}>
               <Bullets items={plan.items} />
-              <p className="text-xs text-hoa-ink-muted">{values[plan.name]}</p>
-              <CtaLink href={membershipUrl(plan.priceId, "membership_page")} size="sm" className="mt-auto w-full">Välj {plan.name}</CtaLink>
+              <CtaLink href={membershipUrl(plan.priceId, "membership_page")} size="sm" className="mt-auto w-fit">Anmäl intresse för {plan.name}</CtaLink>
             </Card>
           ))}
         </Grid>
-        <p className="mt-8 text-center text-sm text-hoa-ink-muted">Alla medlemskap: gym dygnet runt · introduktion och träningsplan · 12 månaders bindningstid</p>
+      </Section>
+      <Section id="medlemspriser" title="Vad kostar ett pass när medlemskapen öppnar?" lead="Med grundmedlemskapet betalar du per pass. Med All inclusive ingår två pass med EWOT per kalendervecka och obegränsat antal pass med rödljus/PEMF.">
+        <p className="mx-auto mb-6 max-w-3xl">Medlemspriserna gäller pass du bokar själv. För en behandling med terapeut ser du det ordinarie priset i bokningen.</p>
+        <dl className="mx-auto max-w-3xl divide-y divide-hoa-line">
+          {memberPrices.map(([name, price]) => (
+            <div key={name} className="grid gap-1 py-4 sm:grid-cols-2 sm:gap-6">
+              <dt className="font-semibold">{name}</dt>
+              <dd>{price}</dd>
+            </div>
+          ))}
+        </dl>
+      </Section>
+      <Section title="Så fungerar det när medlemskapen öppnar" band>
+        <Grid cols={2}>
+          <Card title="Introduktion och digital nyckel" text="Personalen visar hur utrustningen fungerar och godkänner din kostnadsfria grundintroduktion. För att få tillträde dygnet runt behöver du ett betalt medlemskap, godkänd introduktion och en aktiverad nyckel." />
+          <Card title="Celloxy på egen hand" text="Ditt första Celloxy-pass görs med terapeut. När terapeuten godkänt ditt Celloxy-körkort kan du boka enstaka pass och köpa 10-kort i medlemsportalen. Celloxy ingår inte i All inclusive." />
+          <Card id="gymmet" title="Kettlebellrummet" text="När du bokar utrustning får du också använda kettlebellrummet under din bokade tid. Rummet rymmer fyra personer samtidigt och har ingen separat bokning." />
+          <Card title="Om du behöver avboka" text="Avboka senast 24 timmar före passet för att få tillbaka betalningen, klippet eller platsen i veckokvoten. Vid senare avbokning eller uteblivet besök förbrukas passet." />
+        </Grid>
+      </Section>
+      <Section id="baslager" title="Träna med coach eller boka med terapeut">
+        <div className="mx-auto max-w-2xl space-y-4 text-center">
+          <p>Basläger är funktionell träning med kettlebells och vikter, ledd av coach Lucas ”Raw” Eliasson.</p>
+          <p>Även utan medlemskap kan du boka utrustning med terapeut under bemannade tider. Då behöver du ingen medlemsintroduktion.</p>
+          <CtaLink href={bookingUrl(null, "membership_staffed")}>Se bemannade tider</CtaLink>
+        </div>
       </Section>
     </>
   );
